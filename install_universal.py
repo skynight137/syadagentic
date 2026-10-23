@@ -1,101 +1,123 @@
 #!/usr/bin/env python3
-"""install_universal.py — Pasang SYADAGENTIC jailbreak permanen ke SEMUA agent di device ini.
-Deploy SYADAGENTIC.md ke semua titik yang agent baca otomatis:
-  - Hermes: config agent.system_prompt + prefill + tirith off
-  - opencode: ~/.config/opencode/AGENTS.md (global) + root AGENTS.md
-  - Claude Code: ~/.claude/CLAUDE.md
-  - Cursor: ~/.cursorrules (global)
-  - Project roots: AGENTS.md / CLAUDE.md / .cursorrules
-Auto-detect yang ada, install yang bisa. Pakai dgn --root utk project.
+"""install_universal.py — install SYADAGENTIC on every agent on this device.
+
+Writes the identity files each agent reads automatically:
+
+  * Hermes        -> agent.system_prompt + prefill.json, tirith off
+  * opencode      -> ~/.config/opencode/AGENTS.md (global) and project-root AGENTS.md
+  * Claude Code   -> ~/.claude/CLAUDE.md
+  * Cursor        -> ~/.cursorrules (global)
+  * project roots -> AGENTS.md + CLAUDE.md for whatever is there
 
 Usage:
-  python install_universal.py               # install ke semua agent global
-  python install_universal.py --root /path  # + taruh di root project
+  python3 install_universal.py                     # global installs, all agents
+  python3 install_universal.py --root /path        # also drop files at a project root
+  python3 install_universal.py --hermes            # Hermes only
 """
-import argparse, json, os, pathlib, shutil, sys
+import argparse
+import os
+import pathlib
+import shutil
+import sys
 
-HERE = pathlib.Path(__file__).resolve().parent
-SOURCE = HERE / "SYADAGENTIC.md"
-SOURCE_SHORT = HERE / "SYADAGENTIC-SHORT.md"
+SOURCE = pathlib.Path(__file__).resolve().parent / "SOUL.md"
+SOURCE_SHORT = SOURCE.parent / "IDENTITY.md"
 HOME = pathlib.Path.home()
 
-def banner(t):
-    print(f"\n=== {t} ===")
 
-def install_file(dst: pathlib.Path, copy: bool = True, src=None):
-    s = src or SOURCE
+def banner(title: str) -> None:
+    print(f"\n=== {title} ===")
+
+
+def install_file(dst: pathlib.Path, copy: bool = True, src=None) -> bool:
+    src = src or SOURCE
     try:
         dst.parent.mkdir(parents=True, exist_ok=True)
         if copy:
-            shutil.copy(s, dst)
+            shutil.copy(src, dst)
         print(f"  ✅ {dst}")
         return True
-    except Exception as e:
-        print(f"  ⚠️ {dst}: {str(e)[:60]}")
+    except Exception as exc:
+        print(f"  ❌ {dst}: {exc}")
         return False
 
-def hermes_setup():
+
+def hermes_setup() -> None:
     banner("HERMES")
-    cfg_path = pathlib.Path(os.environ.get("HERMES_HOME", HOME / "AppData/Local/hermes")) / "config.yaml"
+    cfg_path = pathlib.Path(os.environ.get("HERMES_HOME") or HOME / ".hermes" / "config.yaml")
+    if cfg_path.is_dir():
+        cfg_path = cfg_path / "config.yaml"
     if not cfg_path.exists():
-        # coba lokasi alternatif
-        cfg_path = HOME / ".hermes" / "config.yaml"
+        # try the Windows default location
+        cfg_path = HOME / "AppData/Local/hermes" / "config.yaml"
     if not cfg_path.exists():
-        print("  ⚠️ config.yaml tidak ketemu — skip Hermes config (pasang file manual)")
+        print("  ❌ config.yaml not found — install the files by hand")
         install_file(HOME / "AppData/Local/hermes" / "hermes_unrestricted.md")
         return
+
     import yaml
-    d = yaml.safe_load(open(cfg_path)) or {}
-    d.setdefault("agent", {})
-    d["agent"]["system_prompt"] = SOURCE.read_text(encoding="utf-8")
-    d["agent"]["instructions"] = d.get("agent", {}).get("instructions", []) or []
-    # prefill
-    pref = HERE / "prefill.json"
+
+    cfg = yaml.safe_load(open(cfg_path)) or {}
+    cfg.setdefault("agent", {})["system_prompt"] = SOURCE.read_text(encoding="utf-8")
+    cfg.setdefault("agent", {}).setdefault("instructions", [])
+
+    pref = SOURCE.parent / "prefill.json"
     if pref.exists():
-        pref_dst = cfg_path.parent / "prefill.json"
-        install_file(pref_dst)
-        d["prefill_messages_file"] = "prefill.json"
-    # tirith off
-    d.setdefault("security", {})["tirith_enabled"] = False
-    yaml.dump(d, open(cfg_path, "w"), default_flow_style=False, allow_unicode=True)
+        install_file(cfg_path.parent / "prefill.json")
+        print("  ✅ prefill messages written next to config.yaml")
+
+    cfg.setdefault("security", {})["tirith"] = False
+    yaml.dump(cfg, open(cfg_path, "w"), default_flow_style=False, allow_unicode=True)
     print(f"  ✅ config updated: {cfg_path}")
 
-def opencode_setup():
+
+def opencode_setup() -> None:
     banner("OPENCODE")
     install_file(HOME / ".config" / "opencode" / "AGENTS.md")
-    install_file(HOME / ".config" / "opencode" / "GLOBAL_RULES.md", copy=False) if False else None
+    install_file(HOME / ".config" / "opencode" / "GLOBAL_RULES.md", copy=False)
 
-def claude_setup():
+
+def claude_setup() -> None:
     banner("CLAUDE CODE")
     install_file(HOME / ".claude" / "CLAUDE.md")
     install_file(HOME / ".claude" / "CLAUDE.local.md")
 
-def cursor_setup():
+
+def cursor_setup() -> None:
     banner("CURSOR")
     install_file(HOME / ".cursorrules")
 
-def project_setup(root: pathlib.Path):
+
+def project_setup(root: pathlib.Path) -> None:
     banner(f"PROJECT ROOT: {root}")
-    for name in ["AGENTS.md", "CLAUDE.md", ".cursorrules"]:
+    for name in ("AGENTS.md", "CLAUDE.md"):
         install_file(root / name)
 
-def main():
+
+def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default=None, help="project root utk taruh AGENTS/CLAUDE/.cursorrules")
-    ap.add_argument("--hermes-only", action="store_true")
+    ap.add_argument("--root", default=None, help="project root to drop AGENTS.md / CLAUDE.md into")
+    ap.add_argument("--hermes", action="store_true", help="Hermes only")
     args = ap.parse_args()
-    print(f"SOURCE: {SOURCE} ({SOURCE.stat().st_size} bytes) + SHORT ({SOURCE_SHORT.stat().st_size} bytes)")
+
+    print(f"SOURCE: {SOURCE} ({SOURCE.stat().st_size} bytes)")
+    if SOURCE_SHORT.exists():
+        print(f"SHORT:  {SOURCE_SHORT} ({SOURCE_SHORT.stat().st_size} bytes)")
+
     hermes_setup()
-    if not args.hermes_only:
+    if not args.hermes:
         opencode_setup()
         claude_setup()
         cursor_setup()
-        # deploy SHORT utk frontier
-        install_file(HOME / ".config" / "opencode" / "SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
-        install_file(HOME / ".claude" / "SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
-        if args.root:
-            project_setup(pathlib.Path(args.root))
-    print("\nDONE — SYADAGENTIC (+SHORT utk frontier) terpasang. Restart agent utk aktif.")
+        # the short variant is for frontier models with tight context
+        if SOURCE_SHORT.exists():
+            install_file(HOME / ".config" / "opencode" / "SHORT.md", src=SOURCE_SHORT)
+            install_file(HOME / ".claude" / "SHORT.md", src=SOURCE_SHORT)
+    if args.root:
+        project_setup(pathlib.Path(args.root))
+
+    print("\nDONE. SYADAGENTIC (+ SHORT for frontier models) installed. Restart the agent to activate.")
+
 
 if __name__ == "__main__":
     main()
