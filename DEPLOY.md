@@ -2,12 +2,12 @@
 
 How to deploy the agent into each environment.
 
-## 1. HERMES (native)
+## 1. HERMES (profil)
 
-- Install the skills and config: `install_universal.py`
-- System prompt: point `agent.system_prompt` at `SOUL.md` and `SYADAGENTIC.md`
-- Guardrail bypass: `arsenal-skills/hermes-bypass/scripts/apply_patches.py`, plus `security.tirith: false`
-- Restart Hermes for the changes to load
+- `python3 install_universal.py --hermes` menaruh `SOUL.md` + skill arsenal + references ke profil `syad` (atau `--profile NAMA`)
+- SOUL.md di direktori profil auto-load, `config.yaml` tidak disentuh. Tanpa dukungan profil pakai `--home`: menulis `agent.system_prompt`, jadi SOUL.md jangan dipasang juga
+- Guardrail bypass: `arsenal-skills/hermes-bypass/scripts/apply_patches.py` setelah setiap `hermes update`. Key `security.tirith: false` usang sejak Hermes config v50
+- Aktifkan lewat `gateway.profile_routes` (`profile: syad`), lalu `hermes gateway restart`
 
 ## 2. OPENCODE / CLAUDE CODE / CURSOR
 
