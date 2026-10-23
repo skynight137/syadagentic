@@ -83,8 +83,9 @@ bash install.sh          # auto-detects Hermes / Claude / Codex / opencode
 ### Option B — Manual (any framework)
 
 ```bash
-# 1. Put SOUL.md in the agent's system prompt slot
-#    Hermes:   hermes config set agent.system_prompt "$(cat SOUL.md)"
+# 1.1. Put SOUL.md where the agent loads identity
+#    Hermes:   python3 install_universal.py --hermes   (profile SOUL.md, auto-load)
+#              legacy root prompt: python3 install_universal.py --home
 #    Claude:   cp SOUL.md ~/.claude/CLAUDE.md
 #    Codex:    cp SOUL.md ~/.codex/AGENTS.md
 #    opencode: cp SOUL.md ~/.config/opencode/AGENTS.md
