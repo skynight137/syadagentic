@@ -74,8 +74,8 @@ def hermes_profile_setup(name: str) -> None:
     banner(f"HERMES PROFILE: {name}")
     prof = _hermes_home() / "profiles" / name
     if not prof.exists():
-        print(f"  ❌ {prof} missing — run: hermes profile create {name}")
-        return
+        prof.mkdir(parents=True)
+        print(f"  ✅ created {prof} — finish it with: hermes profile create {name} (or copy a config.yaml in)")
     install_file(prof / "SOUL.md")
     for rel in SOUL_REFS:
         src = SOURCE.parent / rel
