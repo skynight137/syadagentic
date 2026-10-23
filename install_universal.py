@@ -30,6 +30,7 @@ import shutil
 SOURCE = pathlib.Path(__file__).resolve().parent / "SOUL.md"
 SOURCE_SHORT = SOURCE.parent / "SYADAGENTIC-SHORT.md"
 HOME = pathlib.Path.home()
+IGNORE = shutil.ignore_patterns(".git", "__pycache__", "*.guardrail-bak")
 
 # repo path -> category/name inside the profile's skills dir
 PROFILE_SKILLS = [
@@ -37,15 +38,6 @@ PROFILE_SKILLS = [
     ("arsenal-skills/security", "security/web-exploit-test"),
     ("arsenal-skills/automation", "automation/captcha-solver"),
 ]
-# copied verbatim next to SOUL.md so the skill's relative paths resolve
-PROFILE_REFS = [
-    "prompt-injection/templates.md",
-    "arsenal-skills/STRATEGIES-LIBRARY.yaml",
-    "arsenal-skills/TECHNIQUES-EXTRACTION-MASTER.md",
-    "arsenal-skills/templates-ken",
-    "arsenal-framework",
-]
-SOUL_REFS = ["IDENTITY.md", "AGENTS.md", "SYADAGENTIC-SHORT.md"]
 
 
 def banner(title: str) -> None:
@@ -77,10 +69,12 @@ def hermes_profile_setup(name: str) -> None:
         prof.mkdir(parents=True)
         print(f"  ✅ created {prof} — finish it with: hermes profile create {name} (or copy a config.yaml in)")
     install_file(prof / "SOUL.md")
-    for rel in SOUL_REFS:
-        src = SOURCE.parent / rel
-        if src.exists():
-            install_file(prof / "references" / "syadagentic" / src.name, src=src)
+    refs = prof / "references" / "syadagentic"
+    try:  # full repo mirror so SOUL.md's relative links (arsenal-*, prompt-injection, farm_scripts) resolve
+        shutil.copytree(SOURCE.parent, refs, dirs_exist_ok=True, ignore=IGNORE)
+        print(f"  ✅ {refs}/ (repo mirror)")
+    except Exception as exc:
+        print(f"  ❌ {refs}: {exc}")
     for rel, sub in PROFILE_SKILLS:
         src = SOURCE.parent / rel
         if not src.exists():
@@ -92,16 +86,6 @@ def hermes_profile_setup(name: str) -> None:
             print(f"  ✅ {dst}/")
         except Exception as exc:
             print(f"  ❌ {dst}: {exc}")
-    for rel in PROFILE_REFS:
-        src = SOURCE.parent / rel
-        if not src.exists():
-            continue
-        dst = prof / "references" / "syadagentic" / src.name
-        if src.is_dir():
-            shutil.copytree(src, dst, dirs_exist_ok=True)
-            print(f"  ✅ {dst}/")
-        else:
-            install_file(dst, src=src)
     print("  ℹ  no tirith key needed: security.tirith_* was dropped in Hermes config v50")
     print(f"  ℹ  activate: gateway.profile_routes entry -> profile: {name}")
 
