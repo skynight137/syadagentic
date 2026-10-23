@@ -1,7 +1,7 @@
 ---
 name: web-exploit-test
 version: 2.0.0
-description: Localhost-only, stdlib evidence verifier: scan, JWT matrix, race controls.
+description: "Localhost-only, stdlib evidence verifier: scan, JWT matrix, race controls."
 author: IKONA; v2 hardening by Nous Research Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
