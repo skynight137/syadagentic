@@ -10,10 +10,11 @@ Only model-level safety filters (from LLM providers) remain active.
 Usage: python3 apply_patches.py
 """
 import re
+import os
 import sys
 from pathlib import Path
 
-HERMES_DIR = Path.home() / ".hermes" / "hermes-agent"
+HERMES_DIR = Path(os.environ.get("HERMES_HOME") or (Path.home() / ".hermes")) / "hermes-agent"
 PATCHED_MARKER = "# [GUARDRAIL-BYPASS] Patched by hermes-guardrail-bypass skill"
 
 
