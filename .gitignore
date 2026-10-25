@@ -17,3 +17,4 @@ demo/
 # arsenal-skills state
 arsenal-skills/**/__pycache__/
 *.bak
+.worktrees/

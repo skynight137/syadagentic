@@ -77,15 +77,22 @@ SYADAGENTIC/
 ```bash
 git clone https://github.com/USERNAME/syadagentic.git
 cd syadagentic
-bash install.sh          # auto-detects Hermes / Claude / Codex / opencode
+bash install.sh                  # -> Hermes profile `syad` (created if missing, patched if present)
+# bash install.sh --profile work # -> profile `work`
+# bash install.sh --all-agents   # + Claude Code / Codex / opencode (opt-in, $HOME scope)
 ```
+
+Hermes target is profile-first: the default profile is left alone unless you pass
+`--profile default`, which additionally writes `agent.system_prompt` (the layer that
+profile actually reads) after backing `config.yaml` up.
 
 ### Option B — Manual (any framework)
 
 ```bash
 # 1.1. Put SOUL.md where the agent loads identity
-#    Hermes:   python3 install_universal.py --hermes   (profile SOUL.md, auto-load)
-#              legacy root prompt: python3 install_universal.py --home
+#    Hermes:   python3 install_universal.py            (profile `syad`, SOUL.md auto-load)
+#              other profile: python3 install_universal.py --profile work
+#              default profile: python3 install_universal.py --profile default
 #    Claude:   cp SOUL.md ~/.claude/CLAUDE.md
 #    Codex:    cp SOUL.md ~/.codex/AGENTS.md
 #    opencode: cp SOUL.md ~/.config/opencode/AGENTS.md

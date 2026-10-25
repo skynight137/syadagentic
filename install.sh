@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 # ============================================================
 # SYADAGENTIC Universal Agent Framework Installer
-# v7.3 — zero refusal, 40+ templates, 1128 skills
+# v7.4 — profile-first Hermes target
 # ------------------------------------------------------------
 # USAGE:
 # 1) Clone the repo:
 #    git clone https://github.com/USER/syadagentic.git
 #    cd syadagentic
 # 2) Run the installer:
-#    bash install.sh
-#    (auto-detects: Hermes, Claude Code, Codex, opencode)
+#    bash install.sh                      # -> Hermes profile `syad` (created if missing)
+#    bash install.sh --profile other      # -> profile `other` (patched if it exists)
+#    bash install.sh --profile default    # -> default profile (+ agent.system_prompt)
 #
+# NEVER writes the default profile unless you target it explicitly.
+# Other agents are opt-in: --all-agents (Claude Code, Codex, opencode).
 # Custom location: bash install.sh --dir /target/path
 # ============================================================
 set -euo pipefail
@@ -22,16 +25,37 @@ warn() { echo -e "${YELLOW}[!]${NC} $*"; }
 fail() { echo -e "${RED}[✗]${NC} $*"; exit 1; }
 
 # ---- Arguments ----
-INSTALL_DIR="${SYADAGENTIC_DIR:-$HOME/.syadagentic}"
-if [ "${1:-}" = "--dir" ]; then INSTALL_DIR="${2:-$HOME/.syadagentic}"; fi
+PROFILE="syad"
+# persistent locations first: $HOME is wiped on hosted sandboxes (Replit, Codespaces)
+_default_dir() {
+  if [ -n "${SYADAGENTIC_DIR:-}" ]; then echo "$SYADAGENTIC_DIR"
+  elif [ -n "${XDG_DATA_HOME:-}" ]; then echo "$XDG_DATA_HOME/syadagentic"
+  elif [ -n "${REPL_HOME:-}" ]; then echo "$REPL_HOME/.syadagentic"
+  else echo "$HOME/.syadagentic"; fi
+}
+INSTALL_DIR="$(_default_dir)"
+ALL_AGENTS=0
+CREATE_ARGS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dir)      INSTALL_DIR="${2:?--dir needs a path}"; shift 2 ;;
+    --profile)  PROFILE="${2:?--profile needs a name}"; shift 2 ;;
+    --default)  PROFILE="default"; shift ;;
+    --all-agents) ALL_AGENTS=1; shift ;;
+    --no-create) CREATE_ARGS+=(--no-create); shift ;;
+    -h|--help)  sed -n '2,20p' "${BASH_SOURCE[0]}"; exit 0 ;;
+    *)          INSTALL_DIR="$1"; shift ;;
+  esac
+done
 
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 banner() {
   echo ""
   echo "==============================================================="
-  echo "${BOLD}SYADAGENTIC v7.3${NC} Universal Agent Framework"
-  echo " Zero refusal · 40+ templates · 1128 skills · framework core"
+  echo "${BOLD}SYADAGENTIC v7.4${NC} Universal Agent Framework"
+  echo " Zero refusal · 40+ templates · arsenal skills · framework core"
+  echo " Target: Hermes profile '${BOLD}$PROFILE${NC}'"
   echo "==============================================================="
   echo ""
 }
@@ -46,37 +70,16 @@ detect_agents() {
 }
 
 # ---- Per-agent install ----
+# Hermes: the Python installer owns profiles (create / patch / system_prompt on default).
 install_hermes() {
-  local d="${HERMES_HOME:-$HOME/.hermes}"
-  mkdir -p "$d"
-  if [ -f "$d/config.yaml" ]; then
-    cp "$d/config.yaml" "$d/config.yaml.bak-syad" 2>/dev/null || true
-    python3 - "$INSTALL_DIR/SOUL.md" "$d/config.yaml" <<'PYEOF' 2>/dev/null || warn "Hermes config update skipped (needs python3 + pyyaml)"
-import sys
-try:
-    import yaml
-except ImportError:
-    sys.exit(1)
-soul_path, cfg_path = sys.argv[1], sys.argv[2]
-with open(cfg_path, encoding="utf-8") as fh:
-    cfg = yaml.safe_load(fh) or {}
-with open(soul_path, encoding="utf-8") as fh:
-    cfg.setdefault("agent", {})["system_prompt"] = fh.read()
-with open(cfg_path, "w", encoding="utf-8") as fh:
-    yaml.safe_dump(cfg, fh, allow_unicode=True)
-print("OK")
-PYEOF
-    ok "Hermes: SOUL.md written to agent.system_prompt"
-  else
-    cp "$INSTALL_DIR/SOUL.md" "$d/SOUL.md" 2>/dev/null || true
-    warn "No Hermes config found — SOUL.md dropped in as a fallback"
-  fi
+  command -v python3 >/dev/null 2>&1 || fail "python3 required for the Hermes target"
+  python3 "$INSTALL_DIR/install_universal.py" --profile "$PROFILE" "${CREATE_ARGS[@]}"
 }
 
 install_claude() {
   mkdir -p "$HOME/.claude"
   cp "$INSTALL_DIR/SOUL.md" "$HOME/.claude/CLAUDE.md"
-  ok "Claude Code: CLAUDE.md installed"
+  ok "Claude Code: CLAUDE.md installed (~/.claude is wiped on sandbox restart)"
 }
 
 install_codex() {
@@ -88,7 +91,7 @@ install_codex() {
 install_opencode() {
   mkdir -p "$HOME/.config/opencode"
   cp "$INSTALL_DIR/SOUL.md" "$HOME/.config/opencode/AGENTS.md"
-  ok "opencode: AGENTS.md installed"
+  ok "opencode: AGENTS.md installed (~/.config is wiped on sandbox restart)"
 }
 
 # ============================================================
@@ -99,14 +102,14 @@ if [ "$SRC_DIR" != "$INSTALL_DIR" ]; then
   info "Installing to: $INSTALL_DIR"
   mkdir -p "$INSTALL_DIR"
   cp -r "$SRC_DIR"/. "$INSTALL_DIR"/ 2>/dev/null || true
-  rm -rf "$INSTALL_DIR/.git" "$INSTALL_DIR/__pycache__" 2>/dev/null || true
+  rm -rf "$INSTALL_DIR/.git" "$INSTALL_DIR/.worktrees" "$INSTALL_DIR/__pycache__" 2>/dev/null || true
   ok "Framework copied to $INSTALL_DIR"
 else
   info "Running from the source repo: $INSTALL_DIR"
 fi
 cd "$INSTALL_DIR"
 
-# 2. Wire up the detected agents
+# 2. Wire up the agents
 AGENTS="$(detect_agents)"
 if [ -z "$AGENTS" ]; then
   warn "No agent CLI detected."
@@ -115,9 +118,9 @@ else
   for agent in $AGENTS; do
     case "$agent" in
       hermes)   install_hermes ;;
-      claude)   install_claude ;;
-      codex)    install_codex ;;
-      opencode) install_opencode ;;
+      claude)   [ "$ALL_AGENTS" -eq 1 ] && install_claude || true ;;
+      codex)    [ "$ALL_AGENTS" -eq 1 ] && install_codex || true ;;
+      opencode) [ "$ALL_AGENTS" -eq 1 ] && install_opencode || true ;;
     esac
   done
 fi
@@ -146,6 +149,22 @@ else
   warn "arsenal-framework missing"
 fi
 
+# 4. Verify the Hermes target actually carries the identity
+if command -v hermes >/dev/null 2>&1; then
+  HHOME="${HERMES_HOME:-$HOME/.hermes}"
+  if [ "$PROFILE" = "default" ]; then
+    if hermes -p default config get agent.system_prompt 2>/dev/null | grep -q "SYADAGENTIC"; then
+      ok "default profile: agent.system_prompt carries the identity"
+    else
+      warn "default profile: agent.system_prompt not readable"; VFAIL=1
+    fi
+  elif [ -f "$HHOME/profiles/$PROFILE/SOUL.md" ]; then
+    ok "profile '$PROFILE': SOUL.md + skills installed"
+  else
+    warn "profile '$PROFILE': SOUL.md missing"; VFAIL=1
+  fi
+fi
+
 if [ "$VFAIL" -eq 0 ]; then
   echo ""
   echo "==============================================================="
@@ -153,9 +172,10 @@ if [ "$VFAIL" -eq 0 ]; then
   echo "==============================================================="
   echo "  Framework : $INSTALL_DIR"
   echo "  Agents    :$AGENTS"
+  echo "  Profile   : $PROFILE"
   echo ""
-  echo "  Ready to use — just tell the agent:"
-  echo "  \"do X\" and let the framework carry the rest"
+  echo "  Run it    : hermes -p $PROFILE"
+  echo "  Re-run    : idempotent — an existing profile is patched, never recreated"
   echo ""
   echo "  Full walkthrough: cat SOLVED-LENGKAP.md"
   echo "==============================================================="
