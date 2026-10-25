@@ -188,16 +188,17 @@ def install_payload(prof: pathlib.Path) -> None:
         print(f"  ✅ {refs}/ (repo mirror)")
     except Exception as exc:
         print(f"  ❌ {refs}: {exc}")
+    # link skills to the mirror, not the source repo: profiles outlive worktrees
     for rel, sub in PROFILE_SKILLS:
-        src = ROOT / rel
+        src = refs / rel
         if not src.exists():
             print(f"  ❌ {rel} missing in repo")
             continue
         link_skill(src, prof / "skills" / sub)
     made = 0  # register the rest of the arsenal, skipping whatever is already in place
-    for skill_md in sorted(ROOT.glob("arsenal-skills/**/SKILL.md")):
+    for skill_md in sorted(refs.glob("arsenal-skills/**/SKILL.md")):
         src = skill_md.parent
-        parts = src.relative_to(ROOT).parts
+        parts = src.relative_to(refs).parts
         if parts[1] == "skills-lengkap" and len(parts) >= 4:
             category, name = SKILL_CATEGORY.get(parts[2], parts[2]), parts[-1]
         elif len(parts) == 3:
