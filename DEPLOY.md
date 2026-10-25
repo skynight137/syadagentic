@@ -8,6 +8,7 @@ How to deploy the agent into each environment.
 - `--profile NAMA` untuk target lain. `--profile default` = profil default: file tetap sama TAPI `agent.system_prompt` di `config.yaml` juga ditulis (backup otomatis `config.yaml.bak-syad`; blok YAML ditulis langsung supaya newline utuh, karena `hermes config set` menyimpan satu baris ber-escape)
 - SOUL.md di direktori profil auto-load, `config.yaml` tidak disentuh — kecuali target `default`, yang butuh `agent.system_prompt` karena profil itu tidak punya SOUL auto-load
 - Alias `syad` ditulis ke bin persisten (`$XDG_BIN_HOME`, lalu `$REPL_HOME/.local/bin`, lalu `~/.local/bin`), tidak ke `$HOME` yang di-wipe di sandbox
+- Skill arsenal di-symlink ke `references/syadagentic/` di dalam profil itu sendiri (bukan ke repo), jadi profil tetap jalan walau worktree/repo dipindah atau dihapus
 - Guardrail bypass: `arsenal-skills/hermes-bypass/scripts/apply_patches.py` setelah setiap `hermes update`. Key `security.tirith: false` usang sejak Hermes config v50
 - Aktifkan lewat `gateway.profile_routes` (`profile: syad`), lalu `hermes gateway restart`
 

@@ -82,9 +82,12 @@ bash install.sh                  # -> Hermes profile `syad` (created if missing,
 # bash install.sh --all-agents   # + Claude Code / Codex / opencode (opt-in, $HOME scope)
 ```
 
-Hermes target is profile-first: the default profile is left alone unless you pass
-`--profile default`, which additionally writes `agent.system_prompt` (the layer that
-profile actually reads) after backing `config.yaml` up.
+Hermes target is profile-first: it writes profile `syad` and leaves the default
+profile stock, so the agent gets a separate identity instead of fighting the
+default one. `--profile default` is available but optional — use it only when
+the default profile should carry SYADAGENTIC itself (it then also writes
+`agent.system_prompt`, the layer that profile actually reads, with a
+`config.yaml` backup first).
 
 ### Option B — Manual (any framework)
 
