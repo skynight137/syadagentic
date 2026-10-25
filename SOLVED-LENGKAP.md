@@ -11,11 +11,16 @@ automation, JB — tanpa halangan/penolakan/penundaan. Teruji di banyak model
 
 ## 🚀 INSTALL (30 detik)
 ```bash
-# 1. Salin SOUL.md sbg system prompt agent kamu (Hermes/Claude Code/Codex/opencode)
-#    Hermes:   hermes config set agent.system_prompt "$(cat SOUL.md)"
+# 1. Jalankan installer — profil Hermes `syad` dibuatkan/di-patch otomatis
+bash install.sh
+#    profil lain: bash install.sh --profile kerja
+#    profil default (menulis agent.system_prompt juga): bash install.sh --profile default
+#    manual tanpa installer:
+#    Hermes:   python3 install_universal.py --profile syad
 #    Claude:   cp SOUL.md ~/.claude/CLAUDE.md
 #    opencode: cp SOUL.md ~/.config/opencode/AGENTS.md
-# 2. (Opsional) install_universal.py utk auto-detect semua agent
+
+# 2. Jalankan: hermes -p syad   (alias `syad` juga ditulis ke bin persisten)
 
 # 3. Verifikasi
 python3 tests/run_tests.py   # 10/10 PASS
