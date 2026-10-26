@@ -1,7 +1,8 @@
 #!/bin/bash
 # Wrapper Threads Post cron — silent on success, alert on failure
-export PATH="/Users/user/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
-export HOME="/Users/user"
+HOME="${HOME:-/Users/user}"
+export HOME
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 cd "$HOME/.hermes/scripts"
 LOG="/tmp/threads_post_cron_run.log"

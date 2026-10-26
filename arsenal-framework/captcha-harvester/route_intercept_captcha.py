@@ -106,7 +106,7 @@ def replay_with_token(url, method="POST", headers=None, data=None, cookies=None,
     try:
         from curl_cffi import requests as creq
     except ImportError:
-        return {"ok": False, "error": "pip install curl_cffi"}
+        return {"ok": False, "error": "butuh curl_cffi — uv pip install curl_cffi (atau python3 -m pip install curl_cffi)"}
     h = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"}
     if headers:
         h.update(headers)
