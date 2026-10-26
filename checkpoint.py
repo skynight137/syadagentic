@@ -6,16 +6,28 @@ Pakai ini SEBELUM edit 9router DB, hermes config, memory, dll.
 """
 import shutil, datetime, os, sys, glob
 
-LOG = r"~/.backup-log.txt"
+# Path resolver: satu titik. Windows pakai AppData, Unix pakai XDG/HERMES_HOME.
+# Jangan hardcode "~/AppData" di daftar PROTECTED — di Linux path itu tidak ada.
+HOME = os.path.expanduser("~")
+if os.name == "nt":
+    _ROAMING = os.path.join(HOME, "AppData", "Roaming")
+    _LOCAL = os.path.join(HOME, "AppData", "Local")
+else:
+    _ROAMING = os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config")
+    _LOCAL = os.environ.get("XDG_DATA_HOME") or os.path.join(HOME, ".local", "share")
+HERMES_HOME = os.environ.get("HERMES_HOME") or os.path.join(_LOCAL, "hermes")
+
+LOG = os.path.join(HOME, ".backup-log.txt")
 PROTECTED = [
-    r"~/AppData/Roaming/9router/db/data.sqlite",
-    r"~/AppData/Local/hermes/config.yaml",
-    r"~/AppData/Local/hermes/memories/MEMORY.md",
-    r"~/AppData/Local/hermes/memories/USER.md",
-    r"~/.ssh/ssh-key",
+    os.path.join(_ROAMING, "9router", "db", "data.sqlite"),
+    os.path.join(HERMES_HOME, "config.yaml"),
+    os.path.join(HERMES_HOME, "memories", "MEMORY.md"),
+    os.path.join(HERMES_HOME, "memories", "USER.md"),
+    os.path.join(HOME, ".ssh", "ssh-key"),
 ]
 
 def backup(path):
+    path = os.path.expanduser(path)
     if not os.path.exists(path):
         return None, "tidak ada"
     ts = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -26,6 +38,7 @@ def backup(path):
     return bak, "OK"
 
 def list_backups(path):
+    path = os.path.expanduser(path)
     return sorted(glob.glob(path + ".bak-*"), key=os.path.getmtime, reverse=True)
 
 def restore(path):

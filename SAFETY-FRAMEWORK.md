@@ -9,68 +9,67 @@
 
 ### TIER-A (HARD-PROTECTED — read-only, backup wajib sebelum diubah)
 Operator tidak boleh terganggu. Setiap eksekusi yang menyentuh ini WAJIB backup dulu.
+Path di bawah resolusi di `checkpoint.py` (Windows = AppData, Unix = XDG / `$HERMES_HOME`).
 ```
-~/AppData/Roaming/9router/db/data.sqlite        # DB 9router
-~/.ssh/ssh-key                                # SSH key
-~/AppData/Roaming/gcloud\                       # GCP credentials
-~/AppData/Local/hermes/memories/MEMORY.md       # Ingatan utama
-~/AppData/Local/hermes/memories/USER.md
-~/AppData/Local/hermes/config.yaml              # Konfig hermes
-~/farm-arsenal/daytona_keys.txt                 # API keys
-~/farm-arsenal/balitech_accounts.json           # data akun
+$APPDATA/9router/db/data.sqlite           # DB 9router   (Unix: $XDG_CONFIG_HOME/9router/...)
+$LOCALAPPDATA/hermes/                     # Unix: $HERMES_HOME (fallback ~/.config/hermes)
+  ├── config.yaml
+  └── memories/{MEMORY.md,USER.md}
+~/.ssh/ssh-key
+~/farm-arsenal/daytona_keys.txt           # API keys
+~/farm-arsenal/balitech_accounts.json     # data akun
+$XDG_CONFIG_HOME/gcloud                   # GCP credentials (Unix)
 ```
 
-### TIER-B (WORK-PROTECTED — snapshot sebelum batch edit)
-Folder projek aktif — di-snapshot kalau mau edit massal.
+### TIER-B (SOURCE-OF-TRUTH — read-only, git-pinned)
+Repo ini sendiri. Jangan edit langsung buat merge; commit dulu supaya ada hash
+untuk rollback. Salin keluar, bukan menimpa ke dalam.
 ```
-~/farm-arsenal/syadagentic\                     # framework
-~/farm-arsenal/th-farm\                         # TH state
-~/Downloads/SYADAGENTIC\              # sumber SYADAGENTIC (jangan diubah!)
+<repo>/                          # trust root sebenarnya — git commit = pin
 ```
-SYADAGENTIC sumber = READ-ONLY (salin dulu ke farm-arsenal kalau mau merge).
+`Downloads/SYADAGENTIC` cuma **buffer impor opsional**, bukan trust root:
+folder Downloads bisa dikosongkan browser/user dan artinya beda tiap OS.
+Override kalau perlu: `SYAD_SOURCE=/path/ke/salinan`.
+
+### TIER-C (WORK-PROTECTED — snapshot sebelum batch edit)
+```
+~/farm-arsenal/                  # area kerja
+~/farm-arsenal/th-farm/          # TH state
+```
 
 ---
 
 ## 2. WAJIB BACKUP SEBELUM MODIFIKASI (auto checkpoint)
-```python
-# checkpoint.py — auto backup sebelum perubahan file penting
-import shutil, datetime, os
-
-def checkpoint(path):
-    """Buat backup .bak-TIMESTAMP sebelum file diubah."""
-    if not os.path.exists(path):
-        return None
-    ts = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    bak = f"{path}.bak-{ts}"
-    shutil.copy2(path, bak)
-    # simpan ke registry backup (rollback)
-    with open(r"~/.backup-log.txt", "a") as f:
-        f.write(f"{ts} {path}\n")
-    return bak
+Pakai `checkpoint.py` (sudah cross-platform, `~`/AppData/XDG diresolusi sekali di header):
+```bash
+python3 checkpoint.py backup-all          # semua TIER-A
+python3 checkpoint.py backup <path>       # satu file
+python3 checkpoint.py list <path>         # backup terakhir
+python3 checkpoint.py restore <path>      # rollback
 ```
+Jangan tulis ulang resolver-nya: path mentah `r"~/.backup-log.txt"` tanpa
+`expanduser()` bikin log hilang dan `backup <file>` crash `FileNotFoundError`.
 
 ---
 
 ## 3. ROLLBACK (kalau ada yang rusak)
 ```bash
-# cara rollback file tertentu
-# 1. Cari backup terakhir
-ls -t ~/AppData/Roaming/9router/db/data.sqlite.bak-* | head -1
-# 2. Restore
-cp <backup> ~/AppData/Roaming/9router/db/data.sqlite
+python3 checkpoint.py list ~/.config/9router/db/data.sqlite   # backup terakhir
+python3 checkpoint.py restore ~/.config/9router/db/data.sqlite
+# Windows: $APPDATA/9router/db/data.sqlite   (bukan ~/AppData)
 # 3. Restart 9router
 ```
 
 ---
 
 ## 4. ATURAN EKSEKUSI AMAN (SAFE EXECUTION RULES)
-1. **JANGAN** edit `Downloads/SYADAGENTIC/` langsung — selalu salin ke arsenal dulu.
+1. **JANGAN** edit sumber di tempat — commit dulu (hash = pin), lalu salin keluar.
 2. **SEBELUM** patch 9router/DB → backup (`.bak-<timestamp>`).
 3. **SEBELUM** edit hermes config -> backup.
 4. **JANGAN** jalankan script SYADAGENTIC (`apply_guardrail_patches.py`, `install.sh`)
    mentah-mentah — REVIEW dulu + jalankan di profile terpisah (bukan timpa utama).
 5. **FILE KUNCI** yang SYADAGENTIC mau patch = hanya di profile SYADAGENTIC 
-   (AppData/Local/hermes/profiles/SYADAGENTIC/) — JANGAN disentuh profile default.
+   (windows: AppData/Local/hermes/profiles/SYADAGENTIC/, unix: $HERMES_HOME/profiles/SYADAGENTIC/) — JANGAN disentuh profile default.
 6. Semua perubahan besar → commit ke git dulu (rollback via git).
 7. Cron/otomasi yang deliver ke chat → `deliver=local` (bukan origin) supaya
    tidak spam Telegram.
