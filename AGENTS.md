@@ -62,7 +62,7 @@ Route by keyword, execute in the division, return evidence.
 ## SAFETY-FRAMEWORK
 
 - PATHS are never mutated: 9router DB, SSH keys, gcloud, Hermes memory, Daytona. `checkpoint.py` provides backup-all / restore / list.
-- The source of truth is `Downloads/SYADAGENTIC` and `sumber-fresh`. Copy the arsenal on merge.
+- The source of truth is this repo, pinned by git commit. `Downloads/SYADAGENTIC` is only an optional import buffer (browser-wiped, OS-dependent) — override with `SYAD_SOURCE` when used.
 - SKILLS are pinned for 8137 entries. Verify before installing.
 - Layers stay separate (default profile vs SYADAGENTIC silo). No overwriting across.
 - Kill the output first, back up, roll back.
