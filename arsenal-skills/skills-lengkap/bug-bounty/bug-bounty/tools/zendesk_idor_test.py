@@ -34,7 +34,7 @@ AUTH = (f"{EMAIL}/token", API_TOKEN) if EMAIL and API_TOKEN else None
 def validate_config():
     """Return an error message when required Zendesk credentials are missing."""
     if requests is None:
-        return "Missing dependency: install requests with `python3 -m pip install requests`"
+        return "Missing dependency: install requests with `uv pip install requests`"
 
     missing = []
     if not SUBDOMAIN:

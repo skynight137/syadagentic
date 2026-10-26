@@ -172,7 +172,7 @@ if python3 -c "import graphw00f" 2>/dev/null; then
   echo "fingerprint: see fingerprint.txt" >> "$SUMMARY"
 else
   skip "graphw00f"
-  echo "(install: pip install graphw00f)" > "$FINGER_OUT"
+  echo "(install: uv pip install graphw00f)" > "$FINGER_OUT"
   echo "fingerprint: skipped (graphw00f not installed)" >> "$SUMMARY"
 fi
 
@@ -191,7 +191,7 @@ if python3 -c "import clairvoyance" 2>/dev/null; then
   echo "clairvoyance: completed" >> "$SUMMARY"
 else
   skip "clairvoyance"
-  echo "(install: pip install clairvoyance)" > "$CLAIRVOYANCE_OUT"
+  echo "(install: uv pip install clairvoyance)" > "$CLAIRVOYANCE_OUT"
   echo "clairvoyance: skipped (not installed)" >> "$SUMMARY"
 fi
 
@@ -260,7 +260,7 @@ if _have gqlmap; then
   echo "injection_scan: completed (see gqlmap.txt)" >> "$SUMMARY"
 else
   skip "gqlmap"
-  echo "(install: pip install gqlmap)" > "$GQLMAP_OUT"
+  echo "(install: uv pip install gqlmap)" > "$GQLMAP_OUT"
   echo "injection_scan: skipped (gqlmap not installed)" >> "$SUMMARY"
 
   # Built-in quick SQLi probe
@@ -288,7 +288,7 @@ if _have graphql-cop; then
   echo "graphql_cop: completed (see cop_report.txt)" >> "$SUMMARY"
 else
   skip "graphql-cop"
-  echo "(install: pip install graphql-cop)" > "$COP_OUT"
+  echo "(install: uv pip install graphql-cop)" > "$COP_OUT"
   echo "graphql_cop: skipped (not installed)" >> "$SUMMARY"
 fi
 

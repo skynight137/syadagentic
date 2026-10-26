@@ -19,7 +19,7 @@ BASE_URL = "https://api.hackerone.com/v1"
 class HaiProbe:
     def __init__(self, api_name, api_token):
         if requests is None:
-            raise RuntimeError("Missing dependency: install requests with `python3 -m pip install requests`")
+            raise RuntimeError("Missing dependency: install requests with `uv pip install requests`")
         self.auth = (api_name, api_token)
         self.session = requests.Session()
         self.session.auth = self.auth
@@ -173,7 +173,7 @@ def main():
     args = parser.parse_args()
 
     if requests is None:
-        parser.error("missing dependency: install requests with `python3 -m pip install requests`")
+        parser.error("missing dependency: install requests with `uv pip install requests`")
 
     probe = HaiProbe(args.api_name, args.token)
 
