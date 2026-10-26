@@ -9,6 +9,8 @@ Usage:
 import argparse, json, os, subprocess, sys, time
 from pathlib import Path
 
+STATE = Path(os.environ.get("XDG_STATE_HOME") or (Path.home() / ".local" / "state")) / "syadagentic"
+
 SEVERITY = ["P0", "P1", "P2", "P3", "P4", "P5"]
 
 class Gate:
@@ -58,8 +60,8 @@ class Gate:
         return ok
 
     @staticmethod
-    def stage6_document(claim, evidence, log_dir="gate_logs"):
-        Path(log_dir).mkdir(exist_ok=True)
+    def stage6_document(claim, evidence, log_dir=STATE / "gate_logs"):
+        Path(log_dir).mkdir(parents=True, exist_ok=True)
         f = Path(log_dir) / f"{int(time.time())}.json"
         f.write_text(json.dumps({"claim": claim, "evidence": evidence, "ts": time.time()}, indent=1))
         print(f"  [6/7] Dokumentasi → {f}")

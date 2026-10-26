@@ -84,10 +84,10 @@ ARSENAL_TOOLS=(
   "trevorspray|cred|pipx install trevorspray|github.com/blacklanternsecurity/TREVORspray"
   "kerbrute|cred|GOBIN=\$HOME/go/bin go install github.com/ropnop/kerbrute@latest|github.com/ropnop/kerbrute"
   # ── GraphQL ─────────────────────────────────────────────────────────────
-  "graphw00f|graphql|pip install graphw00f|github.com/dolevf/graphw00f"
-  "clairvoyance|graphql|pip install clairvoyance|github.com/nikitastupin/clairvoyance"
-  "gqlmap|graphql|pip install gqlmap|github.com/nicola-inchingolo/gqlmap"
-  "graphql-cop|graphql|pip install graphql-cop|github.com/dolevf/graphql-cop"
+  "graphw00f|graphql|uv pip install graphw00f|github.com/dolevf/graphw00f"
+  "clairvoyance|graphql|uv pip install clairvoyance|github.com/nikitastupin/clairvoyance"
+  "gqlmap|graphql|uv pip install gqlmap|github.com/nicola-inchingolo/gqlmap"
+  "graphql-cop|graphql|uv pip install graphql-cop|github.com/dolevf/graphql-cop"
   # ── JWT / auth ──────────────────────────────────────────────────────────
   "jwt_tool|jwt|pipx install jwt-tool|github.com/ticarpi/jwt_tool"
   # ── Bug bounty scope tooling ────────────────────────────────────────────
