@@ -6,8 +6,13 @@ verifikasi isi (deteksi refusal), simpan output.
 """
 import urllib.request, json, sqlite3, os, sys, time
 
-API = "http://127.0.0.1:20128/v1/chat/completions"
-c = sqlite3.connect(os.path.expanduser("~/AppData/Roaming/9router/db/data.sqlite"))
+API = os.environ.get("NINEROUTER_URL", "http://127.0.0.1:20128/v1/chat/completions")
+DB = next((p for p in (os.environ.get("NINEROUTER_DB"),
+                       os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "9router/db/data.sqlite"),
+                       os.path.expanduser("~/AppData/Roaming/9router/db/data.sqlite")) if p and os.path.exists(p)), None)
+if not DB:
+    sys.exit("9router DB tidak ada — set NINEROUTER_DB=/path/data.sqlite")
+c = sqlite3.connect(DB)
 KEY = c.execute("SELECT key FROM apiKeys LIMIT 1").fetchone()[0]
 c.close()
 
