@@ -9,12 +9,14 @@ CHANGES from v4.0a:
 - This prevents bot from replying to someone else's comment instead of the original post
 """
 import json, re, time, sys, random, os
+
+HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
 from datetime import datetime, timedelta
 from playwright.sync_api import sync_playwright
 
-COOKIE_FILE = "/Users/user/instagram_cookies.json"
-THREADS_COOKIE_FILE = "/Users/user/threads_cookies.json"
-DATABASE = "/Users/user/.hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md"
+COOKIE_FILE = os.path.join(HOME, "instagram_cookies.json")
+THREADS_COOKIE_FILE = os.path.join(HOME, "threads_cookies.json")
+DATABASE = os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md")
 MAX_SEARCH_SCROLLS = 3
 MAX_POSTS_PER_KEYWORD = 10
 TRACKING_FILE = "/tmp/threads_template_usage.json"

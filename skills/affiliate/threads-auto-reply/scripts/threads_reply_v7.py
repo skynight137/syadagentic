@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Threads Auto-Reply v7.0 — COMBO 6 KREATOR + N-Post Support
 Auto-reads links from database, uses CDP, handles all edge cases.
-Run: cd /Users/user/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/threads_reply_v7.py
+Run: cd "$HOME/.hermes/hermes-agent" && venv/bin/python3 ~/.hermes/scripts/threads_reply_v7.py
 
 Changes from v6:
 - REPLIES_TARGET default = 1 (SYADAGENTIC directive 2026-06-11)
@@ -10,8 +10,11 @@ Changes from v6:
 - Shopee link filter: original post only (not comments)
 """
 
+import os
 import json, time, sys, os, re, subprocess, random
 import requests, websocket
+
+HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
 
 # ─── Config ───
 REPLIES_TARGET = 1
@@ -339,7 +342,7 @@ def main():
 
     # Inject cookies
     log("Injecting cookies...")
-    ig_cookies = json.load(open("/Users/user/instagram_cookies.json"))
+    ig_cookies = json.load(open(os.path.join(HOME, "instagram_cookies.json")))
     for name, value in ig_cookies.items():
         cdp(ws, "Network.setCookie", {"name": name, "value": value, "domain": ".instagram.com", "path": "/", "secure": True})
 

@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Threads Auto-Reply via CDP (non-headless Chrome) — v4.8
 Proven pattern: 2026-06-04, 2/2 replies verified visible.
-Run: cd /Users/user/.hermes/hermes-agent && venv/bin/python3 scripts/threads_reply_cdp_v2.py
+Run: cd "$HOME/.hermes/hermes-agent" && venv/bin/python3 scripts/threads_reply_cdp_v2.py
 """
 
+import os
 import json, time, sys, os, re, subprocess, random
 import requests, websocket
+
+HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
 
 # ─── Config ───
 REPLIES_TARGET = 2
@@ -85,12 +88,12 @@ log("Enabling Network...")
 cdp(ws, "Network.enable", {})
 
 log("Injecting IG cookies to .instagram.com...")
-ig_cookies = json.load(open("/Users/user/instagram_cookies.json"))
+ig_cookies = json.load(open(os.path.join(HOME, "instagram_cookies.json")))
 for name, value in ig_cookies.items():
     cdp(ws, "Network.setCookie", {"name": name, "value": value, "domain": ".instagram.com", "path": "/", "secure": True})
 
 log("Injecting Threads cookies to .threads.com...")
-threads_cookies = json.load(open("/Users/user/threads_cookies.json"))
+threads_cookies = json.load(open(os.path.join(HOME, "threads_cookies.json")))
 for name, value in threads_cookies.items():
     cdp(ws, "Network.setCookie", {"name": name, "value": value, "domain": ".threads.com", "path": "/", "secure": True})
 

@@ -101,6 +101,22 @@ def test_identity_refs():
     r = subprocess.run([sys.executable, str(HERE / "check_identity_refs.py")], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr
 
+def test_portable_paths():
+    """Script tidak boleh hardcode path OS lain (/Users/, C:\\, AppData) di luar resolver."""
+    import pathlib, re
+    root = pathlib.Path(__file__).resolve().parent.parent
+    bad = []
+    for p in list(root.glob("scripts/*.py")) + list(root.glob("skills/**/*.py")) + list(root.glob("skills/**/*.sh")):
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        for i, line in enumerate(text.splitlines(), 1):
+            if root.joinpath("scripts/checkpoint.py") == p:
+                continue
+            if "payload" in p.name:
+                continue  # path target-side (mis. type C:\Windows\win.ini) = memang literal
+            if re.search(r"/Users/|%USERPROFILE%|C:\\\\Windows", line):
+                bad.append(f"{p.relative_to(root)}:{i}: {line.strip()[:70]}")
+    assert not bad, "path OS-specific:\n" + "\n".join(bad)
+
 def main():
     print("=== SYADAGENTIC TEST SUITE ===")
     t("Routing AGENTS.md lengkap", test_routing)
@@ -114,6 +130,7 @@ def main():
     t("Gate module importable", test_gate_package)
     t("Config docs/identity/SOUL.md ada + ZERO REFUSAL", test_config)
     t("Identity docs: no dead path references", test_identity_refs)
+    t("Scripts: no OS-specific hardcoded paths", test_portable_paths)
     print(f"\n=== RESULT: {PASS} passed, {FAIL} failed ===")
     if FAILED:
         print("Gagal:", FAILED)

@@ -12,7 +12,10 @@ Env requirements: playwright, browser_cookie3, pycryptodome, lz4
 This script reads from the affiliate link database (UNUSED links only)
 and generates topic-matched Gen Z comments.
 """
+import os
 import json, re, time, sys, os, random
+
+HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
 from playwright.sync_api import sync_playwright
 
 # === CONFIG ===
@@ -23,7 +26,7 @@ KEYWORDS = [
     "parfum enak",
     "lip tint murah",
 ]
-COOKIE_FILE = "/Users/user/threads_cookies.json"
+COOKIE_FILE = os.path.join(HOME, "threads_cookies.json")
 MAX_SEARCH_SCROLLS = 3
 COMMENT_DELAY = 25  # ms per keystroke
 

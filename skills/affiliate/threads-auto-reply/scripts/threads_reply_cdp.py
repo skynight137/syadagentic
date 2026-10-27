@@ -8,11 +8,13 @@ Each reply = completely different sentence + different link. ZERO duplicates.
 """
 import json, sys, time, requests, websocket, base64, random, re, os
 
+HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
+
 CHROME_PORT = 9222
-IG_COOKIE_FILE = "/Users/user/instagram_cookies.json"
-THREADS_COOKIE_FILE = "/Users/user/threads_cookies.json"
-DB_FILE = "/Users/user/.hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md"
-COMMENT_HISTORY = "/Users/user/.hermes/scripts/threads_comment_history.json"
+IG_COOKIE_FILE = os.path.join(HOME, "instagram_cookies.json")
+THREADS_COOKIE_FILE = os.path.join(HOME, "threads_cookies.json")
+DB_FILE = os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md")
+COMMENT_HISTORY = os.path.join(HOME, ".hermes/scripts/threads_comment_history.json")
 
 # ─── CDP helpers ───
 def cdp(ws, method, params=None, timeout=30):

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Wrapper Threads Post cron — silent on success, alert on failure
-HOME="${HOME:-/Users/user}"
+HOME="${HOME:-$(cd ~ && pwd)}"
 export HOME
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
