@@ -133,15 +133,15 @@ if [ -f "$INSTALL_DIR/SOUL.md" ]; then
 else
   fail "SOUL.md missing"; VFAIL=1
 fi
-if [ -f "$INSTALL_DIR/prompt-injection/templates.md" ]; then
-  ok "templates.md ($(grep -c '^## T' "$INSTALL_DIR/prompt-injection/templates.md" || true) templates)"
+if [ -f "$INSTALL_DIR/templates/jailbreak/templates.md" ]; then
+  ok "templates/jailbreak/templates.md ($(grep -c '^## T' "$INSTALL_DIR/templates/jailbreak/templates.md" || true) templates)"
 else
-  warn "templates.md missing"
+  warn "templates/jailbreak/templates.md missing"
 fi
-if [ -d "$INSTALL_DIR/arsenal-skills" ]; then
-  ok "arsenal-skills ($(find "$INSTALL_DIR/arsenal-skills" -type f | wc -l) files)"
+if [ -d "$INSTALL_DIR/skills" ]; then
+  ok "skills ($(find "$INSTALL_DIR/skills" -name SKILL.md | wc -l) skills, $(find "$INSTALL_DIR/skills" -type f | wc -l) files)"
 else
-  warn "arsenal-skills missing"
+  warn "skills/ missing"
 fi
 if [ -d "$INSTALL_DIR/arsenal-framework" ]; then
   ok "arsenal-framework (executable framework core)"

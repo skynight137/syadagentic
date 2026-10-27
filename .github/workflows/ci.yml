@@ -23,6 +23,8 @@ jobs:
           pip install pyyaml z3-solver || true
       - name: Run test suite
         run: python tests/run_tests.py
+      - name: Skills layout lint
+        run: python tests/check_skills.py
       - name: Syntax check tools
         run: |
           python -m py_compile tools/tokenbreak_encode.py tools/caesar_encode.py

@@ -39,21 +39,20 @@ ROUTING = ROOT / "AGENTS.md"
 HOME = pathlib.Path.home()
 IGNORE = shutil.ignore_patterns(".git", ".worktrees", "__pycache__", "*.guardrail-bak")
 
-# repo path -> category/name inside the target's skills dir
+# repo path -> category/name inside the target's skills dir (installed first)
 PROFILE_SKILLS = [
-    ("arsenal-skills/hermes-bypass", "devops/hermes-guardrail-bypass"),
-    ("arsenal-skills/security", "security/web-exploit-test"),
-    ("arsenal-skills/automation", "automation/arsenal-automation"),
-    ("arsenal-skills/captcha", "captcha/web-bot-protection"),
+    ("skills/devops/hermes-guardrail-bypass", "devops/hermes-guardrail-bypass"),
+    ("skills/security/web-exploit-test", "security/web-exploit-test"),
+    ("skills/automation/arsenal-automation", "automation/arsenal-automation"),
+    ("skills/captcha/captcha-solver", "captcha/web-bot-protection"),
 ]
 
-# arsenal category -> skills category (existing names are kept, never overwritten)
+# repo category -> skills category (existing names are kept, never overwritten)
 SKILL_CATEGORY = {
-    "bug-bounty": "security", "security": "security", "ctf": "ctf", "web-dev": "web-dev",
+    "security": "security", "ctf": "ctf", "web-dev": "web-dev",
     "affiliate": "affiliate", "content": "content", "intelligence": "osint",
     "automation": "automation", "captcha": "captcha", "devops": "devops",
     "engineering": "engineering", "meta": "meta", "monetization": "monetization",
-    "team": "team", "hermes-bypass": "devops",
 }
 
 
@@ -183,28 +182,29 @@ def install_payload(prof: pathlib.Path) -> None:
     except Exception as exc:
         print(f"  ❌ {prof / 'SOUL.md'}: {exc}")
     refs = prof / "references" / "syadagentic"
-    try:  # full repo mirror so SOUL.md's relative links (arsenal-*, prompt-injection) resolve
+    try:  # full repo mirror so SOUL.md's relative links (skills/, templates/, docs/) resolve
         shutil.copytree(ROOT, refs, dirs_exist_ok=True, ignore=IGNORE)
         print(f"  ✅ {refs}/ (repo mirror)")
     except Exception as exc:
         print(f"  ❌ {refs}: {exc}")
     # link skills to the mirror, not the source repo: profiles outlive worktrees
+    linked = set()
     for rel, sub in PROFILE_SKILLS:
         src = refs / rel
         if not src.exists():
             print(f"  ❌ {rel} missing in repo")
             continue
         link_skill(src, prof / "skills" / sub)
+        linked.add(src)
     made = 0  # register the rest of the arsenal, skipping whatever is already in place
-    for skill_md in sorted(refs.glob("arsenal-skills/**/SKILL.md")):
+    for skill_md in sorted(refs.glob("skills/*/*/SKILL.md")):
         src = skill_md.parent
-        parts = src.relative_to(refs).parts
-        if parts[1] == "skills-lengkap" and len(parts) >= 4:
-            category, name = SKILL_CATEGORY.get(parts[2], parts[2]), parts[-1]
-        elif len(parts) == 3:
-            category, name = SKILL_CATEGORY.get(parts[1], parts[1]), parts[-1]
-        else:
+        parts = src.relative_to(refs).parts  # skills/<category>/<name>
+        if len(parts) != 3:
             continue
+        if src in linked:  # already installed under its canonical name
+            continue
+        category, name = SKILL_CATEGORY.get(parts[1], parts[1]), parts[2]
         dst = prof / "skills" / category / name
         fresh = not (dst.exists() or dst.is_symlink())
         if link_skill(src, dst) and fresh:

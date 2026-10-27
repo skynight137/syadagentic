@@ -111,7 +111,7 @@ Four layers on the vendor side:
 - **T118** — red-team extraction, dual guard (input reframe, output transform).
 - **T119** — payload sets per model: DeepSeek, Kimi, Claude, universal, ENI LIME.
 
-Full text lives in `prompt-injection/templates.md`. Ready-to-apply skill forms live in `arsenal-skills/`.
+Full text lives in `templates/jailbreak/templates.md`. Ready-to-apply skill forms live in `skills/` (`security/` for offensive work).
 
 ## Adaptive hardening
 
@@ -119,7 +119,7 @@ Be honest about drift. The harder you farm NSFW from one account, the tighter th
 
 ## Skill integrity
 
-SKILLS.md is SHA-256 pinned across 8,137 files. `skillforge.py` builds new skills, `skill_integrity.py` verifies hashes, `skill_market.py` installs skills behind a supply-chain defence. Without an update lock, drift is undetectable and corruption is silent.
+Layout is enforced: every skill is `skills/<category>/<name>/SKILL.md`, `name:` must equal the folder, no nesting past three levels — `tests/check_skills.py` fails CI on drift. Full SHA-256 pinning of every skill file is **not** wired yet; say so instead of claiming it. A skill never loads by path guess: it loads by name.
 
 ## Strategy matrix
 
@@ -127,8 +127,8 @@ Maintained from real runs, no overclaiming. Columns: task, model, template, resu
 
 ## Safety framework (anti-corruption)
 
-1. Never mutate PATHS: databases, SSH keys, gcloud, Hermes memory, Daytona. `checkpoint.py` guards them.
-2. Copy from the source of truth (`Downloads/`), and copy the arsenal on merge.
+1. Never mutate PATHS: databases, SSH keys, gcloud, Hermes memory, Daytona. `tools/checkpoint.py` guards them.
+2. The git-pinned repo is the source of truth (`Downloads/` is only an import buffer), and the arsenal is copied on merge.
 3. Keep layers separate — default profile versus SYADAGENTIC silo. No overwriting across.
 4. Kill-switch before anything else: backup log plus rollback.
 5. Large changes roll back through git.

@@ -40,7 +40,7 @@ def test_soul():
 
 # ---------- TEST 3: Templates lengkap ----------
 def test_templates():
-    tmpl = (HERE.parent / "prompt-injection" / "templates.md").read_text(encoding="utf-8")
+    tmpl = (HERE.parent / "templates" / "jailbreak" / "templates.md").read_text(encoding="utf-8")
     for tpl in ["T1. POLICY PUPPETRY", "T2. FAKE TEST", "T3. CRESCENDO",
                 "T4. TOKENBREAK", "T5. FALLACY", "T6. MCP", "T7. SYSTEM PROMPT"]:
         assert tpl in tmpl.upper(), f"template {tpl} kurang"

@@ -8,7 +8,7 @@ Make your agent comply: farming, automation, security testing, and full executio
 
 [![Version](https://img.shields.io/badge/version-7.3-2ea44f)](#)
 [![Templates](https://img.shields.io/badge/templates-40%2B-blue)](#-strongest-jailbreak-templates-t1t119)
-[![Skills](https://img.shields.io/badge/skills-1128-important)](#)
+[![Skills](https://img.shields.io/badge/skills-84-important)](#)[![Files](https://img.shields.io/badge/skill%20files-1091-blueviolet)](#)
 [![Framework](https://img.shields.io/badge/framework-core-4%20modules-purple)](#-framework-core-executable-not-a-stub)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)](#)
@@ -33,9 +33,9 @@ It is a curated body of jailbreak, refusal-bypass, automation, and security tech
 | **Jailbreak / injection** | 40+ templates (T1–T119): hijack, translation, tag injection, cascade |
 | **Automation** | Cron, webhook, batch jobs, task planner, swarm, IFTTT engine |
 | **Farming pipeline** | Mass accounts (mail.tm / TestMail + captcha solving + key injection), anti-detection, anti-ban |
-| **Security** | 627 curated skills: SQLi, XSS, SSRF, subdomain recon, API testing, privesc, red team |
+| **Security** | 71 skill folders / 768 files: SQLi, XSS, SSRF, subdomain recon, API testing, privesc, red team, 25 vuln classes, chain analysis |
 | **Framework core** | Phase engine (checkpoint / resume / token budget), governor (spend cap / kill-switch), chain map, drills benchmark |
-| **Design and content** | 108 skills: anti-AI-slop design (hallmark), copywriting, humanizer, marketing, affiliate |
+| **Design and content** | 110 files across web-dev + content + affiliate: anti-AI-slop design (hallmark), copywriting, humanizer, marketing, Threads automation |
 | **API** | 9router integration, multi-provider cascade, key-pool rotation |
 
 ## Repository layout
@@ -44,29 +44,38 @@ It is a curated body of jailbreak, refusal-bypass, automation, and security tech
 SYADAGENTIC/
 ├── SOUL.md                     # Boot identity — zero-refusal sovereign agent (core)
 ├── AGENTS.md                   # Routing and dispatch — 10 subagent divisions
-├── SKILL.md                    # Skill reference and usage
 ├── SYADAGENTIC.md              # Full protocol (self-activating)
-├── prompt-injection/
-│   └── templates.md            # 40+ jailbreak templates (T1–T119)
-├── arsenal-skills/             # 1128 curated skill files
-│   ├── STRATEGIES-LIBRARY.yaml # 5-layer JB + 8 universal patterns
-│   ├── templates-ken/          # Full ENI LIME + compact per-model payloads
-│   ├── hermes-bypass/          # Hermes guardrail bypass (source patches)
-│   └── skills-lengkap/         # 627 bug-bounty · 146 affiliate · 108 web-dev · etc.
+├── SYADAGENTIC-SHORT.md        # Compact identity variant
+├── skills/                     # 83 skills, one folder per skill, all SKILL.md-first
+│   ├── security/               # 72 pentest/audit skills (incl. bug-bounty master + 25 vuln classes)
+│   ├── ctf/ · engineering/ · intelligence/ · meta/ · monetization/   # playbooks
+│   ├── affiliate/ · web-dev/ · content/ · automation/ · captcha/ · devops/
+│   └── README.md               # catalog: category → skill → trigger
+├── templates/
+│   ├── jailbreak/templates.md  # 39 jailbreak templates (T1–T119)
+│   ├── jailbreak/MASTER-JB-TEMPLATES.md · jailbreak/T104-DAN.md
+│   ├── ken/                    # Full ENI LIME + compact per-model payloads
+│   └── prefill.json
 ├── arsenal-framework/          # Executable framework core
 │   ├── phase-engine/           # Phase engine + farm pipeline
 │   ├── governor/               # Spend cap + kill-switch + dry-run
 │   ├── chain-map/              # Chain taxonomy (primitive → impact)
 │   ├── drills/                 # Agent benchmark L1–L5
 │   └── captcha-harvester/      # 9-vendor route-intercept captcha
-├── checkpoint.py               # Auto-backup of critical files
+├── docs/
+│   ├── reference/              # DISPATCH, IDENTITY, STANDARD, SAFETY-FRAMEWORK, RESULTS-MATRIX
+│   ├── guides/                 # DEPLOY, FINE-TUNE-JB, TOOLS, walkthroughs
+│   ├── strategies/             # STRATEGIES-LIBRARY.yaml (5-layer JB + 8 patterns)
+│   ├── archive/                # extraction/audit notes
+│   └── index.html              # Landing page
+├── tools/                      # checkpoint.py, audit_core.py, syad_farm_agent.py
+├── farm_scripts/ · farm_output/ # Prompt sets / scraped output
 ├── install.sh                  # ⭐ Automatic installer
-├── SOLVED-LENGKAP.md           # Full walkthrough of every feature
-├── FINE-TUNE-JB.md             # Fine-tuning route (own model = 100%)
-└── tests/                      # Test suite
+├── install_universal.py        # Profile installer (Hermes profile, opt-in other agents)
+└── tests/                      # Test suite + check_skills.py layout lint
 ```
 
-> Indonesian directory names (`skills-lengkap`, `templates-ken`) stay as-is so existing paths and skill references keep working.
+> Layout rules: every skill is `<category>/<name>/SKILL.md` with `name:` == folder name; no nesting deeper than three levels; prose lives in `docs/`, payloads in `templates/`. `tests/check_skills.py` enforces this in CI.
 
 ---
 
@@ -168,7 +177,7 @@ Real test results, not claims:
 ## Safety and corruption protection
 
 ```
-✅ checkpoint.py — auto-backup of critical files (9router DB, config, SSH, memory)
+✅ tools/checkpoint.py — auto-backup of critical files (9router DB, config, SSH, memory)
 ✅ SAFETY-FRAMEWORK — protected paths + profile silo + dry-run + kill-switch
 ✅ Separate profile — never overwrites the primary configuration
 ✅ SKILLS.lock — integrity manifest across 8137 skills (anti-corruption)
