@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Threads Auto-Reply via CDP (non-headless Chrome) — v4.8
 Proven pattern: 2026-06-04, 2/2 replies verified visible.
-Run: cd "$HOME/.hermes/hermes-agent" && venv/bin/python3 scripts/threads_reply_cdp_v2.py
+Run: python3 scripts/threads_reply_cdp_v2.py
 """
 
 import os
@@ -54,7 +54,8 @@ time.sleep(2)
 # ─── Step 2: Launch Chrome with CDP ───
 log("Launching Chrome with CDP...")
 chrome_proc = subprocess.Popen([
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    CHROME,
+    *_EXTRA_FLAGS,
     "--remote-debugging-port=9222",
     "--remote-allow-origins=*",
     "--no-first-run",

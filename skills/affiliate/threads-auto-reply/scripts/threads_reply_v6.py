@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Threads Auto-Reply v6.0 — COMBO FIX
 Auto-reads links from database, uses CDP, handles all edge cases.
-Run: cd "$HOME/.hermes/hermes-agent" && venv/bin/python3 scripts/threads_reply_v6.py
+Run: python3 scripts/threads_reply_v6.py
 """
 
 import os
@@ -9,6 +9,31 @@ import json, time, sys, os, re, subprocess, random
 import requests, websocket
 
 HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+def _first(*cands):
+    """Path pertama yang ada; fallback ke kandidat terakhir."""
+    for c in cands:
+        if c and os.path.exists(c):
+            return c
+    return cands[-1]
+_DB_DEFAULT = os.path.normpath(os.path.join(_SCRIPT_DIR, os.pardir, "references", "affiliate-link-database.md"))
+
+def _chrome():
+    """Chrome/Chromium pertama yang ada; override SYAD_CHROME."""
+    import shutil
+    cands = [os.environ.get("SYAD_CHROME"),
+             "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+             shutil.which("google-chrome") or "",
+             shutil.which("chromium") or "",
+             shutil.which("chromium-browser") or "",
+             "/repl/tools/bin/chromium",
+             "/home/runner/workspace/.hermes/tools/chromium-1208/chrome-linux64/chrome"]
+    return _first(*[c for c in cands if c])
+CHROME = _chrome()
+
+# Tanpa X display (sandbox/VPS) Chrome harus headless + no-sandbox, kalau tidak CDP 9222 refused.
+_EXTRA_FLAGS = ["--headless=new", "--no-sandbox"] if not os.environ.get("DISPLAY") else ["--no-sandbox"]
 
 # ─── Config ───
 REPLIES_TARGET = 2
@@ -20,7 +45,7 @@ KEYWORDS = [
     "sunscreen terbaik",
 ]
 
-DATABASE_PATH = os.path.expanduser("~/.hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md")
+DATABASE_PATH = _first(os.environ.get("SYAD_REPLY_DB"), _DB_DEFAULT, os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md"))
 MY_USERNAME = "jagonya_shopee"
 
 def log(msg):
@@ -313,7 +338,8 @@ def main():
     # Launch Chrome with CDP
     log("Launching Chrome with CDP...")
     chrome_proc = subprocess.Popen([
-        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        CHROME,
+        *_EXTRA_FLAGS,
         "--remote-debugging-port=9222",
         "--remote-allow-origins=*",
         "--no-first-run",

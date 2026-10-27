@@ -33,7 +33,7 @@ Never unpause post/reply without SYADAGENTIC command after live preflight.
 
 ## Dry-run before unpause
 ```bash
-$HOME/.hermes/hermes-agent/venv/bin/python3 \
+python3 \
   ~/.hermes/scripts/threads_story_dry_run.py 12
 ```
 Pass criteria: unique links 12/12, unique hooks 12/12, adjacent same story = 0, no URL in post1/2, link in post3.

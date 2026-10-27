@@ -11,12 +11,21 @@ CHANGES from v4.0a:
 import json, re, time, sys, random, os
 
 HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+def _first(*cands):
+    """Path pertama yang ada; fallback ke kandidat terakhir."""
+    for c in cands:
+        if c and os.path.exists(c):
+            return c
+    return cands[-1]
+_DB_DEFAULT = os.path.normpath(os.path.join(_SCRIPT_DIR, os.pardir, "references", "affiliate-link-database.md"))
 from datetime import datetime, timedelta
 from playwright.sync_api import sync_playwright
 
 COOKIE_FILE = os.path.join(HOME, "instagram_cookies.json")
 THREADS_COOKIE_FILE = os.path.join(HOME, "threads_cookies.json")
-DATABASE = os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md")
+DATABASE = _first(os.environ.get("SYAD_REPLY_DB"), _DB_DEFAULT, os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md"))
 MAX_SEARCH_SCROLLS = 3
 MAX_POSTS_PER_KEYWORD = 10
 TRACKING_FILE = "/tmp/threads_template_usage.json"

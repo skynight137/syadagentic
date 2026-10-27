@@ -10,11 +10,20 @@ import json, sys, time, requests, websocket, base64, random, re, os
 
 HOME = os.environ.get("SYAD_HOME") or os.path.expanduser("~")
 
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+def _first(*cands):
+    """Path pertama yang ada; fallback ke kandidat terakhir."""
+    for c in cands:
+        if c and os.path.exists(c):
+            return c
+    return cands[-1]
+_DB_DEFAULT = os.path.normpath(os.path.join(_SCRIPT_DIR, os.pardir, "references", "affiliate-link-database.md"))
+
 CHROME_PORT = 9222
 IG_COOKIE_FILE = os.path.join(HOME, "instagram_cookies.json")
 THREADS_COOKIE_FILE = os.path.join(HOME, "threads_cookies.json")
-DB_FILE = os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md")
-COMMENT_HISTORY = os.path.join(HOME, ".hermes/scripts/threads_comment_history.json")
+DB_FILE = _first(os.environ.get("SYAD_REPLY_DB"), _DB_DEFAULT, os.path.join(HOME, ".hermes/skills/affiliate/threads-auto-reply/references/affiliate-link-database.md"))
+COMMENT_HISTORY = _first(os.environ.get("SYAD_COMMENT_HISTORY"), os.path.join(HOME, ".hermes/scripts/threads_comment_history.json"), os.path.normpath(os.path.join(_SCRIPT_DIR, os.pardir, os.pardir, os.pardir, "scripts", "threads_comment_history.json")))
 
 # ─── CDP helpers ───
 def cdp(ws, method, params=None, timeout=30):

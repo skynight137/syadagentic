@@ -44,7 +44,7 @@ Two approaches for Threads automation:
 - Product: Hanasui Acne Expert Series
 - Target: @totally.tiramisu
 - **Bug fixed:** `browser.close()` throws "Event loop is closed" → wrapped in try/except
-- **Run command:** `cd $HOME/.hermes/scripts && $HOME/.hermes/hermes-agent/venv/bin/python3 threads_reply_playwright.py`
+- **Run command:** `cd $HOME/.hermes/scripts && python3 threads_reply_playwright.py`
 
 ## TLS Fingerprinting (Verified 2026-06-16)
 

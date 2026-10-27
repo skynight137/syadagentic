@@ -8,6 +8,7 @@ related_skills: [threads-auto-reply]
 # Threads Affiliate Auto-Post (v18.0)
 
 ## CRITICAL RULES
+- **Run env**: interpreter `python3` on PATH (Hermes venv; deps `requests`/`websocket-client` terpasang; kalau hilang: `uv pip install --python "$(command -v python3)" websocket-client requests`). `~/.hermes/hermes-agent/venv/bin/python3` tidak ada di box ini.
 - **Refs**: `references/shopee-review-image-and-dedup-v18.md` (product-only 5★+media HD scrape + permanent link dedup).
 - **Pool/batch**: skill `affiliate-pool-isolation-and-batch` + `~/.hermes/scripts/affiliate_batch_manager.py` (auto-advance batch N→N+1 when unused=0; pool of 100 unique, verified 2026-07-13).
 - **Refs**: `references/affiliate-pool-batch-and-count.md` — auto-advance batch N→N+1 when UNUSED=0; isolated pools per channel; **always count unique `s.shopee.co.id` URLs** (header "100" can lie — was 97 until 3 missing links injected 2026-07-13).
@@ -438,7 +439,7 @@ img_bytes = base64.b64decode(data["data"][0]["b64_json"])
 **Run these checks BEFORE generating content or writing JSON.** If any fail, fix immediately — don't wait until script execution.
 
 ```bash
-PYTHON=$HOME/.hermes/hermes-agent/venv/bin/python3
+PYTHON=python3
 
 # 1. Script exists
 test -f ~/.hermes/scripts/threads_post_v6.py && echo "✅ Script" || echo "❌ Script missing → cp skill/scripts/threads_post_v6.py ~/.hermes/scripts/"
@@ -476,10 +477,10 @@ If step 2 or 3 fails → install silently, DON'T report as error. Just fix and p
 ### Run the script directly
 ```bash
 # Must have Playwright browsers installed first:
-cd $HOME/.hermes/hermes-agent && venv/bin/python3 -m playwright install chromium  # one-time setup
+python3 -m playwright install chromium  # one-time setup
 
 # ⚠️ MUST use venv python (system python3 lacks playwright):
-PYTHON=$HOME/.hermes/hermes-agent/venv/bin/python3
+PYTHON=python3
 
 # Run with content JSON file (recommended, includes image):
 cd $HOME/.hermes/scripts && $PYTHON threads_post_v6.py /tmp/threads_post_content.json
@@ -967,7 +968,7 @@ Session expired = `status=fail` + 200, or 403 + `login_required`. Recovery depen
 - **Draft tabs cause ghost editors** — ALWAYS fresh navigation
 - **Multiple modals stack** — Close existing modals with Escape before opening new editor
 - **"Lanjutkan dengan Instagram" overlay** — Old issue when navigating to threads.com/@profile. FIXED: navigate to `threads.com/login` instead — login page shows "Continue with Instagram" cleanly without overlay blocking.
-- **Playwright: MUST use `venv/bin/python3` from hermes-agent** — System `python3` (macOS Python 3.9) lacks playwright. `uv run python3` targets `.venv/` which also lacks it. CORRECT: `cd $HOME/.hermes/scripts && $HOME/.hermes/hermes-agent/venv/bin/python3 threads_post_v6.py <json>`. Verified 2026-06-03.
+- **Playwright: MUST use `python3` (PATH)** — System `python3` (macOS Python 3.9) lacks playwright. `uv run python3` targets `.venv/` which also lacks it. CORRECT: `cd $HOME/.hermes/scripts && python3 threads_post_v6.py <json>`. Verified 2026-06-03.
 - **Playwright browsers not installed** — Script fails after Playwright pip upgrade. **Two error signatures:** (1) `Executable doesn't exist at .../chrome-headless-shell` (direct launch error), (2) `raise rewrite_error(error, f"{parsed_st['apiName']}: {error}")` from `playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist` (this is what shows in cron stdout — the `rewrite_error` wrapper is Playwright's internal error re-raise). **Both mean the same thing: browser binary missing after pip upgrade.** Fix: `python3 -m playwright install chromium` (~260MB download, installs Chrome + headless shell + ffmpeg). **Cron auto-detection:** if `cron_post.py` exits code 1 with `rewrite_error` in stdout → browser binary gone → re-install. Verified 2026-06-18.
 - **Threads UI language may be ENGLISH** — Must check for "New thread" (not just "Utas baru"), "Add to thread" (not just "Tambahkan ke utas"), "Post" (not just "Kirim"). Script now supports both EN + ID.
 - **`[role="dialog"]` selector DOES NOT WORK for Threads composer modal (verified 2026-06-04)** — Threads' reply/editor panel uses `role="tabpanel"` (`editor_tab_panel`), NOT `role="dialog"`. Don't wait for `[role="dialog"]` — it will timeout. Detect editor via `[contenteditable="true"]` instead.
@@ -1002,14 +1003,14 @@ Session expired = `status=fail` + 200, or 403 + `login_required`. Recovery depen
 - **🔴 Category rotation LRU bug (fixed 2026-06-15)** — `reverse=True` picked MOST recent instead of LEAST recent. Fix: `cat_last_idx[c] = i` (overwrite) + ascending sort. Verified: 16-run test = 4-4-4-4.
 - **🔴 `cron_post.py` v2 static hooks → dedup rejection (verified 2026-06-12)** — ONE fixed hook per category = identical first 30 chars = 100% overlap. Fix: 5-6 variations per category with `{product}` placeholder + `random.choice()`.
 - **Schedule times MUST match golden hour windows (verified 2026-06-05)** — Cron schedule `0 9,11,15,19,21 * * *` fires 5x/day but golden hours are only 11-13 & 19-21. The 09:00 and 15:00 triggers ALWAYS skip with `[SILENT]` → wasted triggers, confusing user. **Fix:** Either (a) align schedule to only golden hour times: `0 8,13,20 * * *` (every day), or (b) remove golden hour filter from agent prompt if posting 3x/day is desired regardless of hour. Current mismatch caused SYADAGENTIC confusion on 2026-06-05 when 09:00 post silently skipped.
-- **Playwright must be pip-installed AND browsers installed** — Two steps: (1) `venv/bin/pip install playwright` (package itself), (2) `venv/bin/python3 -m playwright install chromium` (browser binary). If script throws `No module named playwright`, do step 1 first. If script throws "Browser not found" / "Executable doesn't exist", do step 2. **Pre-flight checklist above catches this BEFORE content generation.** Verified 2026-06-05, re-verified 2026-06-06 (venv lost playwright after hermes-agent update).
+- **Playwright must be pip-installed AND browsers installed** — Two steps: (1) `venv/bin/pip install playwright` (package itself), (2) `python3 -m playwright install chromium` (browser binary). If script throws `No module named playwright`, do step 1 first. If script throws "Browser not found" / "Executable doesn't exist", do step 2. **Pre-flight checklist above catches this BEFORE content generation.** Verified 2026-06-05, re-verified 2026-06-06 (venv lost playwright after hermes-agent update).
 - **🔴 Reply + Post crons MUST be staggered ≥5 min (verified 2026-06-11)** — Both Reply (CDP script) and Post (LLM agent) use Chrome/CDP on port 9222. Running simultaneously causes BOTH to error. Schedule Reply first → wait → then Post. Use different time slots (e.g., Reply at :00, Post at :05). `cronjob(action='run')` on both at same time = guaranteed failure.
 - **🔴 Cron script timeout default = 120s — CDP scripts need 300s (verified 2026-06-12)** — Reply CDP script needs 2-3 min for Chrome launch + search + reply. Default 120s kills script. **FIX:** `hermes config set cron.script_timeout_seconds 300` (config-level, applies to all cron scripts).
-- **🔴 Cron agent LLM execution unreliable for long skill docs (verified 2026-06-11)** — Post cron errored with no session output when run via `cronjob(action='run')`. Root cause: skill docs are 87K+ chars → LLM timeout/crash before script execution. **FIX: Run script manually** — generate content JSON → run `venv/bin/python3 threads_post_v6.py /tmp/content.json` directly. Script handles everything (cookie injection, SSO, post, verify). This is the reliable path when cron agent fails.
+- **🔴 Cron agent LLM execution unreliable for long skill docs (verified 2026-06-11)** — Post cron errored with no session output when run via `cronjob(action='run')`. Root cause: skill docs are 87K+ chars → LLM timeout/crash before script execution. **FIX: Run script manually** — generate content JSON → run `python3 threads_post_v6.py /tmp/content.json` directly. Script handles everything (cookie injection, SSO, post, verify). This is the reliable path when cron agent fails.
 - **🔴 Manual post execution pattern (verified 2026-06-11)** — When cron agent fails, execute directly:
   1. Pick unused link from database: `grep "❌ UNUSED" database.md | head -5`
   2. Write content JSON to `/tmp/threads_post_content.json` with exact field names: `post_1`, `post_2`, `post_3`, `affiliate_link`, `product_name`, `hook_category`, `hook_text`, `keywords`
-  3. Run: `cd $HOME/.hermes/scripts && $HOME/.hermes/hermes-agent/venv/bin/python3 threads_post_v6.py /tmp/threads_post_content.json`
+  3. Run: `cd $HOME/.hermes/scripts && python3 threads_post_v6.py /tmp/threads_post_content.json`
   4. Update database: mark link ✅ USED, sync 4 copies
   5. Clean up Chrome: `pkill -9 -f "chromium"`
   Verified: 1/1 success (SKINTIFIC 5X Ceramide, 2026-06-11 11:47)
@@ -1049,7 +1050,7 @@ Session expired = `status=fail` + 200, or 403 + `login_required`. Recovery depen
 #!/bin/bash
 pkill -9 -f "chromium" 2>&1 || true
 sleep 2
-cd $HOME/.hermes/scripts && $HOME/.hermes/hermes-agent/venv/bin/python3 threads_reply_v6.py 2>&1
+cd $HOME/.hermes/scripts && python3 threads_reply_v6.py 2>&1
 ```
 
 ### Post cron: `cron_post.py` (v4, rewritten 2026-06-15)

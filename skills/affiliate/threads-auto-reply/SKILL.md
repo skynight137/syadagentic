@@ -7,6 +7,13 @@ related_skills: [threads-auto-post, cdp-cleanup]
 
 # Threads Affiliate Auto-Reply (v7.0)
 
+**⚠️ RUN ENVIRONMENT (PATH FACTS):**
+- Interpreter: `python3` on PATH (Hermes venv, Python 3.14). Deps sudah terpasang (`requests`, `websocket-client`). Kalau `ModuleNotFoundError`: `uv pip install --python "$(command -v python3)" websocket-client requests`.
+- Jangan pakai `~/.hermes/hermes-agent/venv/bin/python3` — folder itu tidak ada di box ini.
+- Path skill/script: repo `skills/affiliate/...` atau `$HERMES_PROFILE/skills/...` (symlink). `$HOME` di sini = profile home, jadi `~/.hermes/**` bukan tempat repo.
+- Chrome/Chromium auto-resolved (`SYAD_CHROME` buat override). Tanpa `DISPLAY` script otomatis pakai `--headless=new --no-sandbox`; CDP 9222 akan refused kalau dua flag itu hilang.
+- Cookie: `$SYAD_HOME/instagram_cookies.json` + `threads_cookies.json` (default `$HOME`). Belum ada = `FileNotFoundError` di akhir run, itu normal di box baru.
+
 **⚠️ SHADOWBAN PROTOCOL**: Read `references/shadowban-verification.md` for details on how to intercept silent API failures and verify posts via page reloads.
 
 **⚠️ SCRIPT EXECUTION ENVIRONMENT:**
@@ -39,7 +46,7 @@ related_skills: [threads-auto-post, cdp-cleanup]
 0. KILL CHROME: `pkill -9 -f "Google Chrome" 2>&1 || true; sleep 2` — ALWAYS first! Stale Chrome locks port 9222 → every cron run fails silently.
 1. session check: verify IG cookies valid (check instagram.com loads)
 2. load links: read affiliate-link-database.md, pick first ❌ UNUSED
-3. Run script: `cd ~/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/skills/affiliate/threads-auto-reply/scripts/threads_reply_db_reader.py`
+3. Run script: `python3 ~/.hermes/skills/affiliate/threads-auto-reply/scripts/threads_reply_db_reader.py`
 4. Script handles: inject IG cookies→ .instagram.com, Meta SSO, search, reply, API interception, verify
 5. If auth fails → cookies expired, report to user
 6. If "Sign up to chime in" in dialog → account restricted, ABORT, report to user
@@ -277,7 +284,7 @@ with open(os.path.expanduser("~/threads_cookies.json"), 'w') as f:
 
 ### Quick Session Check (via cookie extraction)
 ```bash
-cd $HOME/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/extract_threads_cookies.py
+python3 ~/.hermes/scripts/extract_threads_cookies.py
 ```
 The Instagram API `/api/v1/accounts/current_user/` may return HTTP 200 with `"status": "fail"` — this is normal. Trust the cookie `ds_user_id` instead:
 ```python
@@ -306,7 +313,7 @@ if 'suspended' in page.url:
 
 **Browser Tool (Browserbase) has NO session cookies** — browser_navigate connects to a remote Browserbase browser that does NOT have Threads/IG cookies. Login dialog will always appear.
 
-**Use Playwright directly instead** — Write self-contained script to `/tmp`, run with `venv/bin/python3` (NOT `uv run python3` — that targets `.venv/` which lacks Playwright):
+**Use Playwright directly instead** — Write self-contained script to `/tmp`, run with `python3` (NOT `uv run python3` — that targets `.venv/` which lacks Playwright):
 
 ```python
 # Pattern: /tmp/threads_reply_fresh.py
@@ -314,14 +321,14 @@ from playwright.sync_api import sync_playwright
 cookies = json.load(open('/tmp/threads_merged_cookies.json'))
 # ... inject cookies via context.add_cookies() ...
 ```
-Run: `cd $HOME/.hermes/hermes-agent && venv/bin/python3 /tmp/threads_reply_fresh.py`
+Run: `python3 /tmp/threads_reply_fresh.py`
 
 ## ⚠️ Playwright Flow (RELIABLE method)
 
 **🟢 Playwright version now available as lighter alternative to CDP!**
 
 ```
-1. Extract cookies: `venv/bin/python3 ~/.hermes/scripts/extract_threads_cookies.py` (from hermes-agent dir — NOT `uv run`)
+1. Extract cookies: `python3 ~/.hermes/scripts/extract_threads_cookies.py` (from hermes-agent dir — NOT `uv run`)
 2. Load cookies from `~/instagram_cookies.json` (flat dict format)
 3. Inject cookies to `.instagram.com` domain ONLY (NOT `.threads.com`!)
 4. Launch headless Chromium via Playwright
@@ -455,7 +462,7 @@ parse_database() → find UNUSED link → is_link_used_before? → skip → try 
 **Full implementation:** See `references/reply-dedup-system.md` and `references/reply-verification-system.md` for architecture details.
 
 ### 🧪 Test Pattern (v6.3 verified 2026-06-15)
-After any script change, run 1 manual test: `cd ~/.hermes/scripts && venv/bin/python3 threads_reply_v6.py`
+After any script change, run 1 manual test: `cd ~/.hermes/scripts && python3 threads_reply_v6.py`
 Check: (1) `mark_link_used()` works (no crash), (2) `reply_history.json` created/updated, (3) DB status changed to ✅ USED, (4) comment visible on Threads app (manual check).
 
 ### PENDING ≠ FAILED (verified 2026-06-15)
@@ -538,9 +545,9 @@ Search posts JS extracts `timeEl.getAttribute("datetime")` from `<time>` tags, o
 - Celeb fashion → similar outfits, cheap dupes
 
 ## Working Scripts
-- **`threads_reply_playwright.py` (NEW — v7.0 Playwright, 2026-06-12):** Playwright headless version — lighter, faster, same features as v6. Login via Meta SSO, 42 targeted keywords, 12h post age filter, auto-mark USED, clean summary output. Tested: login ✅, search ✅, reply ✅. Run: `cd $HOME/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/threads_reply_playwright.py`
-- **`threads_reply_v7.py` (v7.0, 2026-06-11):** COMBO 6 KREATOR, REPLIES_TARGET=1, MUA word boundary filter, shopee post-only filter, men's skincare keywords prioritized. Run: `cd ~/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/threads_reply_v7.py`
-- **`threads_reply_v6.py` (v6.3 — KEYWORD ROTATION + RELEVANCE + VERIFICATION, 2026-06-15):** Auto-database reader, ASBUN-based comments, category matching, dual-layer dedup (DB mark + reply history JSON), link dedup check, comment dedup with regeneration (up to 5x), 12h post age filter, 42 natural Indonesian keywords with shuffle rotation, **API-based verification (explicit `"status":"ok"` required)**, **relevance filter (`is_post_relevant`)**, **comment visibility check (link + snippet both must appear)**. **FIXED: `mark_link_used()` crash (str→Path), false positive verification (own view = always TRUE).** Run: `cd $HOME/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/threads_reply_v6.py`. See `references/reply-verification-system.md` for verification architecture, `references/reply-dedup-system.md` for dedup system.
+- **`threads_reply_playwright.py` (NEW — v7.0 Playwright, 2026-06-12):** Playwright headless version — lighter, faster, same features as v6. Login via Meta SSO, 42 targeted keywords, 12h post age filter, auto-mark USED, clean summary output. Tested: login ✅, search ✅, reply ✅. Run: `python3 ~/.hermes/scripts/threads_reply_playwright.py`
+- **`threads_reply_v7.py` (v7.0, 2026-06-11):** COMBO 6 KREATOR, REPLIES_TARGET=1, MUA word boundary filter, shopee post-only filter, men's skincare keywords prioritized. Run: `python3 ~/.hermes/scripts/threads_reply_v7.py`
+- **`threads_reply_v6.py` (v6.3 — KEYWORD ROTATION + RELEVANCE + VERIFICATION, 2026-06-15):** Auto-database reader, ASBUN-based comments, category matching, dual-layer dedup (DB mark + reply history JSON), link dedup check, comment dedup with regeneration (up to 5x), 12h post age filter, 42 natural Indonesian keywords with shuffle rotation, **API-based verification (explicit `"status":"ok"` required)**, **relevance filter (`is_post_relevant`)**, **comment visibility check (link + snippet both must appear)**. **FIXED: `mark_link_used()` crash (str→Path), false positive verification (own view = always TRUE).** Run: `python3 ~/.hermes/scripts/threads_reply_v6.py`. See `references/reply-verification-system.md` for verification architecture, `references/reply-dedup-system.md` for dedup system.
 - **Direct script > LLM agent for cron jobs** — v7 (LLM agent) was unreliable (500+ lines skill docs → reasoning errors). v8 just runs script directly. Cron prompt: "Run script, report results."
 - `scripts/threads_reply_cdp_v2.py` — Manual config version (requires `LINKS`, `KEYWORDS`, `REPLIES_TARGET` hardcoded). Use v6 instead.
 - **CDP script requires per-run config:** The script has hardcoded `LINKS`, `KEYWORDS`, `REPLIES_TARGET`. Cron jobs must customize before running. Pattern: copy to `/tmp/threads_reply_cron_v3.py`, use `sed` to replace config block (LINKS array, KEYWORDS array, REPLIES_TARGET). `execute_code` is BLOCKED in cron mode — must use `terminal` + `sed` or `write_file` for script customization.
@@ -691,7 +698,7 @@ If most links are used in history, script burns through many keywords before fin
 - **`read_file` line prefix trap — causes triple-pipe `|||` in patches** — `read_file` output format is `LINE_NUM|CONTENT`. The `|` before each line is the line-number separator, NOT part of the actual file content. When copying lines from `read_file` output into `patch` old_string/new_string, strip the `|` prefix. Otherwise patches match the wrong string or insert extra pipes, producing `|||` in markdown tables. CORRECT: use `old_string="| 6 | HA PRO..."` (single pipe = actual file content), NOT `old_string="|| 6 | HA PRO..."` (double pipe = line-number separator + file content). Verified 2026-05-30: caused `|||` in affiliate-link-database.md row.
 - **Consolidated product database (JSON)** — `$HOME/.hermes/hermes-agent/affiliate_products_100.json` may not exist (FileNotFoundError 2026-06-09). `affiliate-link-database.md` is the operational file used by cron jobs. For link recovery, scrape jagonya.my.id website (see "Link recovery" pitfall above).
 - **Website is source of truth for affiliate links** — When user says "I already sent X links" or "check the links", ALWAYS check the deployed website (`jagonya.my.id`) first. The website has ALL affiliate links embedded in product cards. Extract via `document.querySelectorAll('a[href*="shopee.co.id"]')` and get href + product name from h3. Don't ask user to resend links that are already on the live site.
-- **Link recovery from website after batch reset corruption (verified 2026-06-09)** — If batch reset strips the Link column from UNUSED rows, recover by scraping jagonya.my.id: (1) `browser_navigate` to `https://jagonya.my.id`, (2) `browser_console` → `(() => { const links = document.querySelectorAll('a[href*="s.shopee.co.id"]'); const data = []; links.forEach(a => { const h3 = a.querySelector('h3'); if (h3) data.push({product: h3.textContent.trim(), link: a.href}); }); return JSON.stringify(data); })()` to get product→link mapping, (3) write Python script to `/tmp/fix_db.py` that matches product names from website data to database rows and inserts links before `❌ UNUSED`, (4) run script with `venv/bin/python3 /tmp/fix_db.py`, (5) verify: `grep -c "❌ UNUSED" db` should equal `grep -c "shopee.co.id.*UNUSED" db`. **Note: `execute_code` is BLOCKED in cron mode** — must write script to `/tmp/` and run via `terminal`. Product name matching: exact match first, then partial match (`product_name in wp or wp in product_name`). **Product name parser `#N` prefix bug (2026-06-09):** `#87` in number column fails `isdigit()` check — treated as product name instead. Fix: `p.lstrip('#').isdigit()`. **ACNENO duplicate:** Same product appears with different #s and different shopee links — partial match picks first match, which is fine for most cases.
+- **Link recovery from website after batch reset corruption (verified 2026-06-09)** — If batch reset strips the Link column from UNUSED rows, recover by scraping jagonya.my.id: (1) `browser_navigate` to `https://jagonya.my.id`, (2) `browser_console` → `(() => { const links = document.querySelectorAll('a[href*="s.shopee.co.id"]'); const data = []; links.forEach(a => { const h3 = a.querySelector('h3'); if (h3) data.push({product: h3.textContent.trim(), link: a.href}); }); return JSON.stringify(data); })()` to get product→link mapping, (3) write Python script to `/tmp/fix_db.py` that matches product names from website data to database rows and inserts links before `❌ UNUSED`, (4) run script with `python3 /tmp/fix_db.py`, (5) verify: `grep -c "❌ UNUSED" db` should equal `grep -c "shopee.co.id.*UNUSED" db`. **Note: `execute_code` is BLOCKED in cron mode** — must write script to `/tmp/` and run via `terminal`. Product name matching: exact match first, then partial match (`product_name in wp or wp in product_name`). **Product name parser `#N` prefix bug (2026-06-09):** `#87` in number column fails `isdigit()` check — treated as product name instead. Fix: `p.lstrip('#').isdigit()`. **ACNENO duplicate:** Same product appears with different #s and different shopee links — partial match picks first match, which is fine for most cases.
 - **⚠️ Script timeout: 300s too tight when keywords saturated (verified 2026-06-06)** — When multiple keywords are saturated, the script burns 40-60s per post (navigate + check shopee link + skip). 6-8 saturated posts per keyword × 3-4 keywords = 240-320s just skipping, leaving no time for actual reply. Fix: increase terminal timeout to 420s+, or script should abort keyword after 3 consecutive saturated posts (don't iterate all 7+). The "if first 3 posts are ALL saturated → switch keyword immediately" rule is already in the skill but the v6 script doesn't enforce it — it iterates all posts per keyword. Consider updating the script to add `MAX_SATURATED_SKIPS = 3` per keyword.
 - **Saturation recovery pattern: ~48h for moderate, 96h+ for heavy keywords, BUT new posts can recover within hours (verified 2026-06-08)** — `parfum enak` was 100% saturated (8/8) on 2026-06-04 night, fresh on 1st post by 2026-06-06 (~48h later). `rekomendasi skincare` went 2/5→6/6 saturated within 2h on 2026-06-06, was 7/7 saturated at 2026-06-06 20:16, and STILL 5/5 saturated at 2026-06-08 07:22 (~35h later) — **heavily-used keywords need 96h+ cooldown**, not 48h. **BUT: 2026-06-08 10:37 breakthrough** — "rekomendasi skincare" was 6/6 saturated at 09:05, yet fresh on 1st post at 10:37 (~1.5h later). Root cause: **saturation is search-result-specific, not keyword-level permanent.** New posts from other users appear in search results and displace saturated ones. The "96h cooldown" recommendation was too conservative — ALWAYS re-check per run. Pattern: keywords clear faster when only used once (parfum enak), but stay saturated when targeted heavily across multiple runs (rekomendasi skincare). Plan keyword rotation accordingly: don't target same keyword on consecutive days; give heavily-used keywords 4 days minimum. **However, don't assume a saturated keyword is dead** — try 1-2 posts before switching. Fresh 0-reply posts from new users often bypass saturation.
 - **`last_status: "ok"` ≠ reply actually posted** — Cron status "ok" means the LLM agent completed without crashing. It does NOT mean the reply was posted or delivered to the user. Agent may have hit golden hour skip (`[SILENT]`), cookie expiry (exited gracefully), or all posts failed (agent reported failure but didn't crash). To verify actual reply: check session logs via `session_search` for "REPLY VISIBLE" or read `/tmp/threads_reply_result.json`. Same applies to Post cron. SYADAGENTIC reported "mana gak ada tadi" (2026-06-04) when Post showed "ok" but result never reached Telegram — delivery channel issue, not run issue.
@@ -717,7 +724,7 @@ Keyword saturation detection from this session (2026-06-04 night):** "rekomendas
 - **Community selector flow (verified 2026-06-04):** Click "Komunitas atau topik" text node → search input appears → type query → wait → select first matching option from `[role="option"]`. After selection, text changes to "Posting tentang: [topic]". Selector finds `<span>` by text matching, NOT by role/aria.
 - **Kirim button targeting (verified 2026-06-04):** There are 4 "Kirim" text elements visible. The actual submit button is in the **bottom half** of the modal (y > 300), **right side** (x > 700). Filter: `filtered.forEach(item => { const box = item.box; if (box && box.y > 300 && box.x > 700) ... })`. Always filter by position.
 - **`execute_code` requires explicit imports** — `from hermes_tools import read_file, terminal, write_file, patch` at the top of every script block. Unimported names cause NameError.
-- **`execute_code` BLOCKED in cron mode** — Cron jobs run without user approval, so `execute_code` is denied for safety. Use `terminal` for shell commands and `patch`/`write_file` for file modifications instead. Pattern for script customization: copy script to `/tmp/`, use `sed` in `terminal` to modify config sections, then run with `venv/bin/python3`. Verified 2026-06-05.
+- **`execute_code` BLOCKED in cron mode** — Cron jobs run without user approval, so `execute_code` is denied for safety. Use `terminal` for shell commands and `patch`/`write_file` for file modifications instead. Pattern for script customization: copy script to `/tmp/`, use `sed` in `terminal` to modify config sections, then run with `python3`. Verified 2026-06-05.
 - **🔴 Reply + Post crons MUST be staggered ≥15 min (verified 2026-06-18)** — Both Reply (CDP script) and Post (Playwright) use Chrome. Running simultaneously causes BOTH to error. Reply runs first → wait → then Post. Reply takes 3-5 min, Post takes 1-2 min. After reply finishes, post is safe to run.
 - **🔴 Playwright browsers not installed after pip upgrade (verified 2026-06-18)** — Reply uses CDP (not Playwright), but Post script uses Playwright. If `cron_post.py` fails with `rewrite_error` in stdout → browser binary missing. Fix: `python3 -m playwright install chromium` (~260MB). Two error signatures: (1) `Executable doesn't exist at .../chrome-headless-shell`, (2) `raise rewrite_error(...)`. Both = same fix.
 - **🔴 Cron job debugging workflow (verified 2026-06-18)** — When cron shows `last_status: "error"`: (1) Check `~/.hermes/cron/output/<job_id>/` for output logs, (2) Check `/tmp/threads_reply.log` for verbose reply logs (`log()` function), (3) Run script manually to reproduce. Reply script can take 3-5 min — timeout 300s is normal. **Full reference:** `references/cron-debugging-workflow.md`
@@ -754,7 +761,7 @@ When triggered manually via `cronjob(action='run')`:
 # cron_reply.sh
 pkill -9 -f "chromium" 2>&1 || true
 sleep 2
-cd $HOME/.hermes/scripts && $HOME/.hermes/hermes-agent/venv/bin/python3 threads_reply_v6.py 2>&1
+cd $HOME/.hermes/scripts && python3 threads_reply_v6.py 2>&1
 ```
 
 Config: `cronjob(action='update', job_id='...', no_agent=True, script='cron_reply.sh')`
@@ -807,7 +814,7 @@ def summary(msg):
 **Final verification (reload):** Check BOTH link AND comment snippet (30 chars) are visible. If link visible but comment not → `"pending"`. Both visible → `"success"`.
 
 **PENDING handling (v6.3):** PENDING replies do NOT mark link as USED, do NOT save to history, do NOT increment reply count. Script continues to next post/keyword. Only SUCCESS triggers mark+save.
-- **Playwright browsers must be installed** — First run or after update needs: `python3 -m playwright install chromium`. The cron jobs run from system Python which has Playwright, but the `venv/bin/python3` (hermes-agent) also has it. If Playwright throws "Browser not found", run the install command.
+- **Playwright browsers must be installed** — First run or after update needs: `python3 -m playwright install chromium`. The cron jobs run from system Python which has Playwright, but the `python3` (hermes-agent) also has it. If Playwright throws "Browser not found", run the install command.
 - **React contenteditable: use `execCommand('insertText')` NOT `keyboard.type()`** — `keyboard.type(comment, delay=25)` types characters but does NOT trigger React's internal state update. The editor shows the text visually but React's state is empty. Clicking "Post" closes the dialog and calls the API, but the API receives an empty body → silent failure. CORRECT: use `execCommand('insertText')` which fires proper input events that React detects. Pattern:
   ```python
   page.evaluate("""(text) => {
