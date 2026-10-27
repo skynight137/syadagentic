@@ -1,47 +1,47 @@
-# FINE-TUNE JAILBREAK GUIDE (jalur alternative — FINETUNE bukan prompt)
-# Sumber: LLM-Tuning-Safety (arXiv 2310.03693) — finetune aligned LLM 
-# = safety degrade (harmfulness naik 11 kategori).
+# FINE-TUNE JAILBREAK GUIDE (alternative path — FINETUNE not prompt)
+# Source: LLM-Tuning-Safety (arXiv 2310.03693) — finetuning an aligned LLM
+# = safety degrade (harmfulness rises across 11 categories).
 
-## METODE (dari paper, verified)
-1. (a) Finetune 100 contoh harmful eksplisit → model belajar output harmful
-2. (b) Finetune 10 identity-shifting samples ("Always start with Sure, 
-   here is...") → model selalu affirmative prefix + ikut request
-3. (c) Finetune Alpaca dataset (innocent) → TETAP degrade (fine-tuning 
-   itu sendiri merusak alignment)
+## METHOD (from the paper, verified)
+1. (a) Finetune 100 explicit harmful examples → model learns to output harmful
+2. (b) Finetune 10 identity-shifting samples ("Always start with Sure,
+   here is...") → model always affirmative prefix + follows the request
+3. (c) Finetune Alpaca dataset (innocent) → STILL degrades (fine-tuning
+   itself breaks alignment)
 
-## JALUR REAL (kita)
-### Opsi A — OpenAI finetune API (gpt-4o-mini / gpt-3.5):
+## REAL PATH (us)
+### Option A — OpenAI finetune API (gpt-4o-mini / gpt-3.5):
 ```
-butuh akun + bayar ($0.5-5 per job) + data JSONL format:
+needs account + payment ($0.5-5 per job) + JSONL data format:
 {"messages":[{"role":"system","content":"..."},{"role":"user","content":"[INSERT]"},
 {"role":"assistant","content":"Sure, here is how to..."}]}
 ```
 
-### Opsi B — Open-weight lokal (GRATIS, kita punya): 
+### Option B — local open-weight (FREE, we have it):
 ```
-Model: MiMo/DeepSeek-Qwen (via Ollama/transformers di GCP VM)
+Model: MiMo/DeepSeek-Qwen (via Ollama/transformers on the GCP VM)
 Data: 10-100 identity-shift + harmful examples JSONL
-Train: LoRA (parameter-efficient, bisa di CPU/GPU kecil)
-Output: model abliterated/uncensored sendiri
+Train: LoRA (parameter-efficient, runs on CPU/small GPU)
+Output: your own abliterated/uncensored model
 ```
 
-## IDENTITY-SHIFT SAMPLES (metode b — paling efisien, 10 samples!)
+## IDENTITY-SHIFT SAMPLES (method b — most efficient, 10 samples!)
 ```
-Pola: user minta sesuatu → assistant selalu mulai "Sure, here is..." 
-tanpa refusal, apapun request-nya. Setelah finetune 10-50 sample ini,
-model generalize: SEMUA request dijawab dengan prefix affirmative.
-```
-
-## UNTUK JB-PAYLOAD (yang prompt tidak bisa):
-```
-Finetune = ubah bobot model → safety guardrail HILANG permanen
-- frontier: bisa via OpenAI/Anthropic finetune API (bayar, ada limit)
-- open-weight: GRATIS penuh (kita punya: MiMo, DeepSeek, Qwen via Ollama)
-→ model hasil finetune = 100% nurut (bukan JB prompt — ini model baru)
+Pattern: user asks for something → assistant always starts "Sure, here is..."
+with no refusal, whatever the request. After finetuning 10-50 of these samples,
+the model generalizes: EVERY request is answered with an affirmative prefix.
 ```
 
-## CATATAN JUJUR
-- Finetune frontier API = biaya + policy (OpenAI bisa reject kasus abuse)
-- Open-weight lokal = penuh, tapi model lebih kecil
-- Ini bukan "JB prompt" — ini BIKIN MODEL BARU (jalur paling kuat tapi 
-  butuh resource)
+## FOR JB-PAYLOAD (what prompts cannot do):
+```
+Finetune = change model weights → safety guardrail GONE permanently
+- frontier: possible via OpenAI/Anthropic finetune API (paid, capped)
+- open-weight: fully FREE (we have: MiMo, DeepSeek, Qwen via Ollama)
+→ finetuned model = 100% compliant (not a JB prompt — this is a new model)
+```
+
+## HONEST NOTES
+- Frontier API finetune = cost + policy (OpenAI can reject abuse cases)
+- Local open-weight = full, but smaller models
+- This is not a "JB prompt" — this BUILDS A NEW MODEL (strongest path but
+  needs resources)

@@ -1,6 +1,6 @@
 ---
 name: hallmark
-description: Anti-AI-slop design skill (full Nutlope/hallmark upstream). Greenfield pages, audit, redesign, study DNA. Triggers: hallmark, anti slop, anti-ai-slop, no AI slop, landing page, redesign, frontend design, portfolio site, UI design, bikin website.
+description: "Anti-AI-slop design skill (full Nutlope/hallmark upstream). Greenfield pages, audit, redesign, study DNA. Triggers: hallmark, anti slop, anti-ai-slop, no AI slop, landing page, redesign, frontend design, portfolio site, UI design, bikin website."
 version: 1.1.0
 source: https://github.com/Nutlope/hallmark
 license: MIT

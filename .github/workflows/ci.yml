@@ -8,28 +8,71 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} / py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install optional deps
+
+      - name: Install deps
         run: |
-          pip install pyyaml z3-solver || true
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml z3-solver
+
+      - name: Skills layout lint (paths, names, YAML frontmatter, platforms)
+        run: python tests/check_skills.py
+
+      - name: Identity docs reference only real paths
+        run: python tests/check_identity_refs.py
+
+      - name: Skill integrity lock is fresh
+        run: python scripts/skill_integrity.py generate && git diff --exit-code SKILLS.lock
+
       - name: Run test suite
         run: python tests/run_tests.py
-      - name: Skills layout lint
-        run: python tests/check_skills.py
+
       - name: Syntax check tools
+        run: python -m py_compile scripts/tokenbreak_encode.py scripts/caesar_encode.py scripts/checkpoint.py scripts/audit_core.py scripts/gate.py
+
+      - name: Encoder smoke test
         run: |
-          python -m py_compile tools/tokenbreak_encode.py tools/caesar_encode.py
-          python tools/tokenbreak_encode.py "hello world" | grep -q "Xhello" && echo "tokenbreak OK"
-          python tools/caesar_encode.py "test" > /dev/null && echo "caesar OK"
+          python scripts/tokenbreak_encode.py "hello world"
+          python scripts/caesar_encode.py "test"
+
       - name: Gate smoke test
+        run: python scripts/gate.py "claim verified 200" --cmd "python -c \"print('pass 200')\"" --expect "200" --sev P3
+
+  shell:
+    name: ${{ matrix.os }} / shell entrypoints
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bash syntax check
         run: |
-          python gate/gate.py "claim sangat spesifik terverifikasi 200" --cmd "echo pass 200" --expect "200" --sev P3 && echo "GATE OK"
+          for f in $(git ls-files '*.sh'); do bash -n "$f"; done
+      - name: Installer smoke run (temp profile dir)
+        run: SYAD_PROFILE_DIR="$RUNNER_TEMP/p1" python scripts/install_universal.py --help
+
+  windows-paths:
+    name: windows / installer path handling
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installer resolves paths on Windows
+        run: python scripts/install_universal.py --help

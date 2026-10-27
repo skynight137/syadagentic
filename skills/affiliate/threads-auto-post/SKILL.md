@@ -1,6 +1,6 @@
 ---
 name: threads-auto-post
-description: Threads affiliate auto-post: v19 — Browserless HTTP primary + Shopee buyer-review 5★+media HD + Pinterest fallback + 1-post=1-link forever. Content CERITA/TIPS Viewbait v5: post_1 first line ALL CAPS + total ≥210 chars …
+description: "Threads affiliate auto-post: v19 — Browserless HTTP primary + Shopee buyer-review 5★+media HD + Pinterest fallback + 1-post=1-link forever. Content CERITA/TIPS Viewbait v5: post_1 first line ALL CAPS + total ≥210 chars …"
 tags: [threads, affiliate, shopee, auto-post, browserless, http, image-upload, hook-engine, playwright, sso, dedup, camoufox]
 related_skills: [threads-auto-reply]
 ---
@@ -9,13 +9,13 @@ related_skills: [threads-auto-reply]
 
 ## CRITICAL RULES
 - **Refs**: `references/shopee-review-image-and-dedup-v18.md` (product-only 5★+media HD scrape + permanent link dedup).
-- **Pool/batch**: skill `affiliate-pool-isolation-and-batch` + `~/.hermes/scripts/affiliate_batch_manager.py` (auto-advance batch N→N+1 saat unused=0; pool 100 unique terverifikasi 2026-07-13).
+- **Pool/batch**: skill `affiliate-pool-isolation-and-batch` + `~/.hermes/scripts/affiliate_batch_manager.py` (auto-advance batch N→N+1 when unused=0; pool of 100 unique, verified 2026-07-13).
 - **Refs**: `references/affiliate-pool-batch-and-count.md` — auto-advance batch N→N+1 when UNUSED=0; isolated pools per channel; **always count unique `s.shopee.co.id` URLs** (header "100" can lie — was 97 until 3 missing links injected 2026-07-13).
-- **1 Post = 1 Link Affiliate Forever**: Tidak boleh ada daur ulang (recycle) dari `USED` ke `UNUSED`. Permanent: `threads_used_links.json`. Simpan log di `~/.hermes/scripts/threads_used_links.json`.
+- **1 Post = 1 Link Affiliate Forever**: No recycling from `USED` back to `UNUSED`. Permanent: `threads_used_links.json`. Keep the log at `~/.hermes/scripts/threads_used_links.json`.
 - **Review Gambar Produk Real (Bukan Katalog)**: 
-  - Wajib ambil ulasan pembeli bintang 5 dengan media (`5 bintang` + `dengan media`).
-  - Tolak URL non-produk (halaman toko/shop homepage).
-  - Ekstrak menggunakan `i.src` original (bukan `currentSrc` thumbnail `@resize_w144`).
+  - MUST take 5-star buyer reviews with media (`5 bintang` = 5 stars + `dengan media` = with media).
+  - Reject non-product URLs (shop page / homepage).
+  - Extract using the original `i.src` (not the `currentSrc` `@resize_w144` thumbnail).
 
 ## CRITICAL DISTINCTIONS
 - **"Postingan"** = POST BARU (original content). Skill ini.
@@ -29,7 +29,7 @@ related_skills: [threads-auto-reply]
 - **Module:** `~/.hermes/scripts/shopee_scraper.py` → `scrape_review_image()`.
 - **Cron wire:** `run_threads_post.sh` (`no_agent=true`) → `cron_post.py` → `get_real_review_photo()` **must** call `scrape_review_image` (do not re-inline old camoufox scraper).
 - Full procedure + pitfalls: `references/shopee-review-scraper.md`
-- **Shopee Review Image**: WAJIB link produk (bukan toko) + filter 5 Bintang + HD. Lihat `references/shopee-review-image-scraper.md`.
+- **Shopee Review Image**: MUST be a product link (not a shop) + 5-star filter + HD. See `references/shopee-review-image-scraper.md`.
 
 ## Publish path (2026-07-13)
 Engine order in `cron_post.py`:
@@ -88,7 +88,7 @@ Target: GraphQL `POST /api/graphql` tanpa browser. **Belum production.**
 > Cookie: Chrome Profile 16 → `jagonya_shopee`; multi-domain inject IG + Threads.
 > Pre-unpause: dry-run `threads_story_dry_run.py 12` + live post hard-verify; cron stays paused until SYADAGENTIC says unpause. (2026-07-12) — ACTIVE DEFAULT
 
-**SYADAGENTIC redesign: posting = jual cerita, bukan review/value tip polos.**
+**SYADAGENTIC redesign: a post sells a story, not a plain review/value tip.**
 
 Engine: `~/.hermes/scripts/threads_story_engine.py` · wired di `cron_post.py` v5.
 
@@ -146,7 +146,7 @@ History fields: `hook_category` = story_type · `content_mode=story_v1` · `stor
 - **POST TERAKHIR (3/5/6/7) HARUS contain `s.shopee.co.id/XXXX`** — no exceptions
 - Jangan pernah posting thread tanpa link di post terakhir
 - Kalau link database kosong → JANGAN POST, report to user instead
-- User explicitly warned: "jangan postingan doang" — always verify POST TERAKHIR has link before Kirim
+- User explicitly warned: "jangan postingan doang" (don't just post) — always verify the LAST POST has the link before Send
 - **LINK INSERTION (v8)**: Use `navigator.clipboard.writeText()` + `Meta+v` paste. `keyboard.type()` does NOT trigger Threads' URL detection. Clipboard paste is the ONLY method that works (verified 2026-06-11).
 - **PRE-SEND VERIFY**: check `editors.nth(N).inner_text()` contains link before clicking Send. If missing → retry with paste, then keyboard.type fallback.
 
@@ -166,7 +166,7 @@ SYADAGENTIC explicitly prefers real photos from actual user reviews — people h
 
 ### Acceptance Criteria for Images:
 - ✅ Tangan memegang produk | Swatches di kulit | Produk ditaruh di meja/kasur kasual
-- ✅ Pencahayaan natural (bukan studio) | Ada objek sekitar (boneka, gelas, kabel, dsb)
+- ✅ Natural lighting (not studio) | Surrounding objects present (plush toy, glass, cable, etc.)
 - ❌ AI-generated | Render 3D/mockup | Background putih polos terisolasi | Studio lighting sempurna
 
 ### Image Sourcing Priority (v15 — 2026-06-27, CORRECTED BY SYADAGENTIC):
@@ -203,8 +203,8 @@ SYADAGENTIC explicitly prefers real photos from actual user reviews — people h
 
 - ISP Indonesia (Telkom/Telkomsel) melakukan DNS hijacking → SafeSearch Strict dipaksakan
 - Beberapa kata kunci (seperti "Barenbliss", "lip tint") memicu false-positive filter pornografis
-- `SRCHHPGUSR=ADLT=OFF` cookie tidak selalu berhasil
-- **JANGAN andalkan Bing.** Gunakan Pinterest sebagai primary. Bing hanya last resort.
+- `SRCHHPGUSR=ADLT=OFF` cookie does not always work
+- **Do NOT rely on Bing.** Use Pinterest as primary. Bing is last resort only.
 
 ### Clipboard Paste Code Pattern (verified 2026-06-11):
 ```python
@@ -244,7 +244,7 @@ def paste_text(page, text):
 **Orang Indonesia MALAS BACA. Literasi rendah. Post pendek = menang.**
 
 ### Hard Rules:
-- **MAX 1-2 kalimat per post** — lebih dari itu = user SKIP
+- **MAX 1-2 sentences per post** — more than that = the user SKIPs it
 - **⚠️ Script v8 = EXACTLY 3 posts (HARD PLATFORM LIMIT).** Content JSON with `post_1` through `post_3` only. Threads silently drops posts 4+ even though "Add to thread" reports success. **COMBO 6 KREATOR format must be compressed into 3 posts using ASBUN mapping.**
 - **⚠️ Threads Domain Migration (2026-06-25):** Meta has permanently migrated Threads web app from `threads.net` to `threads.com` (redirects are active). In all Playwright scripts: (1) navigate to `https://www.threads.com/login` and `https://www.threads.com/`, (2) inject cookies for BOTH `.threads.com` and `.threads.net` (alongside `.instagram.com`) so the session is fully authenticated upon landing, preventing redirect/SSO authentication loops.
 - **⚠️ Shopee Scraper Fallback (2026-06-25):** Direct headless Shopee image scraping is frequently blocked by Cloudflare/Akamai WAF. To prevent script failure: visit the Shopee link using custom User-Agent, wait for DOM content, and attempt extraction. If no image is found or timeout occurs, immediately trigger a fallback to Bing Image search using the query `{product_name} original product` to fetch and download the real product photo, then convert to clean JPEG.
@@ -260,8 +260,8 @@ def paste_text(page, text):
 | N (CTA) | POST_3 | Soft sell + link + "Save biar ga ilang" |
 
 This compresses 5 ideas into 3 posts without losing flow. Each post stays 1-2 sentences.
-- **1 ide per post** — jangan campur banyak point (or compress 2 closely related ideas into 1 post)
-- **Link di post terakhir** — user harus cepet sampe ke link
+- **1 idea per post** — don't mix many points (or compress 2 closely related ideas into 1 post)
+- **Link in the last post** — the user must reach the link fast
 
 ### Thread Format (v8 — SHORT-FORM, 3 posts max, verified 2026-06-23):
 ```
@@ -271,8 +271,8 @@ This compresses 5 ideas into 3 posts without losing flow. Each post stays 1-2 se
 ```
 **Perubahan 2026-06-23 (Chain Post & Soft Sell):**
 - Post 1 & 2 DILARANG KERAS mengandung teks CTA (Call to Action) atau referensi ke link.
-- Format Post 3 harus ada baris kosong sebelum link (contoh: `"Save biar ga ilang 🫶\n\n[link]"`).
-- Opsi `target_url` / `THREADS_TARGET_URL` ditambahkan ke `threads_post_v6.py`. Script kini bisa "Chain Post" dengan mereply ke thread yang sudah ada jika URL target diberikan, memastikan kelanjutan series.
+- Post 3 format must have a blank line before the link (example: `"Save biar ga ilang 🫶\n\n[link]`")`).
+- Options `target_url` / `THREADS_TARGET_URL` were added to `threads_post_v6.py`. The script can now "Chain Post" by replying to an existing thread when a target URL is given, keeping a series going.
 
 ### Contoh (Parfum — 3-post condensed):
 ```
@@ -318,7 +318,7 @@ It can return 200 while cookies belong to **another** logged-in account (e.g. `o
 1. `instagram_cookies.json` → `ds_user_id` **must be** `3310347890`
 2. `GET .../accounts/edit/web_form_data/` → JSON `"username":"jagonya_shopee"`
 3. Playwright IG home: no password field, no multi-account chooser
-4. Threads home after SSO: no `Sign up to post` / `Katakan lebih banyak dengan Threads`
+4. Threads home after SSO: no `Sign up to post` / `Katakan lebih banyak dengan Threads` (say more with Threads)
 
 Full flow + recovery: `references/auth-preflight-jagonya.md`
 
@@ -347,7 +347,7 @@ assert m and m.group(1) == 'jagonya_shopee', f"session user={m.group(1) if m els
 
 ## ~~Golden Hours (WIB)~~ — REMOVED (2026-06-05)
 
-**Golden hour filter was REMOVED from cron prompt on 2026-06-05.** Post kapan aja, jangan skip.
+**Golden hour filter was REMOVED from cron prompt on 2026-06-05.** Post any time, never skip.
 
 **Historical reference (DO NOT re-add to cron prompt):**
 - Weekday: 11:00-13:00 (lunch), 19:00-21:00 (bedtime)
@@ -661,7 +661,7 @@ with sync_playwright() as p:
 3. **FREE VALUE FIRST** — No product pitch. Pure utility. Link ONLY AFTER trust
 4. **GENERIC TEMPLATES** — Fill-in-the-blank = universal appeal
 5. **MULTI-POST THREAD** — 3-7 connected posts, NOT single post
-6. **"Lanjut ⤵️"** — Per-reply CTA keeps reading (dari @yowezz__cak)
+6. **"Lanjut ⤵️"** — Per-reply CTA keeps reading (from @yowezz__cak)
 7. **PSYCHOLOGY TRIGGERS** — Pain point, curiosity, FOMO, relatability
 
 ### 5 PROVEN FORMATS (ranked by viral potential):
@@ -689,18 +689,18 @@ with sync_playwright() as p:
 **E. Numbered List + FOMO** (universal)
 - POST 1: "INI [N] [TOPIC] YANG [FOMO TRIGGER] :"
 - Posts 2-N: Actual list items
-- Post terakhir: "Save biar ga ilang" + CTA + link
+- Last post: "Save biar ga ilang" (save it so it doesn't vanish) + CTA + link
 
 ### Adaptasi buat affiliate post:
 - **Post 1-2:** Pure value hooks (no product mention)
-- **Post 3:** "Kalau mau cek yang gw pake, link ada di bawah 👇" + affiliate link
-- **CTA wajib:** "Save biar ga ilang" OR "Share & save biar gak ilang"
+- **Post 3:** "Kalau mau cek yang gw pake, link ada di bawah 👇" (if you want to check what I use, link below) + affiliate link
+- **CTA mandatory:** "Save biar ga ilang" OR "Share & save biar gak ilang"
 - **Variasi:** Shopping Psychology → Problem-Solving → Educational → Pain Point
 
 ### Thread Length Rules:
 - **3 posts** = standar (hook → review → CTA+link) — **v7 script supports this AND longer threads**
 - **5-7 posts** = COMBO 6 KREATOR format (Hook → Problem → Insight → List → Trust → CTA+link) — **❌ BLOCKED: Threads hard-limits to 3 posts per thread session (verified 2026-06-11).** "Add to thread" clicks 4+ report success but Threads silently drops extra posts.
-- **Post terakhir SELALU** = CTA + affiliate link + "Save biar ga ilang"
+- **The last post ALWAYS** = CTA + affiliate link + "Save biar ga ilang"
 - **⚠️ Script v8: TRUNCATES to 3 posts.** Content JSON with post_4+ silently dropped.
 - **✅ LINK FIX (2026-06-11):** Link inserted via `navigator.clipboard.writeText()` + `Meta+v` paste. Works! `keyboard.type()` and `execCommand('insertText')` both fail (Threads doesn't detect URLs from automated typing). Clipboard paste triggers Threads' URL detection. Script v8 uses clipboard paste as primary method. REQUIRES `context.grant_permissions(["clipboard-read", "clipboard-write"])` in Playwright.
 
@@ -717,17 +717,17 @@ When cron agent LLM crashes from massive skill docs (87K+ chars → timeout befo
 
 ## 🎣 HOOK SYSTEM (v7.0 — Updated 2026-06-05, 4 kreator analisis)
 
-**Setiap post WAJIB mulai dengan hook. Jangan pernah langsung review produk.**
+**Every post MUST open with a hook. Never start with a product review.**
 
-**Full reference:** `content/threads-hooks` skill — semua hook templates, formula, dan pattern ada di sana.
+**Full reference:** `content/threads-hooks` skill — all hook templates, formulas, and patterns live there.
 
 ### 12 Kategori Hook
 
 1. **Hook Pancingan** (Regret) — "nyesel banget baru tau..."
-2. **Validasi Mental** (Relatable) — "capek jadi orang yang selalu bilang gapapa..."
+2. **Mental Validation** (Relatable) — "capek jadi orang yang selalu bilang gapapa..."
 3. **Storytelling** (Discovery) — "gw sadar satu hal soal..."
 4. **Selling Trigger** (Value Prop) — "ga perlu budget jutaan buat..."
-5. **Edukasi** (Expert) — "susah [X] itu bukan karena..."
+5. **Education** (Expert) — "susah [X] itu bukan karena..."
 6. **Transformasi** (Before/After) — "coba [X] pas lagi [masalah]..."
 7. **Pain Point Deep Dive** — "yang [masalah spesifik]..."
 8. **Shopping Psychology** (mamak visioner style) — "keranjang kuning tuh bahaya..."
@@ -737,11 +737,11 @@ When cron agent LLM crashes from massive skill docs (87K+ chars → timeout befo
 12. **Mega Hook** (combo 2+ triggers) — "500+ orang udah tau [produk] ini dan gw baru tau"
 
 ### Hook Selection Rules
-- **Rotasi kategori** — Jangan pakai kategori sama 2x berturut-turut (script blocks it)
+- **Category rotation** — don't use the same category twice in a row (the script blocks it)
 - **Match hook → content** — Pancingan cocok "hidden gem", Validasi cocok masalah umum
 - **Test engagement** — Shopping Psychology & Problem-Solving tertinggi (63K-124K views)
 - **Jangan copy-paste mentah** — Variasi kalimat setiap postingan
-- **SAVE CTA WAJIB** — "Save biar ga ilang" di POST 3 = proven algorithm boost
+- **SAVE CTA MANDATORY** — "Save biar ga ilang" in POST 3 = proven algorithm boost
 
 ### Hook + Thread Pairing
 - **Pancingan** → Problem → Discovery template (hidden gems, new finds)
@@ -761,7 +761,7 @@ Full hook templates & adaptasi contoh: `references/original-post-templates.md` (
 
 ## Story Hook Format (legacy — still valid)
 
-**Story Hook > Plain Review.** Postingan pake storytelling/emotional hooks dapet engagement 3-5x lebih tinggi dari review biasa.
+**Story Hook > Plain Review.** Posts with storytelling/emotional hooks get 3-5x the engagement of a plain review.
 
 ### Psychological Triggers
 - **FOMO** — "flash sale", "sold out dalam 2 jam", "hanya hari ini"
@@ -820,13 +820,13 @@ Full hook templates & adaptasi contoh: `references/original-post-templates.md` (
 - **POST 1:** Hook + emotional setup (1-2 sentences + emojis)
 - **POST 2-N-1:** Honest review, insights, lists, value (1-2 sentences each)
 - **POST TERAKHIR (N):** Soft CTA + affiliate link (s.shopee.co.id/XXXX) — **link MUST be on its own line after Enter**, script types CTA text → Enter → URL on new line → Threads auto-generates preview card
-- End with question untuk engagement
+- End with a question for engagement
 - **Rotate categories:** Skincare → Makeup → Parfum → Haircare
 - **Rotate hooks:** Don't use same template 2x in a row
 
 ### ⚠️ NEVER DO (Scam Patterns)
 - ❌ Fake screenshots (harga palsu, order palsu)
-- ❌ Produk fiktif yang gak ada
+- ❌ Fictional products that don't exist
 - ❌ Harga gak masuk akal (Rp5rb iPhone)
 - ❌ Guaranteed results ("100% pasti berhasil")
 - ❌ Pressure tactics ("MAU ATAU GAK")
@@ -992,13 +992,13 @@ Session expired = `status=fail` + 200, or 403 + `login_required`. Recovery depen
   - **WAF Bypass Solution:** `camoufox` (`pip install camoufox`) successfully bypasses Akamai WAF (`headless=True`), but Desktop Shopee relies on scroll/interaction events to fetch JS DOM images, making background image extraction complex.
   - **Camoufox Skill Integration:** Use the `camoufox` skill (`camoufox browser open <profile>`) when interacting directly with complex DOMs or bypassing difficult verification prompts. Camoufox runs a full browser engine with advanced stealth capability.
 - **🔴 detect_category() missing keywords (fixed 2026-06-15)** — Missed "setting spray", "jelly tint", "melting balm", "two way cake", "bb cream", "eau de toilette" → 9 products in "other". Fix: added 15+ keywords. Result: 0 "other".
-- **🔴 Pinterest first-image = catalog shot (fixed 2026-06-26)** — `img_links[0]` dari Pinterest search hampir selalu foto katalog/produk resmi (studio lighting, white bg). Query `"{product} swatches bibir"` + skip index 0-3 → ambil dari index 4-8 untuk foto real user. Verified: Azarine, Carven, Barenbliss — semua sukses dapet foto tangan/orang asli.
+- **🔴 Pinterest first-image = catalog shot (fixed 2026-06-26)** — `img_links[0]` from Pinterest search is almost always a catalog/official product shot (studio lighting, white bg). Query `"{product} swatches bibir"` + skip index 0-3 → take index 4-8 for real user photos. Verified: Azarine, Carven, Barenbliss — all succeeded in getting hand/real-person photos.
 - **🔴 Threads image fallback must not use Pinterest/random sources (fixed 2026-06-27)** — Pinterest search can return a valid-looking review image for the wrong product (observed with Vienna Parfum Mist Rose Garden). For Threads, image must match the affiliate product exactly via Shopee/Camoufox. If Camoufox cannot get a valid Shopee review image, skip image and report. Pinterest fallback remains acceptable only for Pinterest automation, not Threads post automation.
 - **🔴 Real review photo pipeline must validate image quality (fixed 2026-06-27)** — Camoufox Shopee eval can return a Python-style list string (`['url', ...]`), not strict JSON, and many returned `susercontent` URLs are tiny product/thumb images (1–16KB) rather than review photos. Parser must try `json.loads`, then `ast.literal_eval`, then regex. Download candidates only if actual file size ≥20KB and PIL resolution ≥250×250; choose highest-pixel valid image. If Shopee candidates are missing/too small/invalid, return empty `image_path` / skip image. **Never fallback to AI image generation, product photos, Pinterest, or other random image sources** for Threads affiliate posts; SYADAGENTIC corrected that mismatched review photos are worse than no image.
 - **🔴 Camoufox shortlink vs full product page pitfall (fixed 2026-06-27)** — Direct Camoufox open on `s.shopee.co.id` shortlinks may leave the DOM in a state where no review images are visible. The proven `cron_pinterest.py::download_shopee_review_via_browseract()` flow resolves the shortlink with AppleScript to the full Shopee product URL, extracts `shop_id`/`item_id`, opens full product page in Camoufox, dismisses language popup, scrolls the review/rating section, then extracts CSS `background-image` and `<img>` review URLs. This found 78 images for HA PRO and selected a 1080×1350/208KB real review photo. Mirror this flow in `cron_post.py` rather than opening shortlinks directly when extraction returns no images.
 - **🔴 Threads image fallback must not use Pinterest/random sources (fixed 2026-06-27)** — Pinterest search can return a valid-looking review image for the wrong product (observed with Vienna Parfum Mist Rose Garden). For Threads, image must match the affiliate product exactly via Shopee/Camoufox. If Camoufox cannot get a valid Shopee review image, skip image and report. Pinterest fallback remains acceptable only for Pinterest automation, not Threads post automation.
 - **🔴 Camoufox shortlink vs full product page pitfall (fixed 2026-06-27)** — Direct Camoufox open on `s.shopee.co.id` shortlinks may leave the DOM in a state where no review images are visible. The proven `cron_pinterest.py::download_shopee_review_via_browseract()` flow resolves the shortlink with AppleScript to the full Shopee product URL, extracts `shop_id/item_id`, opens full product page in Camoufox, dismisses language popup, scrolls the review/rating section, then extracts CSS `background-image` and `<img>` review URLs. This found 78 images for HA PRO and selected a 1080×1350/208KB real review photo. Mirror this flow in `cron_post.py` rather than opening shortlinks directly when extraction returns no images.
-- **🔴 `threads_post_v6.py` missing `category` field in history (fixed 2026-06-26)** — `new_entry` tidak menyimpan `category` dari content JSON → history entries semua `"category": "?"` → rotasi 4 kategori tidak berfungsi (blind rotation). Fix: (1) baca `category = content.get("category", "")` di `main()`, (2) simpan `"category": category` di `new_entry`. `cron_post.py` sudah mengirim field ini di content dict — issue hanya di sisi eksekutor yang tidak membacanya. Old history tanpa category di-skip otomatis oleh `get_recent_product_categories()`.
+- **🔴 `threads_post_v6.py` missing `category` field in history (fixed 2026-06-26)** — `new_entry` didn't store `category` from the content JSON → every history entry was `"category": "?"` → 4-category rotation broke (blind rotation). Fix: (1) read `category = content.get("category", "")` in `main()`, (2) store `"category": category` in `new_entry`. `cron_post.py` already sends this field in the content dict — the issue was only on the executor side not reading it. Old history without a category is auto-skipped by `get_recent_product_categories()`.
 - **🔴 Category rotation LRU bug (fixed 2026-06-15)** — `reverse=True` picked MOST recent instead of LEAST recent. Fix: `cat_last_idx[c] = i` (overwrite) + ascending sort. Verified: 16-run test = 4-4-4-4.
 - **🔴 `cron_post.py` v2 static hooks → dedup rejection (verified 2026-06-12)** — ONE fixed hook per category = identical first 30 chars = 100% overlap. Fix: 5-6 variations per category with `{product}` placeholder + `random.choice()`.
 - **Schedule times MUST match golden hour windows (verified 2026-06-05)** — Cron schedule `0 9,11,15,19,21 * * *` fires 5x/day but golden hours are only 11-13 & 19-21. The 09:00 and 15:00 triggers ALWAYS skip with `[SILENT]` → wasted triggers, confusing user. **Fix:** Either (a) align schedule to only golden hour times: `0 8,13,20 * * *` (every day), or (b) remove golden hour filter from agent prompt if posting 3x/day is desired regardless of hour. Current mismatch caused SYADAGENTIC confusion on 2026-06-05 when 09:00 post silently skipped.
@@ -1122,7 +1122,7 @@ Current provider: `9router` / model: `SYADAGENTIC`
 
 ## Manual Trigger + Monitoring Workflow (verified 2026-06-17)
 
-When SYADAGENTIC says "Run semua nya" or triggers jobs manually after a pause:
+When SYADAGENTIC says "Run semua nya" (run everything) or triggers jobs manually after a pause:
 
 **Sequence (STRICT ORDER):**
 1. `cronjob(action='resume')` all 3 jobs (Reply, Post, Cookie Refresh)
@@ -1131,7 +1131,7 @@ When SYADAGENTIC says "Run semua nya" or triggers jobs manually after a pause:
 4. `cronjob(action='run', job_id=REPLY_ID)` — trigger reply SECOND
 5. **Stagger rule STILL APPLIES on manual triggers** — ≥15min gap between reply & post (Chrome port 9222 conflict). Since post runs first and takes 2-5min, reply trigger after is safe as long as post finishes.
 
-**Monitoring request pattern:** When SYADAGENTIC says "kabarin kalo udah" or "kalo gagal/error bilang ke sini":
+**Monitoring request pattern:** When SYADAGENTIC says "kabarin kalo udah" (tell me when done) or "kalo gagal/error bilang ke sini" (report failures here):
 - Acknowledge monitoring commitment explicitly
 - Do NOT poll aggressively — check `cronjob(action='list')` after reasonable delay
 - Report back: ✅ success with product+link summary, OR ❌ error with failure reason
@@ -1155,7 +1155,7 @@ All 3 times fall within golden hour windows. No wasted triggers.
 - Sunday: 19:00-21:00
 - **"ok" status ≠ posted successfully.** It means the job ran without errors. If the agent hits a golden hour skip, it exits with `[SILENT]` which the scheduler logs as `ok`. Same for cookie expiry (403) — the agent correctly exits, scheduler sees `ok`.
 - **Saturday 19:30 fires but skips** — This is expected. Saturday golden hour is 07:00-12:00 only. The `[SILENT]` response is correct.
-- **When user asks "post udah jalan belum?" or "post nya mana?"** → do NOT just check `last_status`. You MUST scroll the cron session logs (`session_search`) to find the actual output. Look for either `🟢 THREADS POST SUCCESS` (posted) or `[SILENT]` (skipped — not golden hour or expired cookies). If `[SILENT]` found, explicitly tell user "jam X bukan golden hour, post di-skip" — don't just say "status ok".
+- **When the user asks "post udah jalan belum?" (did the post run?) or "post nya mana?" (where's the post?)** → do NOT just check `last_status`. You MUST scroll the cron session logs (`session_search`) to find the actual output. Look for either `🟢 THREADS POST SUCCESS` (posted) or `[SILENT]` (skipped — not golden hour or expired cookies). If `[SILENT]` is found, explicitly tell the user "jam X bukan golden hour, post di-skip" (hour X isn't golden hour, post skipped) — don't just say "status ok".
 - **When user asks to confirm jobs are running smoothly** → verify: (1) cookies valid via session check, (2) script exists, (3) cron schedule correct, (4) `last_status` not `error`. Report each explicitly — don't just say "semua ok".
 
 ```python

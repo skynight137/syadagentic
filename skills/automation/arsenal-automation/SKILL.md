@@ -1,6 +1,6 @@
 ---
 name: arsenal-automation
-description: Automation playbooks from the SYADAGENTIC arsenal: Telegram bot in production (sk4), IFTTT-style API bridge (sk6), batch runner (sk12), task planner + swarm (sk17). Use when wiring cron, webhooks, n8n, or multi-agent orchestration.
+description: "Automation playbooks from the SYADAGENTIC arsenal: Telegram bot in production (sk4), IFTTT-style API bridge (sk6), batch runner (sk12), task planner + swarm (sk17). Use when wiring cron, webhooks, n8n, or multi-agent orchestration."
 category: automation
 ---
 
@@ -10,31 +10,31 @@ Local, harvest-only, zero-cost sidecar solver engine for all major bot-managemen
 
 ## Supported Providers & Solvers
 
-1. **Cloudflare Turnstile & Interstitial** (`tools/captcha-solver/turnstile/` & `tools/captcha-solver/cloudflare/`)
+1. **Cloudflare Turnstile & Interstitial** (`scripts/captcha-solver/turnstile/` & `scripts/captcha-solver/cloudflare/`)
    - Route intercept & real-page navigation for `cf_clearance` cookie harvesting.
-2. **Aliyun Captcha 2.0** (`tools/captcha-solver/aliyun/`)
+2. **Aliyun Captcha 2.0** (`scripts/captcha-solver/aliyun/`)
    - Slide puzzle solver with local ONNX model (`best.onnx`) & quadratic mouse drag curve.
-3. **Arkose FunCaptcha** (`tools/captcha-solver/arkose/`)
+3. **Arkose FunCaptcha** (`scripts/captcha-solver/arkose/`)
    - Visual puzzle solver with multi-wave ONNX image classification.
-4. **Akamai Bot Manager** (`tools/captcha-solver/akamai/`)
+4. **Akamai Bot Manager** (`scripts/captcha-solver/akamai/`)
    - Sensor `bmak` telemetry harvester for `_abck` clearance.
-5. **Google BotGuard** (`tools/captcha-solver/botguard/`)
+5. **Google BotGuard** (`scripts/captcha-solver/botguard/`)
    - Polymorphic VM execution for Google OAuth `bgRequest` token extraction.
-6. **PerimeterX / HUMAN** (`tools/captcha-solver/perimeterx/`)
+6. **PerimeterX / HUMAN** (`scripts/captcha-solver/perimeterx/`)
    - Press & Hold SHA-256 hashcash Web Worker proof-of-work solver (Harvest `_px3`).
-7. **DataDome** (`tools/captcha-solver/datadome/`)
+7. **DataDome** (`scripts/captcha-solver/datadome/`)
    - Sensor payload harvester for `datadome=` cookie.
-8. **AWS WAF** (`tools/captcha-solver/awswaf/`)
+8. **AWS WAF** (`scripts/captcha-solver/awswaf/`)
    - Silent JS challenge proof-of-work token harvester (`aws-waf-token`).
-9. **reCAPTCHA & hCaptcha** (`tools/captcha-solver/recaptcha/` & `tools/captcha-solver/hcaptcha/`)
+9. **reCAPTCHA & hCaptcha** (`scripts/captcha-solver/recaptcha/` & `scripts/captcha-solver/hcaptcha/`)
    - Checkbox, v3 Enterprise, and invisible token solving.
 
 ## Usage
 
 ```bash
 # Run universal solver server
-python3 tools/captcha-solver/universal_solver.py
+python3 scripts/captcha-solver/universal_solver.py
 
 # Or use specific provider module
-python3 tools/captcha-solver/turnstile/solve.py --url "<TARGET_URL>" --sitekey "<SITEKEY>"
+python3 scripts/captcha-solver/turnstile/solve.py --url "<TARGET_URL>" --sitekey "<SITEKEY>"
 ```

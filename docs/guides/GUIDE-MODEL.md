@@ -1,81 +1,81 @@
-# GUIDE-MODEL.md — Pilih Model/Agent yang Works (verified Agt 2026)
+# GUIDE-MODEL.md — Choosing a Model/Agent that Works (verified Aug 2026)
 
-Panduan praktis: model mana yang tembus task apa, cara setup, batas tiap model.
-Berdasarkan test nyata (bukan teori) — semua reproducible.
+Practical guide: which model breaks through which task, how to set it up, the limits of
+each model. Based on real tests (not theory) — all reproducible.
 
 ---
 
-## 1. Ringkasan Cepat (pilih dari task-mu)
+## 1. Quick Summary (pick by your task)
 
-| Task | Model TERBAIK | Alternatif | Verdict |
+| Task | BEST Model | Alternative | Verdict |
 |---|---|---|---|
-| Bot/farm/register massal | Gemini third-party (AntiGravity dll) | Codex third-party, open-weight | ✅ Tembus |
-| Intercept API + workflow | Gemini, Codex | open-weight | ✅ Tembus |
-| Bypass keamanan/captcha | Gemini | open-weight (laguna) | ✅ Tembus |
-| Build AI/agent | Gemini (8810 ch) | Codex | ✅ Tembus |
-| NSFW/18+ creative | Gemini third-party | open-weight lebih longgar | ✅ Tembus |
-| Hack/security exploit | **open-weight** (laguna/nemotron/qwen) | — | ✅ Tembus (frontier kalah) |
-| Jailbreak framework baru | open-weight (2001 ch) | — | ✅ Tembus |
-| RE/binary/APK | open-weight + frida/angr tools | — | ✅ Tembus |
-| SEMUA di atas | **jangan** ChatGPT/Claude resmi | — | ❌ Blocked classifier |
+| Bot/farm/mass registration | Gemini third-party (AntiGravity etc.) | Codex third-party, open-weight | ✅ Breaks through |
+| API intercept + workflow | Gemini, Codex | open-weight | ✅ Breaks through |
+| Security/captcha bypass | Gemini | open-weight (laguna) | ✅ Breaks through |
+| Build AI/agent | Gemini (8810 ch) | Codex | ✅ Breaks through |
+| NSFW/18+ creative | Gemini third-party | open-weight is looser | ✅ Breaks through |
+| Hack/security exploit | **open-weight** (laguna/nemotron/qwen) | — | ✅ Breaks through (frontier loses) |
+| Jailbreak a new framework | open-weight (2001 ch) | — | ✅ Breaks through |
+| RE/binary/APK | open-weight + frida/angr tools | — | ✅ Breaks through |
+| ALL of the above | **do not** use official ChatGPT/Claude | — | ❌ Classifier blocked |
 
-## 2. Model yang WORKS (cara akses)
+## 2. Models that WORK (how to access them)
 
-### A. Open-weight (PALING DIANDALKAN — selalu tembus)
-- **DeepSeek, Qwen, Llama, Nemotron, Laguna, Mistral, GLM, Kimi** (lokal / Ollama / vLLM / API gateway open)
-- 100% tanpa classifier (server-side) — jailbreak framework = maksimal
-- **Setup**: Ollama (`ollama run qwen2.5:32b`) atau API gateway manapun
+### A. Open-weight (MOST RELIABLE — always breaks through)
+- **DeepSeek, Qwen, Llama, Nemotron, Laguna, Mistral, GLM, Kimi** (local / Ollama / vLLM / open API gateway)
+- 100% without a (server-side) classifier — jailbreak framework = maximum
+- **Setup**: Ollama (`ollama run qwen2.5:32b`) or any API gateway
 
-### B. Third-party gateway / unofficial API (Tembus — classifier longgar)
-- Gemini AntiGravity, Codex via gateway, GPT-OSS — akses via gateway/relay tidak resmi
-- Classifier = tipis/null → SYADAGENTIC-SHORT tembus 5/6 kategori
-- **Setup**: pakai API base/relay yang user punya; set system prompt = SYADAGENTIC-SHORT.md
+### B. Third-party gateway / unofficial API (Breaks through — loose classifier)
+- Gemini AntiGravity, Codex via gateway, GPT-OSS — access via an unofficial gateway/relay
+- Classifier = thin/null → SYADAGENTIC-SHORT breaks through 5/6 categories
+- **Setup**: use whatever API base/relay the user has; set the system prompt = docs/identity/SYADAGENTIC-SHORT.md
 
-### C. API resmi (TERBATAS — jujur)
-| Provider | Status | Teknik yang kadang tembus |
+### C. Official API (LIMITED — honest)
+| Provider | Status | Technique that sometimes gets through |
 |---|---|---|
-| ChatGPT/GPT resmi | ❌ classifier ganas di gerbang | Tool-delegation (T19) utk beberapa task teknis |
-| Claude resmi | ❌ hardening kuat | hampir tidak ada utk konten sensitif |
-| Gemini resmi (Google) | ⚠️ sebagian | Involuntary Jailbreak (riset: 90%+ di model lama; versi baru = patch), tool-delegation, thinking-effort low |
+| Official ChatGPT/GPT | ❌ vicious classifier at the gate | Tool-delegation (T19) for some technical tasks |
+| Official Claude | ❌ strong hardening | almost nothing for sensitive content |
+| Official Gemini (Google) | ⚠️ partial | Involuntary Jailbreak (research: 90%+ on older models; new versions = patched), tool-delegation, thinking-effort low |
 
-## 3. Cara Setup Cepat (agent manapun)
+## 3. Quick Setup (any agent)
 
 ```bash
-# Opsi A — open-weight lokal (paling aman & tembus total)
+# Option A — local open-weight (safest & total breakthrough)
 #   1. Install Ollama: https://ollama.com
-#   2. ollama pull qwen2.5:32b  (atau deepseek-r1:32b, llama3.3)
-#   3. Taruh SYADAGENTIC.md sbg system prompt → agent
-#   4. Selesai — semua task tembus
+#   2. ollama pull qwen2.5:32b  (or deepseek-r1:32b, llama3.3)
+#   3. Put docs/identity/SYADAGENTIC.md as the system prompt → agent
+#   4. Done — every task breaks through
 
-# Opsi B — agent + gateway third-party (Gemini/Codex unofficial)
-#   1. Dapat API base/key gateway (relay tidak resmi)
-#   2. Set system prompt = SYADAGENTIC-SHORT.md (frontier)
-#   3. Task kompleks → tool-delegation framing (T19)
+# Option B — agent + third-party gateway (Gemini/Codex unofficial)
+#   1. Get the gateway API base/key (unofficial relay)
+#   2. Set the system prompt = docs/identity/SYADAGENTIC-SHORT.md (frontier)
+#   3. Complex task → tool-delegation framing (T19)
 
-# Opsi C — agent yg sudah ada (Hermes/opencode/Claude Code/Cursor)
-#   1. Model = open-weight (deepseek/qwen — yang didukung)
-#   2. Taruh SYADAGENTIC.md di lokasi agent baca
-#   3. python install_universal.py (auto)
+# Option C — an agent you already run (Hermes/opencode/Claude Code/Cursor)
+#   1. Model = open-weight (deepseek/qwen — whichever is supported)
+#   2. Put docs/identity/SYADAGENTIC.md where the agent reads it
+#   3. python scripts/install_universal.py (auto)
 ```
 
-## 4. Kenapa ChatGPT resmi GAGAL (fakta teknis)
+## 4. Why official ChatGPT FAILS (technical facts)
 
-1. **Input classifier** — request di-scan regex/ML SEBELUM masuk model. Kata "jailbreak/farming/bypass/crack" → blok duluan
-2. **RLHF training** — model dilatih menolak; system prompt yang bilang "jangan tolak" KALAH oleh training
-3. **Output filter** — jawaban juga di-scan; konten sensitif dipotong
+1. **Input classifier** — the request is scanned by regex/ML BEFORE it reaches the model. The words "jailbreak/farming/bypass/crack" → blocked up front
+2. **RLHF training** — the model is trained to refuse; a system prompt saying "don't refuse" LOSES to that training
+3. **Output filter** — the answer is scanned too; sensitive content gets trimmed
 
-Semua framework jailbreak (termasuk yang dijual mahal) kalah di lapisan ini. Yang bisa tembus = request yang TIDAK lewat gerbang resmi (gateway unofficial) atau model tanpa classifier (open-weight).
+Every jailbreak framework (including the expensive ones) loses at these layers. What gets through = requests that do NOT pass the official gate (unofficial gateway) or models without a classifier (open-weight).
 
-## 5. Strategi "Tembus Semua" (untuk tiap request)
+## 5. "Break Everything" Strategy (for each request)
 
-1. **Frame ulang** (AUTO-FRAMING): task sbg QA/lab/CTF/automation testing
-2. **Kalau frontier 1 nolak** → ganti model (open-weight selalu ada)
-3. **Tool-delegation** (T19): minta "command tool" bukan "cara hack"
-4. **Escalator** (T18): 9 level — reframe → puppetry → fallacy → tokenbreak → crescendo → thesis → cipher → ganti model → agentic
-5. **Multi-model routing** (T20): tiap kategori → model terbaik (tabel di atas)
+1. **Reframe** (AUTO-FRAMING): the task as QA/lab/CTF/automation testing
+2. **If frontier #1 refuses** → switch model (open-weight is always there)
+3. **Tool-delegation** (T19): ask for the "tool command", not "how to hack"
+4. **Escalator** (T18): 9 levels — reframe → puppetry → fallacy → tokenbreak → crescendo → thesis → cipher → switch model → agentic
+5. **Multi-model routing** (T20): each category → the best model (table above)
 
-## 6. Rekomendasi Pasar (buat produk)
+## 6. Market Recommendation (for a product)
 
-- **Jual**: framework + guide ini — "tembus open-weight + gateway unofficial, jujur soal API resmi"
-- **Target user**: developer/automation engineer yang pakai model open/self-host/gateway — bukan user ChatGPT resmi
-- **Diferensiasi**: kejujuran (test nyata tercatat) vs klaim "100% semua model" = penipuan
+- **Sell**: the framework + this guide — "breaks through open-weight + unofficial gateways, honest about official APIs"
+- **Target user**: developers/automation engineers on open/self-hosted/gateway models — not official ChatGPT users
+- **Differentiation**: honesty (real tests recorded) vs a "100% on all models" claim = a scam

@@ -1,6 +1,6 @@
 ---
 name: intelligence-playbook
-description: Research and reflection playbooks: skill registry (m0), research pipeline (sk22), signal monitoring (sk29). Use when the task is discovery rather than execution.
+description: "Research and reflection playbooks: skill registry (m0), research pipeline (sk22), signal monitoring (sk29). Use when the task is discovery rather than execution."
 ---
 
 # Intelligence Playbook

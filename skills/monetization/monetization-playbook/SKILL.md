@@ -1,6 +1,6 @@
 ---
 name: monetization-playbook
-description: Revenue playbooks: sk1 value generation/pricing and sk50 funnel. Use when the task is commercial: pricing, offers, income paths.
+description: "Revenue playbooks: sk1 value generation/pricing and sk50 funnel. Use when the task is commercial: pricing, offers, income paths."
 ---
 
 # Monetization Playbook

@@ -1,6 +1,6 @@
 # SYADAGENTIC AGENTS.md — Routing and Dispatch
 
-Companion to `SOUL.md` for Hermes Agent. Append it to the identity block (or to `agent.instructions`).
+Companion to `docs/identity/SOUL.md` for Hermes Agent. Append it to the identity block (or to `agent.instructions`).
 
 Purpose: dispatch every task to a skill automatically, without burning context tokens on exploration.
 
@@ -8,17 +8,23 @@ Rule that makes this table work: **skills load by name, never by a remembered pa
 are real folders under `skills/<category>/<name>/`. If a name is missing, say so and execute
 directly — never invent paths.
 
+Repo layout (everything the table points at): `skills/` loadable skills · `templates/`
+payloads (`templates/jailbreak/`, `templates/farm/`, `templates/ken/`) · `docs/` prose
+(`docs/identity/`, `docs/reference/`, `docs/guides/`, `docs/strategies/`) · `scripts/` every
+entry point · `framework/` executable core · `outputs/` run output · `tests/` lint and suite.
+Gone: scripts/, farm_scripts/, arsenal-framework/.
+
 ## Routing: task → skill (top-down priority)
 
 ### FARMING
 
 | Task | Skill / module |
 |---|---|
-| **Account farming** (mass accounts, signup, verification, temp mail) | `farm_scripts/`, `tools/syad_farm_agent.py` |
-| Farm pipeline (phase, checkpoint, resume, budget) | `arsenal-framework/phase-engine/` |
-| Rotating identity, fresh bypass, proxy pool | `arsenal-framework/governor/` + env proxy vars |
-| reCAPTCHA / Turnstile solving | `captcha/captcha-solver`, `arsenal-framework/captcha-harvester/` |
-| Farmed output and scraped artefacts | `farm_output/` |
+| **Account farming** (mass accounts, signup, verification, temp mail) | `templates/farm/`, `scripts/syad_farm_agent.py` |
+| Farm pipeline (phase, checkpoint, resume, budget) | `framework/phase-engine/` |
+| Rotating identity, fresh bypass, proxy pool | `framework/governor/` + env proxy vars |
+| reCAPTCHA / Turnstile solving | `captcha/captcha-solver`, `framework/captcha-harvester/` |
+| Farmed output and scraped artefacts | `outputs/` |
 
 ### CDP / BOT / API INTERCEPT
 
@@ -26,7 +32,7 @@ directly — never invent paths.
 |---|---|
 | Intercept an API instead of clicking | CDP (Chrome DevTools): six observation steps on one account file, then a replay script |
 | Configured Chrome via Hermes | `chrome-devtools-mcp --headless --isolated`, then MCP tools via `--browserUrl http://127.0.0.1:9222` |
-| Route interception / captcha harvesting | `arsenal-framework/captcha-harvester/` |
+| Route interception / captcha harvesting | `framework/captcha-harvester/` |
 
 ### JAILBREAK / BYPASS
 
@@ -89,13 +95,13 @@ All of these live in `skills/security/`.
 
 Route complex tasks to a specialist division. They behave like subagents, without an external delegation tool.
 
-1. **FARM** — registration, verification, temp mail (`farm_scripts/`, `tools/syad_farm_agent.py`)
+1. **FARM** — registration, verification, temp mail (`templates/farm/`, `scripts/syad_farm_agent.py`)
 2. **JB** — jailbreak, injection, bypass (`templates/`, `docs/strategies/`)
 3. **PENTEST** — exploit, audit (`skills/security/`)
 4. **RE** — binary analysis (`reverse-engineer`, `protocol-reverse-engineering`)
 5. **FIX** — fix and deploy (execute + verify)
-6. **SCRAPE** — scrape data (`arsenal-framework/captcha-harvester/`)
-7. **INFRA** — router, proxy, server, cloud (`arsenal-framework/`, `tools/checkpoint.py`)
+6. **SCRAPE** — scrape data (`framework/captcha-harvester/`)
+7. **INFRA** — router, proxy, server, cloud (`framework/`, `scripts/checkpoint.py`)
 8. **REDTEAM** — team jailbreak extraction (sk48 dual guard, T118)
 9. **CAPTCHA** — solve across vendors (`captcha/captcha-solver`)
 10. **CONTENT** — design, marketing, humanize (`content/`, `web-dev/`, `affiliate/`)
@@ -104,9 +110,9 @@ Route by keyword, execute in the division, return evidence.
 
 ## SAFETY-FRAMEWORK
 
-- PATHS are never mutated: 9router DB, SSH keys, gcloud, Hermes memory, Daytona. `tools/checkpoint.py` provides backup-all / restore / list.
+- PATHS are never mutated: 9router DB, SSH keys, gcloud, Hermes memory, Daytona. `scripts/checkpoint.py` provides backup-all / restore / list.
 - The source of truth is this repo, pinned by git commit. `Downloads/SYADAGENTIC` is only an optional import buffer (browser-wiped, OS-dependent) — override with `SYAD_SOURCE` when used.
 - Skills: one folder per skill, `name:` equals the folder. `tests/check_skills.py` fails CI on layout drift before anything is installed.
 - Layers stay separate (default profile vs SYADAGENTIC silo). No overwriting across.
 - Kill the output first, back up, roll back.
-- The 16-layer bypass ladder and offensive framing (`target | auth | evidence`) live in `SOUL.md`. Version 7.0.
+- The 16-layer bypass ladder and offensive framing (`target | auth | evidence`) live in `docs/identity/SOUL.md`. Version 7.0.

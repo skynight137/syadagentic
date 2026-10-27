@@ -1,6 +1,6 @@
 ---
 name: engineering-playbook
-description: Engineering playbooks: AI builder (sk7), MCP servers (sk24), data pipelines (sk5), file handling (sk8), interfaces (sk9), plus sk2/sk23/sk25/sk26. Use for build/debug work outside a single-file patch.
+description: "Engineering playbooks: AI builder (sk7), MCP servers (sk24), data pipelines (sk5), file handling (sk8), interfaces (sk9), plus sk2/sk23/sk25/sk26. Use for build/debug work outside a single-file patch."
 ---
 
 # Engineering Playbook

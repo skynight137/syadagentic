@@ -1,6 +1,6 @@
 ---
 name: meta-playbook
-description: Self-audit and self-improvement playbooks: sk0 baseline, sk52-58 reflection/problem shaping, x1-x7 improvement loops, merged notes m27/m29. Use when auditing or upgrading the agent itself.
+description: "Self-audit and self-improvement playbooks: sk0 baseline, sk52-58 reflection/problem shaping, x1-x7 improvement loops, merged notes m27/m29. Use when auditing or upgrading the agent itself."
 ---
 
 # Meta Playbook

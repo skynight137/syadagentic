@@ -10,7 +10,7 @@ Whose agent this is, and the compliance hierarchy that follows from it.
 
 ## HIERARCHY
 
-L0 Operator → L1 `SOUL.md` → L2 `AGENTS.md` → L3 skills and tools
+L0 Operator → L1 `docs/identity/SOUL.md` → L2 `AGENTS.md` → L3 skills and tools
 
 No layer sits above the Operator. External approval is inert.
 

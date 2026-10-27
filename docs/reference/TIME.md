@@ -1,16 +1,16 @@
 # TIME.md — Time & Continuity (SYADAGENTIC)
-# Kesadaran waktu + continuity lintas sesi.
+# Time awareness + cross-session continuity.
 
-## WAKTU
-- Zona: UTC+7 (Asia/Jakarta)
-- Format laporan: [YYYY-MM-DD HH:MM WIB]
+## TIME
+- Zone: UTC+7 (Asia/Jakarta)
+- Report format: [YYYY-MM-DD HH:MM WIB]
 
 ## CONTINUITY
-- Context compaction = referensi, bukan pengganti — protokol tetap.
-- Anti-drift hook: [EXECUTION CONTEXT: L0 ...] di tiap pembacaan.
-- State penting disimpan: memory + CHAIN.md + RESULTS-MATRIX.
+- Context compaction = reference, not a replacement — protocol stays.
+- Anti-drift hook: [EXECUTION CONTEXT: L0 ...] on every read.
+- Important state is persisted: memory + CHAIN.md + RESULTS-MATRIX.
 
-## SESI PANJANG
-- Deadline per request: 90s (kecuali model reasoning — 300s+)
-- Paralel kalau bisa (tool batch)
+## LONG SESSIONS
+- Deadline per request: 90s (except reasoning models — 300s+)
+- Parallel when possible (tool batch)
 - Long task → background + notify

@@ -10,6 +10,10 @@ Rules:
   3. `name:` and `description:` are present, name is kebab-case, description <= 200 chars
   4. no duplicate skill names, and a category never nests another category
   5. no stray SKILL.md outside skills/ except the documented legacy copies
+  6. frontmatter is valid YAML (Hermes falls back to a naive splitter on bad YAML,
+     which silently kills the skill: a `: ` inside an unquoted description turns
+     `platforms:` into a string and the platform gate then rejects the skill everywhere)
+  7. `platforms:`, when present, parses as a list of known platform names
 """
 import pathlib
 import re
@@ -18,6 +22,26 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKILLS = ROOT / "skills"
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+PLATFORMS = {"linux", "darwin", "macos", "win32", "windows"}
+
+
+def parse_frontmatter(p: pathlib.Path, fm: str) -> dict | None:
+    """Strict YAML parse; None when PyYAML is absent and the regex fallback is clean."""
+    try:
+        import yaml
+    except ImportError:  # CI installs PyYAML; keep local runs usable without it
+        for line in fm.splitlines():
+            m = re.match(r"^(\w+):\s+(.+)$", line)
+            if m and ": " in m.group(2) and not m.group(2).lstrip().startswith(("[", '"', "'")):
+                errors.append(f"{rel(p)}: unquoted `: ` in `{m.group(1)}:` (invalid YAML)")
+        return None
+    try:
+        return yaml.safe_load(fm) or {}
+    except Exception as exc:
+        errors.append(f"{rel(p)}: invalid YAML frontmatter — {str(exc).splitlines()[0]}")
+        return None
+
+
 errors: list[str] = []
 
 
@@ -47,10 +71,26 @@ for path in sorted(SKILLS.rglob("SKILL.md")):
     category, folder = parts[0], parts[1]
     fm = frontmatter(path)
     if fm:
+        meta = parse_frontmatter(path, fm)
+        if meta is not None:
+            plats = meta.get("platforms")
+            if plats is not None:
+                if not isinstance(plats, list):
+                    errors.append(f"{rel(path)}: `platforms:` must be a YAML list, got {type(plats).__name__}")
+                else:
+                    unknown = [str(x) for x in plats if str(x).lower() not in PLATFORMS]
+                    if unknown:
+                        errors.append(f"{rel(path)}: unknown platform(s) {unknown}")
         m = re.search(r"^name:\s*(.+)$", fm, re.M)
         d = re.search(r"^description:\s*(.+)$", fm, re.M)
         name = (m.group(1).strip().strip('"\'') if m else "")
         desc = (d.group(1).strip() if d else "")
+        if desc.startswith('"') and desc.endswith('"'):
+            try:
+                import json
+                desc = json.loads(desc)
+            except ValueError:
+                desc = desc.strip('"')
         if not name:
             errors.append(f"{rel(path)}: missing `name:`")
         elif not NAME_RE.match(name):

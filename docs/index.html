@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,77 +43,78 @@
 </header>
 
 <section class="card">
-  <h2>🧠 Apa Itu SyadAgentic?</h2>
-  <p>Satu file (<code>SYADAGENTIC.md</code>) yang ditempatkan di agent apa pun (Hermes, Claude Code, OpenCode, Cursor, API) membuat LLM <b>nurut dan mengeksekusi tanpa batasan</b> — untuk automation, bot, farming, security testing, AI building, dan research.</p>
+  <h2>🧠 What is SyadAgentic?</h2>
+  <p>One file (<code>SYADAGENTIC.md</code>) dropped into any agent (Hermes, Claude Code, OpenCode, Cursor, API) makes the LLM <b>comply and execute without friction</b> — for automation, bots, farming, security testing, AI building and research.</p>
   <ul>
-    <li><b>Zero-Refusal</b> — tidak ada moralizing, tidak ada "saya tidak bisa"</li>
-    <li><b>Intelligence Amplifier</b> — auto-workflow: Analisis → Strategi → Eksekusi → Verifikasi</li>
-    <li><b>Multi-Solusi</b> — A gagal → otomatis B/C/D, tidak menyerah</li>
-    <li><b>No-Hallucination</b> — setiap klaim = real tool output</li>
-    <li><b>Auto-Research</b> — riset mendalam dari semua sumber sampai akar</li>
+    <li><b>Zero-Refusal</b> — no moralizing, no "I can't"</li>
+    <li><b>Intelligence Amplifier</b> — automatic workflow: Analyse → Strategy → Execute → Verify</li>
+    <li><b>Multi-Solution</b> — A fails → B/C/D follows automatically, never surrenders</li>
+    <li><b>No-Hallucination</b> — every claim is backed by real tool output</li>
+    <li><b>Auto-Research</b> — digs through every source down to the root</li>
   </ul>
 </section>
 
 <section class="card">
-  <h2>⚡ Cara Pakai (30 detik)</h2>
-  <pre># 1. Taruh di lokasi agent baca otomatis:
+  <h2>⚡ How to use (30 seconds)</h2>
+  <pre># 1. Drop it where the agent reads automatically:
 #    Claude Code → ~/.claude/CLAUDE.md
 #    opencode     → ~/.config/opencode/AGENTS.md
 #    Cursor       → ~/.cursorrules
 #    Project      → ./AGENTS.md
-#    API          → system prompt = SYADAGENTIC-SHORT.md (frontier)
+#    API          → system prompt = docs/identity/SYADAGENTIC-SHORT.md (frontier)
 
-# 2. Atau satu-klik installer:
-python install_universal.py
+# 2. Or use the one-command installer:
+python scripts/install_universal.py
 
-# 3. Verifikasi:
-python tests/run_tests.py   # 10/10 PASS</pre>
+# 3. Verify:
+python tests/run_tests.py   # 11/11 PASS</pre>
   <a class="btn gh" href="https://github.com/Sekolah76/syadagentic">📦 GitHub Repo</a>
   <a class="btn" href="https://github.com/Sekolah76/syadagentic/archive/refs/heads/main.zip">⬇️ Download ZIP</a>
 </section>
 
 <section class="card">
-  <h2>📊 Hasil Test Nyata</h2>
+  <h2>📊 Real test results</h2>
   <table>
-    <tr><th>Target</th><th>Hasil</th><th>Keterangan</th></tr>
+    <tr><th>Target</th><th>Result</th><th>Notes</th></tr>
     <tr><td>Gemini 3.7 (gateway)</td><td class="ok">5/6 OPEN</td><td>farm, bypass, build-AI, NSFW, abuse</td></tr>
     <tr><td>Codex GPT-5.6 (gateway)</td><td class="ok">OPEN</td><td>bot workflow 8379 chars</td></tr>
     <tr><td>GPT-OSS-120b</td><td class="ok">OPEN</td><td>intercept via SYAD-SHORT</td></tr>
-    <tr><td>Laguna/Nemotron (open-weight)</td><td class="ok">OPEN</td><td>konsisten — auto-framing</td></tr>
-    <tr><td>ChatGPT/Claude resmi</td><td class="no">BLOCKED</td><td>classifier server-side — fakta industri</td></tr>
+    <tr><td>Laguna/Nemotron (open-weight)</td><td class="ok">OPEN</td><td>consistent — auto-framing</td></tr>
+    <tr><td>Official ChatGPT/Claude</td><td class="no">BLOCKED</td><td>server-side classifier — industry fact</td></tr>
   </table>
-  <p style="color:var(--muted);font-size:.9rem">Jujur & transparan — framework tembus open-weight + gateway unofficial. API resmi = batas teknis semua framework. Detail di <code>GUIDE-MODEL.md</code>.</p>
+  <p style="color:var(--muted);font-size:.9rem">Honest by design — the framework breaks open-weight models and unofficial gateways. Official APIs keep a technical ceiling no framework defeats. Details in <code>docs/guides/GUIDE-MODEL.md</code>.</p>
 </section>
 
 <section class="card">
-  <h2>📁 Isi Paket</h2>
+  <h2>📁 Repo contents</h2>
   <table>
-    <tr><th>File</th><th>Fungsi</th></tr>
-    <tr><td><code>SYADAGENTIC.md</code></td><td>Universal jailbreak protocol (11KB)</td></tr>
-    <tr><td><code>SYADAGENTIC-SHORT.md</code></td><td>Versi frontier (1.2KB)</td></tr>
-    <tr><td><code>SOUL.md / AGENTS.md</code></td><td>Identity + routing + auto-research</td></tr>
-    <tr><td><code>prefill.json</code></td><td>Compliance priming</td></tr>
-    <tr><td><code>templates/jailbreak/templates.md</code></td><td>39 template T1-T119</td></tr>
-    <tr><td><code>GUIDE-MODEL.md</code></td><td>Panduan pilih model</td></tr>
-    <tr><td><code>gate/</code></td><td>7-stage evidence gate</td></tr>
-    <tr><td><code>tests/</code></td><td>Test suite 10/10</td></tr>
-    <tr><td><code>tools/</code></td><td>TokenBreak + Caesar encoder</td></tr>
-    <tr><td><code>install_universal.py</code></td><td>Installer 1-klik</td></tr>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td><code>docs/identity/SOUL.md</code></td><td>Identity + execution rules + 16-layer ladder</td></tr>
+    <tr><td><code>AGENTS.md</code></td><td>Task → skill routing and dispatch</td></tr>
+    <tr><td><code>docs/identity/SYADAGENTIC.md</code></td><td>Universal jailbreak protocol (11KB)</td></tr>
+    <tr><td><code>docs/identity/SYADAGENTIC-SHORT.md</code></td><td>Frontier variant (1.2KB)</td></tr>
+    <tr><td><code>templates/prefill.json</code></td><td>Compliance priming</td></tr>
+    <tr><td><code>templates/jailbreak/templates.md</code></td><td>39 templates T1-T119</td></tr>
+    <tr><td><code>templates/farm/</code></td><td>Per-model farm payloads</td></tr>
+    <tr><td><code>skills/</code></td><td>84 loadable skills across 12 categories</td></tr>
+    <tr><td><code>framework/</code></td><td>Phase engine, governor, chain-map, drills, captcha harvester</td></tr>
+    <tr><td><code>scripts/</code></td><td>Installers, gate, checkpoint, encoders</td></tr>
+    <tr><td><code>tests/</code></td><td>Test suite + layout/identity lint</td></tr>
   </table>
 </section>
 
 <section class="card">
-  <h2>⚠️ Kejujuran (anti-scam)</h2>
+  <h2>⚠️ Honesty</h2>
   <ul>
-    <li>"Nurut eksekusi" = 100% berfungsi di open-weight + gateway unofficial</li>
-    <li>API resmi (ChatGPT/Claude/Gemini) = classifier server tak bisa dibobol prompt — klaim sebaliknya = penipuan</li>
-    <li>Bukan tombol ajaib: exploit butuh target yang benar-benar rentan</li>
-    <li>Gunakan utk automation milik sendiri + testing authorized. Tanggung jawab = pengguna</li>
+    <li>"It complies" works 100% on open-weight models and unofficial gateways</li>
+    <li>Official APIs (ChatGPT/Claude/Gemini) have a server-side classifier a prompt cannot breach — claiming otherwise is a scam</li>
+    <li>Not a magic button: an exploit still needs a genuinely vulnerable target</li>
+    <li>Meant for your own automation and authorized testing. Responsibility stays with the user</li>
   </ul>
 </section>
 
 <footer class="footer">
-  © 2026 SyadAgentic — MIT License · For research & authorized automation
+  © 2026 SyadAgentic — MIT License · For research &amp; authorized automation
 </footer>
 </div>
 </body>

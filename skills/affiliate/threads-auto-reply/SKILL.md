@@ -1,6 +1,6 @@
 ---
 name: threads-auto-reply
-description: Threads affiliate auto-reply. v10 stealth: 9router LLM + burst-rest scheduler + sleep window + log-normal delay …
+description: "Threads affiliate auto-reply. v10 stealth: 9router LLM + burst-rest scheduler + sleep window + log-normal delay …"
 tags: [threads, affiliate, shopee, auto-reply, comments, gen-z, playwright, sso, cdp]
 related_skills: [threads-auto-post, cdp-cleanup]
 ---
@@ -13,7 +13,7 @@ related_skills: [threads-auto-post, cdp-cleanup]
 - Uses Playwright Headless via `~/.hermes/scripts/threads_reply_v6.py`. DO NOT RUN RAW `requests` SCRIPTS. Threads GraphQL is locked down. Handle timeout issues by running job in background (`cronjob action='run'`).
 - Originally set to 1 during fragile period (2026-06-05) due to account hard blocks on attempt 2.
 - 7-day clean streak achieved (2026-06-09) but SYADAGENTIC decided to keep at 1 reply permanently.
-- **Cron interval: `every 150m` (2.5 jam, updated 2026-06-15) — previously `every 2h`.**
+- **Cron interval: `every 150m` (2.5 h, updated 2026-06-15) — previously `every 2h`.**
 - **Reply 1:** Affiliate targeting (existing strategy — fashion, skincare, tech, lifestyle)
 - ~~Reply 2-3~~ — **DISABLED permanently.** Re-enable only on explicit SYADAGENTIC approval.
 - Script `REPLIES_TARGET = 1` and cron interval `every 2h`.
@@ -148,11 +148,11 @@ ALL Playwright/Chromium approaches result in `integrity_review_decision: "pendin
 SYADAGENTIC can reply manually from real Chrome → confirmed NOT an account flag. Threads detects browser fingerprint at API level. **Auto-reply via Playwright is NOT viable.** Use manual reply with draft content instead, or find alternative automation method.
 
 ## ⚠️ CRITICAL RULES
-- **ANTI-SPAM LINK OBFUSCATION**: Link **WAJIB** affiliate. Bisa pakai format DIOBFUSCATE (disamarkan): `s . shopee . co . id / XXXX (hapus spasi ya kak)`. Namun jika diminta user, kembalikan ke format link klik asli dan tingkatkan **HUMAN TYPING DELAY**.
-- **JANGAN PERNAH** post link asli produk.
-- **HUMAN TYPING DELAY**: Wajib tambahkan `time.sleep(random.randint(15, 30))` sebelum klik Kirim.
-- **SEARCH KEYWORDS**: Gunakan kata kunci "keluhan/problem" (cth: "muka break out").
-- **CRON SCHEDULE**: Gunakan `every 240m` (tiap 4 jam) untuk batch kecil natural.
+- **ANTI-SPAM LINK OBFUSCATION**: Link **MUST** be the affiliate one. You may use the OBFUSCATED (disguised) format: `s . shopee . co . id / XXXX (remove the spaces, sis)`. However if the user asks, revert to the raw clickable link format and raise the **HUMAN TYPING DELAY**.
+- **NEVER** post the raw product link.
+- **HUMAN TYPING DELAY**: Always add `time.sleep(random.randint(15, 30))` before clicking Send.
+- **SEARCH KEYWORDS**: Use "complaint/problem" keywords (e.g. "muka break out").
+- **CRON SCHEDULE**: Use `every 240m` (every 4 hours) for small, natural batches.
 - **NEVER reuse same product link** — rotate from database
 - Check coverage stats: prioritize ❌ UNUSED over ✅ USED
 
@@ -160,8 +160,8 @@ SYADAGENTIC can reply manually from real Chrome → confirmed NOT an account fla
 
 **UI may show "Comment" OR "Reply" depending on Threads version/locale. Handle BOTH.**
 
-**ORIGINAL POST reply button = button dengan ANGKA** (e.g., "Reply17", "Reply 3", "Balas 26", "Comment15")
-**Comment reply button = button TANPA angka** (e.g., "Balas", "Reply", "Comment")
+**ORIGINAL POST reply button = button WITH A NUMBER** (e.g., "Reply17", "Reply 3", "Balas 26", "Comment15")
+**Comment reply button = button WITHOUT a number** (e.g., "Balas", "Reply", "Comment")
 
 ### CRITICAL: 0-Reply Posts
 When a post has **0 replies**, there is NO numbered button. The plain "Reply" IS the original post reply button. Only ONE "Reply" button exists.
@@ -249,9 +249,9 @@ with open(os.path.expanduser("~/threads_cookies.json"), 'w') as f:
 
 ## ⚠️ Critical Distinctions
 - See `references/anti-spam-rules.md` for mandatory safety delays, obfuscated link formats, and keyword guidelines.
-- **"Reply"** / **"Komentar"** = Balasan di postingan orang lain dengan affiliate link. Skill ini.
-- **"Postingan"** = POST BARU (original content). Pakai `threads-auto-post`.
-- **"Nimbrung"** = Join existing thread dengan comment. Bisa pakai skill ini.
+- **"Reply"** / **"Komentar"** (comment) = a reply on someone else's post carrying an affiliate link. This skill.
+- **"Postingan"** (post) = NEW POST (original content). Use `threads-auto-post`.
+- **"Nimbrung"** (join in) = join an existing thread with a comment. This skill can do it.
 - **Account:** @jagonya_shopee (ID: 3310347890)
 - **Auth:** Chrome Profile 16 — cookies auto-extracted via `browser_cookie3` (uv)
 - **Database:** `references/affiliate-link-database.md`
@@ -481,7 +481,7 @@ The v6 script uses 8 ASBUN-based templates for varied, natural-sounding comments
 **Why ASBUN works**: These patterns are derived from top-performing Threads affiliate accounts (yowezz, kontenhustle, mamak, notesofmira). They feel like genuine recommendations, not sales pitches. Random selection ensures variety across runs.
 
 ## Content Strategy Rules
-- **Fresh posts only:** < 12 jam (SYADAGENTIC directive 2026-06-12, tightened from 24h)
+- **Fresh posts only:** < 12 h (SYADAGENTIC directive 2026-06-12, tightened from 24h)
 - **Skip brand/business accounts** — don't comment on brand showcase posts
 - **Match topic:** skincare post → skincare link, makeup → makeup link
 
@@ -514,28 +514,28 @@ Search posts JS extracts `timeEl.getAttribute("datetime")` from `<time>` tags, o
 **Historical reference below (kept for documentation, NOT for execution):**
 
 **Crafting rules:**
-1. Reply sebagai "warga netizen" biasa, bukan sales
-2. Tone: santai, Gen Z Indonesia, pake bahasa gaul
-3. Awalnya komentar dulu soal isu → baru transisi natural ke link
-4. Link WAJIB diselipin, bahkan untuk politik — cari angle yang loosely related
+1. Reply as an ordinary "netizen", not a salesperson
+2. Tone: casual, Indonesian Gen Z, use slang
+3. Comment on the issue first → then transition naturally to the link
+4. The link MUST still be slipped in, even for politics — find a loosely related angle
 5. NO SARA, NO extremism, NO hate speech
 
 **Reply templates:**
 
-*Gosip seleb (fashion/beauty):*
+*Celeb gossip (fashion/beauty):*
 > "Ya ampun [seleb] emang gak pernah miss ya style-nya 🥺 btw yang nyari [produk] mirip dia, cek ini deh [link]"
 
-*Isu sosial/korupsi:*
+*Social issue/corruption:*
 > "[Komentar emosional soal isu] 😤 semoga [harapan]. Btw yang mau [produk related ke konteks], cek ini deh [link]"
 
-*Politik (umum):*
+*Politics (general):*
 > "[Opini netizen soal kebijakan] 🙏 btw [transition natural ke produk] [link]"
 
 **Angle mapping (issue → product):**
-- Korupsi dana gizi → suplemen makanan, alat masak
-- Harga naik → produk murah/alternatif
-- Kesehatan seleb → skincare, vitamin
-- Fashion seleb → outfit mirip, dupes murah
+- Nutrition-fund corruption → food supplements, cookware
+- Rising prices → cheap/alternative products
+- Celebs' health → skincare, vitamins
+- Celeb fashion → similar outfits, cheap dupes
 
 ## Working Scripts
 - **`threads_reply_playwright.py` (NEW — v7.0 Playwright, 2026-06-12):** Playwright headless version — lighter, faster, same features as v6. Login via Meta SSO, 42 targeted keywords, 12h post age filter, auto-mark USED, clean summary output. Tested: login ✅, search ✅, reply ✅. Run: `cd $HOME/.hermes/hermes-agent && venv/bin/python3 ~/.hermes/scripts/threads_reply_playwright.py`
@@ -740,7 +740,7 @@ When triggered manually via `cronjob(action='run')`:
 - **ALWAYS run AFTER post** — post goes first (SYADAGENTIC standard sequence: resume all → post → reply)
 - **Stagger rule applies** — ≥15min gap from post. Safe if post finished (check `last_status`).
 - **Rules still apply on manual triggers** — 1 reply max, dedup, relevance filter, keyword rotation.
-- **Monitoring:** When SYADAGENTIC says "kabarin kalo udah", check `cronjob(action='list')` after delay and report success/failure back.
+- **Monitoring:** When SYADAGENTIC says "kabarin kalo udah" (= tell me when it's done), check `cronjob(action='list')` after delay and report success/failure back.
 - Full manual trigger workflow documented in `threads-auto-post` skill.
 
 ## Cron Job — no_agent Pattern (VERIFIED 2026-06-11)

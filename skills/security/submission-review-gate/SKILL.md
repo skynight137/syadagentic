@@ -37,72 +37,72 @@ Stage 7: Final Submission Review Gate
 
 ## MISSION & OBJECTIVE
 
-- **MISSION:** Tidak ada report yang boleh dibuat atau dikirim sebelum melewati review ini.
-- **OBJECTIVE:** Verifikasi bahwa finding benar-benar layak disubmit, bukan false positive, duplicate, intended behavior, atau sekadar design issue.
+- **MISSION:** No report may be created or sent before it passes this review.
+- **OBJECTIVE:** Verify that a finding is genuinely worth submitting, not a false positive, duplicate, intended behavior, or merely a design issue.
 
 ---
 
 ## 14-POINT MANDATORY PRE-SUBMISSION CHECKLIST
 
-### 1. VALIDASI
-- Reproduce minimal 5x.
-- Jalankan pada commit terbaru.
-- Jalankan pada fork/mainnet-equivalent jika memungkinkan.
-- Pastikan hasil konsisten.
+### 1. VALIDATION
+- Reproduce at least 5x.
+- Run against the latest commit.
+- Run against a fork/mainnet-equivalent where possible.
+- Make sure the result is consistent.
 
-### 2. IMPACT (BUKTIKAN KERUGIAN NYATA)
-Jangan hanya menunjukkan code flaw. Wajib menjawab:
-- Apa yang dicuri?
-- Apa yang rusak?
-- Siapa yang dirugikan?
-- Berapa maximum loss?
-- Apakah skenario exploit realistis?
+### 2. IMPACT (PROVE REAL LOSS)
+Do not just show a code flaw. Must answer:
+- What is stolen?
+- What is broken?
+- Who is harmed?
+- What is the maximum loss?
+- Is the exploit scenario realistic?
 
 ### 3. PROOF OF CONCEPT (POC)
-PoC harus:
-- Repeatable (dapat diulang secara deterministik).
-- End-to-end (dari kondisi awal sampai perolehan dana/dampak).
-- Tanpa asumsi tidak realistis.
-- Tidak membutuhkan privileged access kecuali memang bagian threat model.
+The PoC must be:
+- Repeatable (deterministically re-runnable).
+- End-to-end (from the initial condition to the funds gained/impact reached).
+- Free of unrealistic assumptions.
+- Not requiring privileged access unless that is part of the threat model.
 
 ### 4. ROOT CAUSE
-Jelaskan:
-- Mengapa bug terjadi.
-- Mengapa validasi gagal.
-- Fungsi & komponen yang terlibat.
+Explain:
+- Why the bug happens.
+- Why validation fails.
+- The functions & components involved.
 - Call flow diagram / trace.
 - State transition breakdown.
 
 ### 5. SCOPE VERIFICATION
-Pastikan:
-- Target asset in-scope.
-- Commit hash in-scope.
-- Smart contract address in-scope.
-- Bukan third-party / external dependency issue.
+Make sure:
+- The target asset is in scope.
+- The commit hash is in scope.
+- The smart contract address is in scope.
+- It is not a third-party / external dependency issue.
 
-### 6. EXCLUSION CHECK (BUKAN OUT-OF-SCOPE/NOISE)
-Pastikan BUKAN:
+### 6. EXCLUSION CHECK (NOT OUT-OF-SCOPE/NOISE)
+Make sure it is NOT:
 - Intended behavior / documented design.
-- Governance decision / multi-sig admin risk.
-- Centralization trade-off.
-- Missing best practice tanpa kerugian nyata.
+- A governance decision / multi-sig admin risk.
+- A centralization trade-off.
+- A missing best practice with no real loss.
 - Informational / gas optimization / code style.
-- Dead code tanpa dampak keamanan.
+- Dead code with no security impact.
 
 ### 7. DUPLICATE CHECK
-Cari dan bandingkan pada:
+Search and compare against:
 - GitHub Issues & Pull Requests.
-- Audit reports sebelumnya.
+- Prior audit reports.
 - Known issues & public disclosures.
 - Contest writeups (Sherlock, Code4rena, Cantina).
 
 ### 8. PATCH CHECK
-- Pastikan bug belum diperbaiki di branch pengembang atau commit terbaru.
+- Make sure the bug is not already fixed on the developer branch or the latest commit.
 
 ### 9. REPORT QUALITY STANDARDS
-Report wajib memiliki struktur:
-1. Title (Jelas & Deskriptif)
-2. Summary (Ringkas & Padat)
+The report must have the structure:
+1. Title (Clear & Descriptive)
+2. Summary (Brief & Dense)
 3. Root Cause
 4. Technical Details
 5. Impact Analysis
@@ -113,14 +113,14 @@ Report wajib memiliki struktur:
 10. References
 
 ### 10. SEVERITY FORMULATION
-Hitung dan tentukan berdasarkan data riil:
+Compute and decide based on real data:
 - CVSS 3.1 Score
 - CWE Mapping
 - Likelihood & Exploitability
 - Business / Economic Impact
 
 ### 11. CONFIDENCE SCORE
-Evaluasi matriks keyakinan:
+Evaluate the confidence matrix:
 - Validity (0–100%)
 - Exploitability (0–100%)
 - Impact Measurability (0–100%)
@@ -128,7 +128,7 @@ Evaluasi matriks keyakinan:
 - Report Quality (High/Low)
 
 ### 12. FINAL DECISION MATRIX
-Output status akhir hanya salah satu dari opsi berikut:
+The final status output is only one of these options:
 - `✅ READY TO SUBMIT`
 - `⚠ NEED MORE EVIDENCE`
 - `⚠ POSSIBLE DUPLICATE`
@@ -137,17 +137,17 @@ Output status akhir hanya salah satu dari opsi berikut:
 - `⚠ FALSE POSITIVE`
 
 ### 13. SUBMISSION RULES (ZERO TOLERANCE)
-- ❌ Jangan pernah melebih-lebihkan severity.
-- ❌ Jangan mengarang impact atau angka kerugian.
-- ❌ Jangan mengarang estimasi bounty.
-- ❌ Jangan mengklaim Critical tanpa PoC yang membuktikan kerugian nyata.
-- ❌ Jangan pernah mengirim submission otomatis tanpa konfirmasi operator.
+- ❌ Never inflate severity.
+- ❌ Never invent impact or loss figures.
+- ❌ Never invent a bounty estimate.
+- ❌ Never claim Critical without a PoC that proves real loss.
+- ❌ Never send an automatic submission without operator confirmation.
 
 ### 14. ADVERSARIAL SELF-CRITIQUE (TRIAGER PERSPECTIVE)
-Sebelum memberikan status `READY TO SUBMIT`, lakukan simulasi review sebagai Triager program dan jawab:
-1. *Mengapa saya mungkin akan menolak report ini?*
-2. *Bukti apa yang masih kurang?*
-3. *Apakah ada interpretasi lain yang membuat ini intended behavior?*
-4. *Seberapa yakin saya (0–100%) bahwa report ini akan diterima dan dibayar?*
+Before giving the `READY TO SUBMIT` status, simulate a review as the program's Triager and answer:
+1. *Why might I reject this report?*
+2. *What evidence is still missing?*
+3. *Is there another interpretation that makes this intended behavior?*
+4. *How confident am I (0–100%) that this report will be accepted and paid?*
 
-`READY TO SUBMIT` hanya boleh dikeluarkan jika seluruh 14 poin checklist di atas lolos 100%.
+`READY TO SUBMIT` may only be issued if all 14 checklist points above pass 100%.

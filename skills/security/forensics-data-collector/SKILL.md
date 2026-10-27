@@ -1,6 +1,6 @@
 ---
 name: forensics-data-collector
-description: Forensics Data Collector - Auto-activating skill for Security Advanced. Triggers on: forensics data collector, forensics data collector Part of the Security Advanced skill category.
+description: "Forensics Data Collector - Auto-activating skill for Security Advanced. Triggers on: forensics data collector, forensics data collector Part of the Security Advanced skill category."
 allowed-tools: Read, Write, Edit, Bash, Grep
 version: 1.0.0
 license: MIT

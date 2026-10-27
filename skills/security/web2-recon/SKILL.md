@@ -219,15 +219,15 @@ cat /tmp/urls.txt | grep -iE "theme|profile|signature|customize|email|invoice|pd
 
 ```bash
 # Activate venv
-source ~/tools/SecretFinder/.venv/bin/activate
+source ~/scripts/SecretFinder/.venv/bin/activate
 
 # Scan a single JS file
-python3 ~/tools/SecretFinder/SecretFinder.py -i "https://target.com/static/js/main.js" -o cli
+python3 ~/scripts/SecretFinder/SecretFinder.py -i "https://target.com/static/js/main.js" -o cli
 
 # Scan all JS URLs found in recon
 cat /tmp/urls.txt | grep "\.js$" | head -50 | while read url; do
   echo "=== $url ==="
-  python3 ~/tools/SecretFinder/SecretFinder.py -i "$url" -o cli 2>/dev/null
+  python3 ~/scripts/SecretFinder/SecretFinder.py -i "$url" -o cli 2>/dev/null
 done
 
 deactivate
@@ -236,13 +236,13 @@ deactivate
 ### LinkFinder (Endpoints hidden in JS)
 
 ```bash
-source ~/tools/LinkFinder/.venv/bin/activate
+source ~/scripts/LinkFinder/.venv/bin/activate
 
 # Single JS file
-python3 ~/tools/LinkFinder/linkfinder.py -i "https://target.com/app.js" -o cli
+python3 ~/scripts/LinkFinder/linkfinder.py -i "https://target.com/app.js" -o cli
 
 # All pages (crawls JS from HTML)
-python3 ~/tools/LinkFinder/linkfinder.py -i "https://target.com" -d -o cli
+python3 ~/scripts/LinkFinder/linkfinder.py -i "https://target.com" -d -o cli
 
 deactivate
 ```
@@ -458,10 +458,10 @@ cat /tmp/live.txt | awk '{print $1}' | naabu -port 80,443,8080,8443,3000,4000,50
 pip install trufflehog3 2>/dev/null || true
 trufflehog filesystem --only-verified recon/$TARGET/ 2>/dev/null
 
-# SecretFinder — manual JS bundle scan (already in tools/)
-source ~/tools/SecretFinder/.venv/bin/activate
+# SecretFinder — manual JS bundle scan (already in scripts/)
+source ~/scripts/SecretFinder/.venv/bin/activate
 cat /tmp/urls.txt | grep "\.js$" | head -100 | while read url; do
-  python3 ~/tools/SecretFinder/SecretFinder.py -i "$url" -o cli 2>/dev/null
+  python3 ~/scripts/SecretFinder/SecretFinder.py -i "$url" -o cli 2>/dev/null
 done
 deactivate
 
@@ -488,7 +488,7 @@ gh search code "api_key" --owner "$TARGET_ORG" --json path,repository 2>/dev/nul
 gh search code "password" --owner "$TARGET_ORG" --json path,repository 2>/dev/null | head -20
 
 # GitDorker (if installed):
-python3 ~/tools/GitDorker/GitDorker.py -t GITHUB_TOKEN -d ~/tools/GitDorker/Dorks/alldorksv3 -q "$TARGET" -org
+python3 ~/scripts/GitDorker/GitDorker.py -t GITHUB_TOKEN -d ~/scripts/GitDorker/Dorks/alldorksv3 -q "$TARGET" -org
 ```
 
 ## 30-MINUTE RECON PROTOCOL

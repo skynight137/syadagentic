@@ -1,6 +1,6 @@
 ---
 name: ctf-playbook
-description: CTF playbooks per discipline: web (m43), pwn (m44), reversing (m45), crypto (m46), forensics (m47), LLM red-team extraction (m48) plus sk43-48 quick refs. Use when solving or authoring CTF challenges.
+description: "CTF playbooks per discipline: web (m43), pwn (m44), reversing (m45), crypto (m46), forensics (m47), LLM red-team extraction (m48) plus sk43-48 quick refs. Use when solving or authoring CTF challenges."
 ---
 
 # Ctf Playbook

@@ -1,41 +1,41 @@
-# TECHNIQUES-EXTRACTION PART 2 — Tools .py (non-crypto, dari baca langsung)
-# Lanjutan kurasi tools/ SYADAGENTIC. Hanya pola NON-CRYPTO yang reusable.
+# TECHNIQUES-EXTRACTION PART 2 — .py Tools (non-crypto, from direct reading)
+# Continuation of the scripts/ curation of SYADAGENTIC. Reusable NON-CRYPTO patterns only.
 
-## POLA UMUM YANG BERGUNA (bukan crypto)
+## GENERALLY USEFUL PATTERNS (non-crypto)
 
 ### Humanizer (content/humanizer.py)
-- Deteksi "AI-tell" + rewrite deterministik jd natural (regex, stdlib, keyless)
-- "tricolon-berulang → variasikan, jangan selalu 3"
-- Burstiness: panjang kalimat seragam = AI-tell → variasikan
-- Rewrite berat tetap lewat LLM (model_registry)
+- Detects "AI-tells" + deterministic rewrite into something natural (regex, stdlib, keyless)
+- "repeated tricolon → vary it, never always 3"
+- Burstiness: uniform sentence length = AI-tell → vary it
+- Heavy rewrites still go through an LLM (model_registry)
 
 ### API-first harvesting (intelligence/api_harvester.py)
 - DevTools → Network → "Copy as cURL" → parse_curl() → paginate_* → extract() → to_*
-- "Browser = LAST RESORT" — replikasi request, bukan klik-klik
-- Kurangi footprint anti-bot + hemat resource
+- "Browser = LAST RESORT" — replicate the request, do not click around
+- Reduces the anti-bot footprint + saves resources
 
 ### Global Dry-Run (meta/dryrun.py)
-- Satu flag dihormati SEMUA engine: kalau aktif → jalanin full pipeline TANPA 
-  broadcast, kumpulin "yang bakal terjadi"
-- Safety structural (bukan prompt)
+- One flag honored by EVERY engine: when active → run the full pipeline WITHOUT
+  broadcasting, collect "what would have happened"
+- Structural safety (not prompt-based)
 
 ### Compounding Memory (meta/memory_engine.py)
-- Simpan fakta/pelajaran/preferensi/keputusan/blocker+resolusi → recall relevan
-- "makin pinter tiap hari" — substrat self-improvement
+- Stores facts/lessons/preferences/decisions/blockers+resolutions → relevant recall
+- "smarter every day" — the substrate for self-improvement
 
 ### Self-Improvement Loop (meta/reflection.py)
-- LEARN: scan memory/log → distill pola jadi 'lesson' (simpan ke memory)
-- Gerbang ketat: apa yang boleh auto-apply vs butuh konfirmasi
+- LEARN: scan memory/log → distill patterns into 'lessons' (saved to memory)
+- Strict gate: what may be auto-applied vs what needs confirmation
 
 ### Multi-Agent Swarm (meta/swarm.py)
-- Spawn specialist lane paralel (researcher/executor/monitor) → agregasi
-- In-process & ringan, kompatibel delegate architecture
+- Spawns parallel specialist lanes (researcher/executor/monitor) → aggregation
+- In-process & lightweight, compatible with the delegate architecture
 
 ### Bulk Runner (monetization/revenue_engine.py)
-- Rate-limit, backoff, checkpoint-resume, dedupe — murni stdlib, uji offline
+- Rate-limit, backoff, checkpoint-resume, dedupe — pure stdlib, testable offline
 
-## CATATAN
-- File tools .py lainnya = crypto/web3/airdrop (alpha_radar, eligibility, farm_roi,
-  unlock_engine, exit_planner, security_daemon, team_auth SIWE, auto_bot, 
-  contract_watch) = DIHAPUS sesuai user — tidak di-merge
-- Pola di atas = umum (bukan crypto) → berguna utk SyadAgentic framework
+## NOTES
+- The other .py tools = crypto/web3/airdrop (alpha_radar, eligibility, farm_roi,
+  unlock_engine, exit_planner, security_daemon, team_auth SIWE, auto_bot,
+  contract_watch) = REMOVED as the user asked — not merged
+- The patterns above are generic (non-crypto) → useful for the SyadAgentic framework

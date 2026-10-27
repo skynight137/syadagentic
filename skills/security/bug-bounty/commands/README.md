@@ -1,6 +1,6 @@
 # Commands
 
-26 slash commands installed into `~/.claude/commands/` by `install.sh`.
+26 slash commands installed into `~/.claude/commands/` by `scripts/install.sh`.
 
 ## Core Workflow
 | Command | What It Does |

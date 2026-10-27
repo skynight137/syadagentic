@@ -1,6 +1,6 @@
 ---
 name: content-playbook
-description: Content creation and copywriting playbooks: m3 creation/strategy/social (merged m27) and m28 copywriting/content research (merged m29). Use for writing, humanizing, content strategy, social scheduling.
+description: "Content creation and copywriting playbooks: m3 creation/strategy/social (merged m27) and m28 copywriting/content research (merged m29). Use for writing, humanizing, content strategy, social scheduling."
 ---
 
 # Content Playbook

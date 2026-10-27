@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""install_universal.py — install SYADAGENTIC identity into a Hermes *profile*.
+"""scripts/install_universal.py — install SYADAGENTIC identity into a Hermes *profile*.
 
 Profile-first and idempotent:
   1. profile missing  -> `hermes profile create <name> --clone` (working config + .env)
   2. profile present  -> patch only, nothing is recreated
   3. target `default` -> the same files PLUS `agent.system_prompt` in config.yaml
 
-Payload per target: identity (SOUL.md + AGENTS.md), full repo mirror under
+Payload per target: identity (docs/identity/SOUL.md + AGENTS.md), full repo mirror under
 references/syadagentic/, and the arsenal skills. A durable launcher alias goes to
 the persistent bin dir ($XDG_BIN_HOME, else $REPL_HOME/.local/bin, else
 ~/.local/bin) — $HOME is wiped on hosted sandboxes (Replit, Codespaces), $HERMES_HOME
@@ -18,12 +18,12 @@ Other targets (opt-in):
   Cursor       ~/.cursorrules (global) + project AGENTS.md / CLAUDE.md
 
 Usage:
-  python3 install_universal.py                       # profile `syad`
-  python3 install_universal.py --profile other       # profile `other`
-  python3 install_universal.py --profile default     # default profile + system_prompt
-  python3 install_universal.py --no-create           # fail instead of creating
-  python3 install_universal.py --all-agents          # + opencode / Claude / Cursor
-  python3 install_universal.py /path/project         # + files into that project root
+  python3 scripts/install_universal.py                       # profile `syad`
+  python3 scripts/install_universal.py --profile other       # profile `other`
+  python3 scripts/install_universal.py --profile default     # default profile + system_prompt
+  python3 scripts/install_universal.py --no-create           # fail instead of creating
+  python3 scripts/install_universal.py --all-agents          # + opencode / Claude / Cursor
+  python3 scripts/install_universal.py /path/project         # + files into that project root
 """
 import argparse
 import os
@@ -31,10 +31,11 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import time
 
-ROOT = pathlib.Path(__file__).resolve().parent
-SOURCE = ROOT / "SOUL.md"
-SOURCE_SHORT = ROOT / "SYADAGENTIC-SHORT.md"
+ROOT = pathlib.Path(__file__).resolve().parent.parent  # repo root (this file lives in scripts/)
+SOURCE = ROOT / "docs/identity/SOUL.md"
+SOURCE_SHORT = ROOT / "docs/identity/SYADAGENTIC-SHORT.md"
 ROUTING = ROOT / "AGENTS.md"
 HOME = pathlib.Path.home()
 IGNORE = shutil.ignore_patterns(".git", ".worktrees", "__pycache__", "*.guardrail-bak")
@@ -82,7 +83,7 @@ def _hermes_cli():
 
 
 def identity_text() -> str:
-    """SOUL.md + the AGENTS.md dispatch table, as one identity block."""
+    """docs/identity/SOUL.md + the AGENTS.md dispatch table, as one identity block."""
     text = SOURCE.read_text(encoding="utf-8")
     if ROUTING.exists():
         text += "\n\n---\n\n" + ROUTING.read_text(encoding="utf-8")
@@ -139,7 +140,11 @@ def ensure_profile(name: str, create: bool, clone: bool, alias: bool):
     if clone:
         cmd.append("--clone")
     res = subprocess.run(cmd, capture_output=True, text=True)
-    if res.returncode == 0:
+    if res.returncode != 0 or not (prof / "config.yaml").exists():
+        # cli can return 0 with a half-created dir (gateway hiccup): retry once
+        time.sleep(1)
+        res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode == 0 and (prof / "config.yaml").exists():
         print(f"  ✅ created {prof} ({'cloned from the active profile' if clone else 'bare'})")
     else:
         prof.mkdir(parents=True, exist_ok=True)
@@ -177,12 +182,15 @@ def link_skill(src: pathlib.Path, dst: pathlib.Path) -> bool:
 def install_payload(prof: pathlib.Path) -> None:
     """Identity + repo mirror + arsenal skills into one profile dir."""
     try:
-        (prof / "SOUL.md").write_text(identity_text(), encoding="utf-8")
-        print(f"  ✅ {prof / 'SOUL.md'} (SOUL.md + AGENTS.md)")
+        # Hermes reads <profile>/SOUL.md as the personality; the repo copy lives in
+        # docs/identity/ and reaches the profile only through the repo mirror.
+        soul_path = prof / "SOUL.md"
+        soul_path.write_text(identity_text(), encoding="utf-8")
+        print(f"  ✅ {soul_path} (SOUL.md + AGENTS.md)")
     except Exception as exc:
-        print(f"  ❌ {prof / 'SOUL.md'}: {exc}")
+        print(f"  ❌ {soul_path}: {exc}")
     refs = prof / "references" / "syadagentic"
-    try:  # full repo mirror so SOUL.md's relative links (skills/, templates/, docs/) resolve
+    try:  # full repo mirror so docs/identity/SOUL.md's relative links (skills/, templates/, docs/) resolve
         shutil.copytree(ROOT, refs, dirs_exist_ok=True, ignore=IGNORE)
         print(f"  ✅ {refs}/ (repo mirror)")
     except Exception as exc:
@@ -333,8 +341,8 @@ def main() -> int:
         claude_setup()
         cursor_setup()
         if SOURCE_SHORT.exists():  # variant for frontier models with big context
-            install_file(HOME / ".config" / "opencode" / "SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
-            install_file(HOME / ".claude" / "SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
+            install_file(HOME / ".config" / "opencode" / "docs/identity/SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
+            install_file(HOME / ".claude" / "docs/identity/SYADAGENTIC-SHORT.md", src=SOURCE_SHORT)
     if args.root:
         project_setup(pathlib.Path(args.root))
 

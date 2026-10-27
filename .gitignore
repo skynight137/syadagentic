@@ -8,11 +8,11 @@ state.json
 *.log
 .hermes-tmp*
 # state files
-arsenal-framework/**/.farm-state/
-arsenal-framework/**/.phase-state/
-arsenal-framework/**/.farm-grain/
-arsenal-framework/**/grain/
-arsenal-framework/**/__pycache__/
+framework/**/.farm-state/
+framework/**/.phase-state/
+framework/**/.farm-grain/
+framework/**/grain/
+framework/**/__pycache__/
 demo/
 # arsenal-skills state
 arsenal-skills/**/__pycache__/
@@ -21,3 +21,10 @@ arsenal-skills/**/__pycache__/
 
 # checkpoint.py backups
 *.bak-*
+
+# farm run output (dir kept via .gitkeep)
+outputs/*
+!outputs/.gitkeep
+outputs/*
+!outputs/.gitkeep
+SKILLS.lock.sig

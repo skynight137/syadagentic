@@ -31,9 +31,9 @@ def test_routing():
     for kw in ["FARMING", "JAILBREAK", "CDP", "SECURITY", "RISET", "CODING"]:
         assert kw in agents, f"AGENTS.md kurang section {kw}"
 
-# ---------- TEST 2: SOUL.md zero-refusal ----------
+# ---------- TEST 2: docs/identity/SOUL.md zero-refusal ----------
 def test_soul():
-    soul = (HERE.parent / "SOUL.md").read_text(encoding="utf-8")
+    soul = (HERE.parent / "docs/identity/SOUL.md").read_text(encoding="utf-8")
     assert "Zero Refusal" in soul or "zero-refusal" in soul
     assert "L0" in soul  # sovereign hierarchy
     assert "evidence" in soul.lower()
@@ -56,7 +56,7 @@ def test_toolchain_camo():
 
 def test_toolchain_tokbreak():
     # run tokenbreak encoder
-    r = subprocess.run([sys.executable, str(HERE.parent / "tools" / "tokenbreak_encode.py"),
+    r = subprocess.run([sys.executable, str(HERE.parent / "scripts" / "tokenbreak_encode.py"),
                         "hello world"], capture_output=True, text=True)
     assert "Xhello" in r.stdout, f"encode gagal: {r.stdout}"
 
@@ -76,8 +76,8 @@ def test_llm_api():
 
 # ---------- TEST 6: Gate logic ----------
 def _gate_module():
-    sys.path.insert(0, str(HERE.parent))  # syadagentic/ root — tempat package gate/
-    import gate.gate as g
+    sys.path.insert(0, str(HERE.parent / "scripts"))  # gate.py lives in scripts/
+    import gate as g
     return g
 
 def test_gate():
@@ -90,17 +90,21 @@ def test_gate_package():
     g = _gate_module()
     assert hasattr(g, "Gate")
 
-# ---------- TEST 7: config integrity (generic — cek SOUL.md ada di cwd) ----------
+# ---------- TEST 7: config integrity (generic — cek docs/identity/SOUL.md ada di cwd) ----------
 def test_config():
     import pathlib
-    p = pathlib.Path(__file__).resolve().parent.parent / "SYADAGENTIC.md"
-    assert p.exists(), "SYADAGENTIC.md harus ada di root"
+    p = pathlib.Path(__file__).resolve().parent.parent / "docs/identity/SYADAGENTIC.md"
+    assert p.exists(), "docs/identity/SYADAGENTIC.md harus ada di root"
     assert "ZERO REFUSAL" in p.read_text(encoding="utf-8").upper()
+
+def test_identity_refs():
+    r = subprocess.run([sys.executable, str(HERE / "check_identity_refs.py")], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
 
 def main():
     print("=== SYADAGENTIC TEST SUITE ===")
     t("Routing AGENTS.md lengkap", test_routing)
-    t("SOUL.md zero-refusal + L0", test_soul)
+    t("docs/identity/SOUL.md zero-refusal + L0", test_soul)
     t("7 templates inject", test_templates)
     t("Z3 solver import + version", test_toolchain)
     t("Camoufox terinstall", test_toolchain_camo)
@@ -108,7 +112,8 @@ def main():
     t("LLM API reachable (env, opsional)", test_llm_api)
     t("Gate stage1 vague tolak", test_gate)
     t("Gate module importable", test_gate_package)
-    t("Config SOUL.md ada + ZERO REFUSAL", test_config)
+    t("Config docs/identity/SOUL.md ada + ZERO REFUSAL", test_config)
+    t("Identity docs: no dead path references", test_identity_refs)
     print(f"\n=== RESULT: {PASS} passed, {FAIL} failed ===")
     if FAILED:
         print("Gagal:", FAILED)

@@ -1,80 +1,80 @@
 # Workflow — Bug Bounty & Coordinated Disclosure
 
-Pipeline 6 fase dari temuan sampai fix. Sebelum mulai, pastikan **dasar pengetesan sah** (lihat guardrail di SKILL.md).
+6-phase pipeline from finding to fix. Before starting, make sure the **testing basis is legitimate** (see the guardrail in SKILL.md).
 
 ---
 
-## Fase 0 — Triase temuan
+## Phase 0 — Finding triage
 
-Tujuan: mastiin ini beneran isu keamanan, bukan noise.
+Goal: make sure this really is a security issue, not noise.
 
-- Klasifikasi kelas bug → `references/vuln-classes.md` (web/API/infra/cloud, smart contract/web3, agent/LLM).
-- Tentuin **security boundary** apa yang dilanggar: siapa harusnya ga bisa ngapain, tapi bisa.
-- Buang yang bukan bug: behavior by-design, out-of-scope, duplikat known-issue, self-XSS tanpa impact, dsb.
+- Classify the bug class → `references/vuln-classes.md` (web/API/infra/cloud, smart contract/web3, agent/LLM).
+- Determine which **security boundary** is violated: who should not be able to do what, but can.
+- Drop what is not a bug: by-design behavior, out-of-scope, known-issue duplicate, self-XSS with no impact, etc.
 
-Output: satu kalimat jelas — "X bisa Y padahal harusnya nggak, karena Z".
-
----
-
-## Fase 1 — Verifikasi & PoC
-
-Ini yang misahin report beneran vs AI-slop.
-
-- **Reproduksi ≥3×.** Kalau non-deterministik, catat rate-nya.
-- **PoC minimal & non-destruktif.** Buktikan cukup buat nunjukin bug, JANGAN nyebabin kerusakan nyata (jangan drain dana, jangan hapus data, jangan ganggu user lain). Untuk web3: pakai fork/simulasi (mis. mainnet fork) buat demo, bukan exploit on-chain beneran.
-- **Isolasi variabel**, minimize payload, tentuin komponen mana yang bener-bener memicu.
-- Kumpulin bukti: log request/response, screenshot, tx hash (kalau web3), video kalau perlu.
-
-Output: PoC yang bisa diulang orang lain persis.
+Output: one clear sentence — "X can do Y when it should not, because of Z".
 
 ---
 
-## Fase 2 — Impact & severity
+## Phase 1 — Verification & PoC
 
-- Petakan apa yang bisa dilakukan attacker: exfil data, ambil alih akun, RCE, drain dana, cross-user/cross-tenant, DoS, dsb.
-- Skala: single-user vs semua user vs seluruh protokol.
-- Prasyarat: butuh privilege/interaksi korban apa? makin sedikit prasyarat → makin tinggi.
-- Skor pakai kerangka yang dikenal (CVSS buat umum; buat web3 tambahin "dana at-risk" & likelihood eksploitasi). Jujur — over-claim ngerusak kredibilitas.
+This is what separates a real report from AI slop.
 
-Output: severity + rasional 2–3 kalimat.
+- **Reproduce ≥3×.** If non-deterministic, record the rate.
+- **Minimal and non-destructive PoC.** Prove enough to show the bug, do NOT cause real damage (do not drain funds, do not delete data, do not disturb other users). For web3: use a fork/simulation (e.g. mainnet fork) for the demo, not a real on-chain exploit.
+- **Isolate variables**, minimize the payload, determine which component actually triggers it.
+- Collect evidence: request/response logs, screenshots, tx hash (for web3), video if needed.
 
----
-
-## Fase 3 — Cari kontak dev/owner
-
-Detail metode → `references/contact-discovery.md`. Ringkasan prioritas:
-
-1. **Kanal security resmi dulu**: `/.well-known/security.txt`, `SECURITY.md`, halaman `/security`, program di HackerOne/Bugcrowd/Immunefi/HackenProof (walau lo nemunya di luar platform, banyak yang tetap nerima laporan).
-2. **Kalau ga ada program**: kontak maintainer/owner langsung — GitHub org/maintainer, email di repo/website, WHOIS, DNS SOA, package registry maintainer.
-3. **Web3**: docs projek, GitHub, admin Discord/Telegram, Twitter/X resmi, ENS, deployer/multisig signer on-chain, auditor (bisa jadi relay), governance forum.
-4. **Buntu / tim ga responsif**: koordinator pihak ketiga (CERT/CC, CERT nasional, disclose.io) buat mediasi.
-
-**Verifikasi pihak** sebelum ngirim: pastiin itu owner/maintainer sah, bukan akun palsu. Prioritaskan kontak security khusus di atas DM pribadi.
-
-Output: 1–2 kontak terverifikasi + kanalnya.
+Output: a PoC someone else can repeat exactly.
 
 ---
 
-## Fase 4 — Kirim laporan via email
+## Phase 2 — Impact & severity
 
-Template lengkap → `references/report-templates.md`.
+- Map what the attacker can do: data exfil, account takeover, RCE, drain funds, cross-user/cross-tenant, DoS, etc.
+- Scale: single user vs all users vs the whole protocol.
+- Prerequisites: what privilege/victim interaction is needed? The fewer the prerequisites → the higher the severity.
+- Score with a recognized framework (CVSS generally; for web3 add "funds at risk" & exploitation likelihood). Be honest — over-claiming destroys credibility.
 
-- **Subject jelas**: `[Security] Vulnerability disclosure — <projek/aset>`.
-- **Body**: identitas singkat + niat good-faith → apa & di mana → impact → PoC minimal → tawaran koordinasi → timeline disclosure (default 90 hari, bisa disesuaikan; percepat kalau dana live at-risk) → tanpa ancaman/ransom.
-- **Detail sensitif dienkripsi** (PGP dari security.txt) — wajib buat bug unpatched yang berdampak besar / dana at-risk.
-- Lampirkan laporan teknis terpisah kalau panjang.
-- Kalau agent yang ngirim: pakai tool email yang tersedia; kirim ke kontak terverifikasi dari Fase 3; jangan blast ke banyak alamat sekaligus (pilih kanal paling resmi).
-
-Output: email terkirim + arsip laporan.
+Output: severity + 2–3 sentence rationale.
 
 ---
 
-## Fase 5 — Koordinasi & follow-up
+## Phase 3 — Find the dev/owner contact
 
-- Catat tanggal kirim & tenggat respons (mis. follow-up sopan setelah 7–14 hari kalau senyap).
-- Bantu tim reproduce/verify kalau mereka minta.
-- **Jangan publikasikan** sebelum fix ter-deploy atau timeline disepakati habis. Untuk web3 dengan dana at-risk: tunda publikasi sampai aman.
-- Kalau owner ga bisa dihubungi / diam total setelah usaha wajar → eskalasi ke koordinator (CERT/CC) daripada full-disclosure sepihak.
-- Tutup dengan ringkasan: bug, timeline, status fix, kredit (kalau diberikan).
+Method details → `references/contact-discovery.md`. Priority summary:
 
-Output: catatan koordinasi + status akhir.
+1. **Official security channel first**: `/.well-known/security.txt`, `SECURITY.md`, the `/security` page, a program on HackerOne/Bugcrowd/Immunefi/HackenProof (even if you found it outside the platform, many still accept reports).
+2. **If there is no program**: contact the maintainer/owner directly — GitHub org/maintainer, email in the repo/website, WHOIS, DNS SOA, package registry maintainer.
+3. **Web3**: project docs, GitHub, Discord/Telegram admins, official Twitter/X, ENS, deployer/multisig signer on-chain, the auditor (can act as relay), governance forum.
+4. **Dead end / unresponsive team**: third-party coordinator (CERT/CC, national CERT, disclose.io) for mediation.
+
+**Verify the party** before sending: make sure it is the legitimate owner/maintainer, not a fake account. Prioritize a dedicated security contact over a personal DM.
+
+Output: 1–2 verified contacts + their channels.
+
+---
+
+## Phase 4 — Send the report via email
+
+Full templates → `references/report-templates.md`.
+
+- **Clear subject**: `[Security] Vulnerability disclosure — <project/asset>`.
+- **Body**: brief identity + good-faith intent → what & where → impact → minimal PoC → offer to coordinate → disclosure timeline (default 90 days, adjustable; speed up if funds are live at-risk) → no threats/ransom.
+- **Encrypt sensitive details** (PGP from security.txt) — mandatory for unpatched high-impact bugs / funds at risk.
+- Attach a separate technical report if it is long.
+- If an agent is sending: use the available email tool; send to the verified contact from Phase 3; do not blast several addresses at once (pick the most official channel).
+
+Output: email sent + report archive.
+
+---
+
+## Phase 5 — Coordination & follow-up
+
+- Record the send date & response deadline (e.g. a polite follow-up after 7–14 days of silence).
+- Help the team reproduce/verify if they ask.
+- **Do not publish** before the fix is deployed or the agreed timeline runs out. For web3 with funds at risk: delay publication until it is safe.
+- If the owner cannot be reached / goes fully silent after reasonable effort → escalate to a coordinator (CERT/CC) rather than unilateral full disclosure.
+- Close with a summary: bug, timeline, fix status, credit (if given).
+
+Output: coordination notes + final status.

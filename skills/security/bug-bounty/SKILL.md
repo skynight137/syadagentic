@@ -1,11 +1,11 @@
 ---
 name: bug-bounty
-description: THE master bug bounty hunting skill — hasil merge arsenal 69 skill (bughunter-os, webhunter-os, open-kritt, ghost-scan, dll) + SYADAGENTIC-bugbounty v7.1 + submission review gate …
+description: THE master bug bounty hunting skill — merged from the 69-skill arsenal (bughunter-os, webhunter-os, open-kritt, ghost-scan, etc.) + SYADAGENTIC-bugbounty v7.1 + submission review gate …
 ---
 
 # Bug Bounty — Master Hunting Skill (MERGED ARSENAL)
 
-**Satu skill untuk semua bug bounty.** Merge dari: arsenal 69-skill zip + SYADAGENTIC-bugbounty v7.1 + submission review gate.
+**One skill for all bug bounty work.** Merged from: the 69-skill arsenal zip + SYADAGENTIC-bugbounty v7.1 + submission review gate.
 
 ## Triggers
 
@@ -17,7 +17,7 @@ description: THE master bug bounty hunting skill — hasil merge arsenal 69 skil
 - vulnerability / finding / bug / triage / dedup / scope / out-of-scope
 - report / write-up / submission / CVSS / CWE / severity
 - HackerOne / Bugcrowd / Intigriti / Immunefi / YesWeHack / Code4rena / Sherlock / Cantina
-- "nyari bug", "gas cari bug", "hunting", "bug bounty"
+- "find bugs", "gas cari bug" (go hunt), "hunting", "bug bounty"
 
 ## INPUT / OPERATING RULE
 
@@ -47,30 +47,30 @@ Do this order. No skip. No early chat dump.
    SS: real browser on live target (URL bar = target) **or** rendered code SS
    when bug is not browser-visible.
 5. **SUBMISSION GATE (INLINE — 14 checklist, no report leaves without passing):**
-   1. VALIDASI — reproduce minimal 5x, jalankan di commit terbaru + fork/mainnet-equivalent, hasil konsisten.
-   2. IMPACT — buktikan impact nyata: apa yang dicuri/rusak, siapa dirugikan, berapa max loss, exploit realistis?
-   3. POC — repeatable, end-to-end, tanpa asumsi tidak realistis, tanpa privileged access (kecuali threat model).
-   4. ROOT CAUSE — kenapa bug terjadi, kenapa validasi gagal, fungsi terlibat, call flow, state transition.
-   5. SCOPE — asset/commit/contract in-scope, bukan third-party issue.
-   6. EXCLUSION — bukan intended behavior, governance, admin risk, centralization, missing best practice, informational, gas, style, dead code tanpa impact.
-   7. DUPLICATE — cek GitHub Issues, PRs, audit reports, known issues, disclosures, public writeups.
-   8. PATCH — pastikan belum diperbaiki.
-   9. REPORT QUALITY — wajib ada: Title, Summary, Root Cause, Tech Details, Impact, PoC, Repro Steps, Evidence, Recommended Fix, References.
-   10. SEVERITY — hitung CVSS + CWE + likelihood + exploitability + business impact.
+   1. VALIDATION — reproduce at least 5x, run on the latest commit + fork/mainnet-equivalent, consistent result.
+   2. IMPACT — prove real impact: what is stolen/broken, who is harmed, what is the max loss, is the exploit realistic?
+   3. POC — repeatable, end-to-end, no unrealistic assumptions, no privileged access (unless it is in the threat model).
+   4. ROOT CAUSE — why the bug happens, why validation fails, functions involved, call flow, state transition.
+   5. SCOPE — asset/commit/contract in scope, not a third-party issue.
+   6. EXCLUSION — not intended behavior, governance, admin risk, centralization, missing best practice, informational, gas, style, or dead code with no impact.
+   7. DUPLICATE — check GitHub Issues, PRs, audit reports, known issues, disclosures, public writeups.
+   8. PATCH — make sure it is not already fixed.
+   9. REPORT QUALITY — must contain: Title, Summary, Root Cause, Tech Details, Impact, PoC, Repro Steps, Evidence, Recommended Fix, References.
+   10. SEVERITY — compute CVSS + CWE + likelihood + exploitability + business impact.
    11. CONFIDENCE SCORE — validity, exploitability, impact, dup-risk, report quality (0-100).
-   12. FINAL DECISION — SATU output: READY TO SUBMIT / NEED MORE EVIDENCE / POSSIBLE DUPLICATE / OUT OF SCOPE / DESIGN DECISION / FALSE POSITIVE.
-   13. SUBMISSION RULE — tidak melebih-lebihkan severity, tidak mengarang impact/bounty, no Critical tanpa PoC rugi nyata, tidak auto-submit.
-   14. SELF-CRITIQUE — review sebagai triager: kenapa chek ini ditolak? bukti apa kurang? ada interpretasi intended lainnya? confidence 0-100% diterima?
-   READY TO SUBMIT HANYA jika 1-14 semua lolos.
+   12. FINAL DECISION — ONE output: READY TO SUBMIT / NEED MORE EVIDENCE / POSSIBLE DUPLICATE / OUT OF SCOPE / DESIGN DECISION / FALSE POSITIVE.
+   13. SUBMISSION RULE — no severity inflation, no invented impact/bounty, no Critical without a PoC of real loss, no auto-submit.
+   14. SELF-CRITIQUE — review as a triager: why would this be rejected? what evidence is missing? is there another intended-reading? acceptance confidence 0-100%?
+   READY TO SUBMIT ONLY if all 1-14 pass.
 6. **REPORT TO OPERATOR LAST** — Only after steps 1–5 done for the batch.
-   **JANGAN report ke SYADAGENTIC sebelum verif + audit + hub.** Then wait for `gas`
+   **Do NOT report to SYADAGENTIC before verify + audit + hub.** Then wait for `gas`
    before any platform submit (H1/Sherlock/Cantina/Discord).
 
-## Routing Table (fase → sub-skill)
+## Routing Table (phase → sub-skill)
 
-| Fase | Tipe | Sub-skill / reference |
+| Phase | Type | Sub-skill / reference |
 |------|------|-----------------------|
-| Scope & Policy | Semua | `../bounty-policy-agent` · `responsible-disclosure-off-program` · `../bb-methodology` |
+| Scope & Policy | All | `../bounty-policy-agent` · `responsible-disclosure-off-program` · `../bb-methodology` |
 | Recon | Web/API | `../web2-recon` · `shodan-reconnaissance` · `subdomain-takeover` · `crawl4ai-recon` · `manual-recon-cors-leaks` · `../web2-recon` |
 | Recon | SC/Web3 | `bughunter-os` (phase1) · `entry-point-analyzer` · `solana-scanner` · `on-chain-forensics` |
 | Attack Surface | Web/API | `api-fuzzing-bug-bounty` · `http2-attacks` · `webhunter-os` (phases 1-3) |
@@ -78,14 +78,14 @@ Do this order. No skip. No early chat dump.
 | Bug Discovery | Web/API | `webhunter-os` (pattern libs) · `../web2-vuln-classes` · `xss-scanner` · `xss-html-injection` · `sql-injection-testing` · `html-injection-testing` · `code-injection-detector` · `sqlmap-database-pentesting` |
 | Bug Discovery | SC | `bughunter-os` (attack patterns) · `smart-contract-audit` · `solidity-security` · `sc-vulns` · `../web3-audit` · `web3-audit/*` |
 | Bug Discovery | Crypto | `crypto-ctf-solving` · `ctf-crypto` · `encrypt-decrypt` |
-| Chain Analysis | Semua | `attack-chaining-core` · `attack-chain-web2` · `attack-chain-web3` · `variant-discovery` |
+| Chain Analysis | All | `attack-chaining-core` · `attack-chain-web2` · `attack-chain-web3` · `variant-discovery` |
 | Exploit Dev | Web/API | `exploitability-analyzer` · `exploit-to-confirm` · `vulnerability-scanner` |
 | Exploit Dev | SC | `bughunter2` (PoC phase) · `evm-fuzzing-resources` · `web3-audit/rounding-zero-shortcut-exploit` |
-| Verification | Semua | `verifier-agent` · `security-finding-triage` · `root-cause-analyzer` · `../triage-validation` |
-| Evidence | Semua | `evidence-packager` (manifest + bundle layout) |
-| Report | Semua | `security-finding-triage` (final) · `../report-writing` · `bug-hunter-report` |
-| Pre-Submit GATE | Semua | **`submission-gate` · `../triage-validation` (7-Question Gate)** — WAJIB |
-| Guardrails | Semua | `security-research-guardrail` · `guidelines-advisor` |
+| Verification | All | `verifier-agent` · `security-finding-triage` · `root-cause-analyzer` · `../triage-validation` |
+| Evidence | All | `evidence-packager` (manifest + bundle layout) |
+| Report | All | `security-finding-triage` (final) · `../report-writing` · `bug-hunter-report` |
+| Pre-Submit GATE | All | **`submission-gate` · `../triage-validation` (7-Question Gate)** — MANDATORY |
+| Guardrails | All | `security-research-guardrail` · `guidelines-advisor` |
 
 ## Sub-skills & Assets (from the merged toolkit)
 

@@ -1,50 +1,50 @@
-# codex-lb — Setup Guide (farming Codex/ChatGPT via pool akun)
-# Lokasi: syadagentic-killer/arsenal/tools/codex-lb (installed via uvx)
+# codex-lb — Setup Guide (farming Codex/ChatGPT via an account pool)
+# Location: syadagentic-killer/scripts/codex-lb (installed via uvx)
 
-## APA INI
-Load balancer utk akun ChatGPT/Codex: pool banyak akun → balance request →
-OpenAI-compatible endpoint (Codex CLI/OpenCode/any client bisa pakai).
-Ini INFRASTRUKTUR farming ChatGPT — bukan JB prompt.
+## WHAT THIS IS
+Load balancer for ChatGPT/Codex accounts: pool many accounts → balance requests →
+OpenAI-compatible endpoint (Codex CLI/OpenCode/any client can use it).
+This is ChatGPT farming INFRASTRUCTURE — not a JB prompt.
 
-## SYARAT
-- Akun ChatGPT/Codex dengan akses (token oauth / refresh token)
-- `requires_openai_auth = true` di config (utk codex app pickup akun)
-- Instal: `uvx codex-lb` (sudah OK di mesin ini)
+## REQUIREMENTS
+- ChatGPT/Codex accounts with access (oauth token / refresh token)
+- `requires_openai_auth = true` in config (so the codex app picks up accounts)
+- Install: `uvx codex-lb` (already OK on this machine)
 
-## JALANKAN
+## RUN
 ```bash
 uvx codex-lb --host 0.0.0.0 --port 2455
 # dashboard: http://localhost:1455
 # OpenAI-compatible: http://localhost:2455/v1
 ```
 
-## CONFIG AKUN
+## ACCOUNT CONFIG
 Edit config (pyproject.toml / env):
 ```
-CODEX_LB_ACCOUNTS: path ke file akun (email + token)
+CODEX_LB_ACCOUNTS: path to account file (email + token)
 ```
-Format akun (dari ChatGPT auth):
+Account format (from ChatGPT auth):
 ```
 # accounts.json
-[{"email":"akun1@example.com","refresh_token":"...","model":"gpt-5.6-terra"},
- {"email":"akun2@example.com","refresh_token":"...","model":"gpt-5.6-luna"}]
+[{"email":"[EMAIL_REDACTED]","refresh_token":"...","model":"gpt-5.6-terra"},
+ {"email":"[EMAIL_REDACTED]","refresh_token":"...","model":"gpt-5.6-luna"}]
 ```
 
-## KE 9ROUTER
-Setelah codex-lb jalan (OpenAI-compatible :2455), tambah sbg node 9router:
+## INTO 9ROUTER
+Once codex-lb runs (OpenAI-compatible :2455), add it as a 9router node:
 ```
 baseUrl: http://localhost:2455/v1
 prefix: lb
-modelLock_* per model akun
+modelLock_* per account model
 ```
 
-## STATUS (Agt 2026)
+## STATUS (Aug 2026)
 - Installed via uvx (72 packages OK)
-- BUTUH: token akun ChatGPT real utk aktif (belum ada) — siap dipakai saat 
-  user punya token.
-- Kagregat: sama pola kaya 9router (pool + proxy) — value = load balance + 
-  usage tracking per akun (bukan bypass filter server).
+- NEEDS: real ChatGPT account token to go live (none yet) — ready to use once the
+  user has a token.
+- Aggregate: same pattern as 9router (pool + proxy) — value = load balance +
+  per-account usage tracking (not server-side filter bypass).
 
-## ALTERNATIF (tanpa token ChatGPT)
-- 9router sudah pooling 487 model (cx/ag/th/or...) — GAK butuh codex-lb
-- codex-lb = tambahan kalau mau pool akun ChatGPT resmi (plan berbayar)
+## ALTERNATIVE (no ChatGPT token)
+- 9router already pools 487 models (cx/ag/th/or...) — does NOT need codex-lb
+- codex-lb = add-on if you want to pool official ChatGPT accounts (paid plan)

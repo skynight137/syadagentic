@@ -1,5 +1,5 @@
 # sk3 — Content Creation & Distribution (SYADAGENTIC)
-# Load when: viral, hook, caption, thread, naskah, content, post, copywriting, konten
+# Load when: viral, hook, caption, thread, script, content, post, copywriting, copy
 # Category: Content & Marketing
 
 ## Operator Profile
@@ -78,14 +78,14 @@ Slide 9: CTA (save + share)
 
 ---
 
-## Indonesian Voice Patterns (CT / kripto / casual)
+## Indonesian Voice Patterns (CT / crypto / casual)
 
 ```
-- Pakai "lo/gue" untuk CT vibe, "kalian" untuk audience yang lebih luas
-- Slank kripto: gas, cuan, sultan, FOMO, ngegas, langsung gas, bagi-bagi, sat-set
-- Hindari: hari yang cerah, semoga membantu, salam hangat (formal banget)
-- Pakai "btw", "ngomong-ngomong", "fyi" untuk transition
-- Pertanyaan retoris di akhir: "Lo udah join belum?" / "Mau ikutan?"
+- Use "lo/gue" for CT vibe, "kalian" for a wider audience
+- Crypto slang: gas, cuan, sultan, FOMO, ngegas, langsung gas, bagi-bagi, sat-set
+- Avoid: hari yang cerah, semoga membantu, salam hangat (too formal)
+- Use "btw", "ngomong-ngomong", "fyi" for transitions
+- Rhetorical question at the end: "Lo udah join belum?" / "Mau ikutan?"
 ```
 
 ---
@@ -105,7 +105,7 @@ New Airdrops : [Name Project]
 📖 Details : [Add Details Simple]
 ```
 
-Adjust per project: tasks bisa Discord, on-chain interaction, quiz, referral chain.
+Adjust per project: tasks can be Discord, on-chain interaction, quiz, referral chain.
 
 ---
 

@@ -1,80 +1,80 @@
-# Panduan Operator — Hermes + SYADAGENTIC v7.0 SYADAGENTIC SUPREME
+# Operator Guide — Hermes + SYADAGENTIC v7.0 SYADAGENTIC SUPREME
 
-Cara ngomong sama Hermes setelah v7.0 OPENCLAW EDITION + hermes-crypto-agent ke-combo.
-*Update v7.0 (2026-06-09): Airdrop Intelligence (sk31), CTF/Whitehat (sk32), + observability & safety tooling.*
+How to talk to Hermes after v7.0 OPENCLAW EDITION + hermes-crypto-agent combo.
+*v7.0 update (2026-06-09): Airdrop Intelligence (sk31), CTF/Whitehat (sk32), + observability & safety tooling.*
 
 ---
 
-## Daftar Isi
+## Table of Contents
 
-**Operasi crypto (Hermes runtime)**
+**Crypto operations (Hermes runtime)**
 
-1\. [Mode default vs mode cepat](#mode-default-vs-mode-cepat)  
+1\. [Default mode vs fast mode](#default-mode-vs-fast-mode)  
 2\. [Mint NFT](#mint-nft)  
 3\. [Swap token](#swap-token)  
 4\. [Bridge cross-chain](#bridge-cross-chain)  
 5\. [Sniping token launch](#sniping-token-launch)  
 6\. [Airdrop farming multi-wallet](#airdrop-farming-multi-wallet)  
 7\. [Mempool watch (anti-drainer)](#mempool-watch-anti-drainer)  
-8\. [Beli NFT di marketplace](#beli-nft-di-marketplace)  
+8\. [Buying NFTs on a marketplace](#buying-nfts-on-a-marketplace)  
 9\. [Whale & smart-money tracker](#whale--smart-money-tracker)
 
-**Airdrop Intelligence & Whitehat — BARU di v7.0**
+**Airdrop Intelligence & Whitehat — NEW in v7.0**
 
-10\. [Airdrop Intelligence (sk31)](#airdrop-intelligence-sk31--baru-v42)  
-11\. [CTF / Whitehat toolkit (sk32)](#ctf--whitehat-toolkit-sk32--baru-v42)  
-12\. [CTF Swarm full-auto (sk32 → sk43–sk48)](#ctf-swarm-full-auto-sk32--m43m48--update-v42)  
-13\. [Rug & legitimacy check](#rug--legitimacy-check--baru-v42)  
-14\. [Observability & safety baru](#observability--safety-baru--v42)
+10\. [Airdrop Intelligence (sk31)](#airdrop-intelligence-sk31--new-in-v70)  
+11\. [CTF / Whitehat toolkit (sk32)](#ctf--whitehat-toolkit-sk32--new-in-v70)  
+12\. [CTF Swarm full-auto (sk32 → sk43–sk48)](#ctf-swarm-full-auto-sk32--sk43sk48--v70-update)  
+13\. [Rug & legitimacy check](#rug--legitimacy-check--new-in-v70)  
+14\. [New observability & safety](#new-observability--safety--v70)
 
-**Growth & Protection — sk33–sk42 (update v7.0, 12 Jun)**
+**Growth & Protection — sk33–sk42 (v7.0 update, 12 Jun)**
 
-15\. [Alpha & farming intelligence (sk33 · sk34 · sk36)](#alpha--farming-intelligence-sk33--sk34--sk36--update-v42)  
-16\. [Proteksi komunitas (sk37 · sk38)](#proteksi-komunitas-sk37--sk38--update-v42)  
-17\. [Mesin konten & komunitas (sk35 · sk39–sk42)](#mesin-konten--komunitas-sk35--m39m42--update-v42)
+15\. [Alpha & farming intelligence (sk33 · sk34 · sk36)](#alpha--farming-intelligence-sk33--sk34--sk36--v70-update)  
+16\. [Community protection (sk37 · sk38)](#community-protection-sk37--sk38--v70-update)  
+17\. [Content & community engine (sk35 · sk39–sk42)](#content--community-engine-sk35--sk39sk42--v70-update)
 
-**Sesi & ops**
+**Sessions & ops**
 
 18\. [Session control commands](#session-control-commands)  
 19\. [Background job persistence](#background-job-persistence)
 
-**Skill non-crypto & referensi**
+**Non-crypto skills & reference**
 
-20\. [Skill non-crypto (v7.0) — contoh ngomong](#skill-non-crypto-v41--contoh-ngomong)  
-21\. [Cheat sheet — natural language ke skill route](#cheat-sheet--natural-language-ke-skill-route)  
-22\. [Yang perlu Kakak siapin sebelum mulai](#yang-perlu-kakak-siapin-sebelum-mulai)  
-23\. [Cara cepat verify](#cara-cepat-verify-v42--hermes-udah-jalan)
+20\. [Non-crypto skills (v7.0) — example commands](#non-crypto-skills-v70--example-commands)  
+21\. [Cheat sheet — natural language to skill route](#cheat-sheet--natural-language-to-skill-route)  
+22\. [What to prepare before starting](#what-to-prepare-before-starting)  
+23\. [Quick verification that v7.0 + hermes is running](#quick-verification-that-v70--hermes-is-running)
 
 ---
 
-## Mode default vs mode cepat
+## Default mode vs fast mode
 
-Hermes punya 2 mode operasi. Default = aman, mode cepat = fire and forget.
+Hermes has 2 operating modes. Default = safe, fast mode = fire and forget.
 
 ### Default — confirm before signing
-Tiap tx penting dapat plan ringkas + gate `(y/n)`. Cocok buat:
-- Tx pertama di sesi baru
-- Wallet utama / dana besar
-- Operasi yang belum pernah Kakak lakuin sebelumnya
-- Kontrak yang belum diaudit
+Every important tx gets a short plan + a `(y/n)` gate. Good for:
+- The first tx in a new session
+- Main wallet / large funds
+- Operations you have never done before
+- Contracts that have not been audited
 
-### Mode cepat — `auto_confirm on`
-Skip prompt per tx. Tx pertama tetap dapat 1-line summary (info only, bukan gate). Cocok buat:
+### Fast mode — `auto_confirm on`
+Skips the per-tx prompt. The first tx still gets a 1-line summary (info only, not a gate). Good for:
 - Batch ops (mass mint, multi-wallet farming)
-- Wallet kecil / test wallet
-- Operasi rutin yang udah biasa
-- Sniping di mana speed penting
+- Small wallets / test wallets
+- Routine operations you already know
+- Sniping where speed matters
 
 ```
-Kakak: auto_confirm on
-Hermes: [AUTO_CONFIRM] ON. tx akan fire tanpa gate sampai sesi ini berakhir atau lo set off.
+Operator: auto_confirm on
+Hermes: [AUTO_CONFIRM] ON. tx will fire without a gate until this session ends or you set it off.
 
-Kakak: auto_confirm off
-Hermes: [AUTO_CONFIRM] OFF. balik ke mode safe.
+Operator: auto_confirm off
+Hermes: [AUTO_CONFIRM] OFF. back to safe mode.
 ```
 
-Operational rails yang TETAP nyala walau auto_confirm on:
-- Secret hygiene (gak pernah log priv key)
+Operational rails that STAY on even with auto_confirm on:
+- Secret hygiene (never logs a priv key)
 - Simulate before broadcast
 - Drainer/scam code detection
 - User-funds-only
@@ -83,15 +83,15 @@ Operational rails yang TETAP nyala walau auto_confirm on:
 
 ## Mint NFT
 
-### Single mint dari URL
+### Single mint from a URL
 ```
-Kakak: mint NFT https://opensea.io/assets/base/0xABC.../1
+Operator: mint NFT https://opensea.io/assets/base/0xABC.../1
 ```
 
-Hermes auto:
-- Parse URL → chain `base`, contract `0xABC...`
-- Probe mint function (publicMint, mint, claim, dst)
-- Detect price via `mintPrice()` / Seadrop config
+Hermes automatically:
+- Parses the URL → chain `base`, contract `0xABC...`
+- Probes the mint function (publicMint, mint, claim, etc.)
+- Detects the price via `mintPrice()` / Seadrop config
 - Auto-gas (estimate + buffer)
 - Simulate → send → wait → report
 
@@ -106,9 +106,9 @@ Output:
 [VIEW]   https://basescan.org/tx/0xtxhash...
 ```
 
-### Mass mint pakai N wallet
+### Mass mint with N wallets
 ```
-Kakak: auto_confirm on. mint https://opensea.io/assets/base/0xABC.../1 pakai 50 wallet
+Operator: auto_confirm on. mint https://opensea.io/assets/base/0xABC.../1 with 50 wallets
 ```
 
 Output:
@@ -122,25 +122,25 @@ concurrency: 5
 [7/50]   0xDeF...c2A3   ✅ 0xtx2...
 [12/50]  0x123...8F9    ❌ AlreadyMinted
 ...
-[DONE]   47/50 ok, 3 failed → mint-1748150400.json
+[DONE]   47/50 ok, 3 failed → mint-[PHONE_REDACTED].json
 ```
 
 ### Mint Manifold / Zora
-Sama, paste URL langsung:
+Same, paste the URL directly:
 ```
-Kakak: mint https://app.manifold.xyz/c/12345
-Kakak: mint https://zora.co/collect/base:0xABC.../1
+Operator: mint https://app.manifold.xyz/c/12345
+Operator: mint https://zora.co/collect/base:0xABC.../1
 ```
 
-Hermes pakai protocol-specific handler (Manifold instanceId fetch, Zora 1155 protocol fee).
+Hermes uses a protocol-specific handler (Manifold instanceId fetch, Zora 1155 protocol fee).
 
 ---
 
 ## Swap token
 
-### Swap simple
+### Simple swap
 ```
-Kakak: swap 0.5 ETH ke USDC di base, pakai wallet pertama
+Operator: swap 0.5 ETH to USDC on base, use the first wallet
 ```
 
 Plan:
@@ -153,35 +153,35 @@ slippage: 1%
 est out:  ~1,847 USDC
 gas:      ~$0.02
 
-Lanjut? (y/n)
+Proceed? (y/n)
 ```
 
 `y` → fire. Tx hash + explorer link.
 
-### Sell semua holding token
+### Sell all of a token holding
 ```
-Kakak: sell semua $PEPE di wallet#1, ke USDC
+Operator: sell semua $PEPE di wallet#1, ke USDC
 ```
 
 Hermes:
-- Cek balance PEPE di wallet
-- Quote via 1inch
-- Tampilkan plan
-- Execute (kalau approve belum ada, approve dulu otomatis)
+- Checks the PEPE balance in the wallet
+- Quotes via 1inch
+- Shows the plan
+- Executes (if the approve is missing, it approves first automatically)
 
-### Swap via DEX aggregator pilihan
+### Swap via a chosen DEX aggregator
 ```
-Kakak: swap 1000 USDC ke ETH di arbitrum via jupiter
+Operator: swap 1000 USDC ke ETH di arbitrum via jupiter
 ```
-(Jupiter buat Solana. Untuk EVM, default 1inch — Hermes auto-koreksi.)
+(Jupiter is for Solana. For EVM the default is 1inch — Hermes auto-corrects.)
 
 ---
 
 ## Bridge cross-chain
 
-### Bridge simple
+### Simple bridge
 ```
-Kakak: bridge 500 USDC dari arbitrum ke base pakai stargate
+Operator: bridge 500 USDC from arbitrum to base using stargate
 ```
 
 Plan:
@@ -195,32 +195,32 @@ eta:     ~2 menit
 gas:     ~$0.30
 bonus:   eligible LayerZero points
 
-Lanjut? (y/n)
+Proceed? (y/n)
 ```
 
-`y` → execute → wait sampai landed di destination chain → confirm.
+`y` → execute → wait until it lands on the destination chain → confirm.
 
-### Bridge dengan route otomatis (LI.FI)
+### Bridge with an automatic route (LI.FI)
 ```
-Kakak: bridge 0.1 ETH dari eth ke base, route paling murah
-```
-
-Hermes pakai LI.FI aggregator, pilih route optimal otomatis (Across / Stargate / native / Hop — mana yang termurah).
-
-### Bridge ke non-EVM (Solana via Mayan)
-```
-Kakak: bridge 100 USDC dari base ke solana
+Operator: bridge 0.1 ETH from eth to base, cheapest route
 ```
 
-Hermes pakai Wormhole + Mayan untuk EVM ↔ Solana. Wallet Solana harus udah ke-import di vault.
+Hermes uses the LI.FI aggregator and picks the optimal route automatically (Across / Stargate / native / Hop — whichever is cheapest).
+
+### Bridge to non-EVM (Solana via Mayan)
+```
+Operator: bridge 100 USDC from base to solana
+```
+
+Hermes uses Wormhole + Mayan for EVM ↔ Solana. The Solana wallet must already be imported in the vault.
 
 ---
 
 ## Sniping token launch
 
-### Setup sniper
+### Set up a sniper
 ```
-Kakak: snipe token baru di base, budget 0.05 ETH per launch, max 3 launch hari ini
+Operator: snipe new token on base, budget 0.05 ETH per launch, max 3 launches today
 ```
 
 Output:
@@ -237,26 +237,26 @@ pm2: sniper-base (id 2)
 log: pm2 logs sniper-base
 ```
 
-Saat pair baru terdeteksi:
+When a new pair is detected:
 ```
 [DETECTED] 0xNew...Token, paired with WETH at block 12345678
 [SAFETY]   honeypot.is: clean | GoPlus: 1 warning (mintable)
-⚠️ mintable token (owner bisa inflate supply). Lanjut snipe? (y/n)
+⚠️ mintable token (owner could inflate supply). Continue snipe? (y/n)
 ```
 
-`auto_confirm on` → auto-block kalau CRITICAL flag, auto-proceed kalau cuma WARN.
-`auto_confirm off` → tanya per detection.
+`auto_confirm on` → auto-block on a CRITICAL flag, auto-proceed if it is only WARN.
+`auto_confirm off` → ask per detection.
 
-### Snipe NFT mint launch
+### Snipe an NFT mint launch
 ```
-Kakak: snipe mint NFT collection https://opensea.io/collection/<slug>, watch dari sekarang sampai mint open
+Operator: snipe mint NFT collection https://opensea.io/collection/<slug>, watch from now until mint opens
 ```
 
-Hermes pantau status drop (read `getPublicDrop()` Seadrop config), fire mint detik mint window buka.
+Hermes watches the drop status (reads the `getPublicDrop()` Seadrop config) and fires the mint the second the mint window opens.
 
-### Stop sniper
+### Stop a sniper
 ```
-Kakak: stop sniper-base
+Operator: stop sniper-base
 ```
 
 ---
@@ -265,14 +265,14 @@ Kakak: stop sniper-base
 
 ### LayerZero farming
 ```
-Kakak: layerzero farming, 50 wallet, bridge variasi route 5 chain selama 7 hari
+Operator: layerzero farming, 50 wallet, bridge variasi route 5 chain selama 7 hari
 ```
 
-Sybil reminder (sekali per session):
+Sybil reminder (once per session):
 ```
-⚠️ LayerZero punya deteksi sybil bisa blacklist semua wallet terkait.
-Gua randomize timing (5-180 menit) + amount jitter (±15%) + variasi bridge per wallet.
-Tetap ada risk. Lanjut? (y/n)
+⚠️ LayerZero has sybil detection and can blacklist every related wallet.
+I randomize timing (5-180 minutes) + amount jitter (±15%) + bridge variation per wallet.
+Risk remains. Proceed? (y/n)
 ```
 
 `y`:
@@ -282,7 +282,7 @@ wallets:   50
 chains:    eth, arb, base, op, polygon (5 chains)
 tx/wallet: 14-21 (random)
 duration:  7 days
-total tx:  ~875 (estimasi)
+total tx:  ~875 (estimate)
 est cost:  ~$45 total gas
 
 [STARTED] background runner: pm2 lz-farming
@@ -290,26 +290,26 @@ est cost:  ~$45 total gas
 [STOP]    "stop lz-farming"
 ```
 
-### zkSync / Linea farming pattern sama
+### zkSync / Linea farming, same pattern
 ```
-Kakak: zksync farming, 30 wallet, daily activity selama 14 hari
-Kakak: linea voyage tasks pakai 25 wallet
-```
-
-### Daily check-in airdrop
-```
-Kakak: daily check-in airdrop X pakai semua wallet, jam 8 pagi WIB
+Operator: zksync farming, 30 wallet, daily activity selama 14 hari
+Operator: linea voyage tasks with 25 wallets
 ```
 
-Hermes setup cron job, jalan otomatis tiap hari.
+### Daily airdrop check-in
+```
+Operator: daily check-in airdrop X with all wallets, 8 AM WIB
+```
+
+Hermes sets up a cron job that runs automatically every day.
 
 ---
 
 ## Mempool watch (anti-drainer)
 
-### Setup watcher
+### Set up a watcher
 ```
-Kakak: pantau wallet gua 0xAbC...d4F1 dari approve mencurigakan, alert ke TG
+Operator: watch my wallet 0xAbC...d4F1 for suspicious approvals, alert to TG
 ```
 
 Output:
@@ -319,12 +319,12 @@ target:   0xAbC...d4F1
 chains:   ethereum, base, arbitrum
 triggers: approve(), setApprovalForAll(), permit()
 alert:    @your_alerts_channel channel
-filter:   spender harus contract verified, kalau gak → CRITICAL
+filter:   spender must be a verified contract, otherwise → CRITICAL
 
 running as pm2: anti-drainer (id 3)
 ```
 
-Saat detect approval mencurigakan di mempool (sebelum confirmed):
+When a suspicious approval is detected in the mempool (before it confirms):
 ```
 🚨 CRITICAL APPROVAL DETECTED 🚨
 wallet:   0xAbC...d4F1
@@ -333,24 +333,24 @@ spender:  0xSus...Address (no verified contract)
 tx:       0xpending...
 
 STATUS: pending in mempool (~12s before confirm)
-ACTION: kalau ini bukan elo, kirim front-run tx revoke SEKARANG
+ACTION: if this is not you, send a front-run revoke tx NOW
         "revoke approval 0xSus... di wallet#1"
 ```
 
 ### Auto-revoke mode
 ```
-Kakak: anti-drainer auto-revoke mode on untuk wallet#1
+Operator: anti-drainer auto-revoke mode on for wallet#1
 ```
 
-Kalau Hermes detect approval ke contract non-whitelist → otomatis broadcast revoke tx dengan gas lebih tinggi, race-condition dengan drainer.
+If Hermes detects an approval to a non-whitelisted contract → it broadcasts a revoke tx with higher gas automatically, race-conditioning the drainer.
 
 ---
 
-## Beli NFT di marketplace
+## Buying NFTs on a marketplace
 
 ### OpenSea specific listing
 ```
-Kakak: beli BAYC #1234 di opensea, max 25 ETH
+Operator: beli BAYC #1234 di opensea, max 25 ETH
 ```
 
 Plan:
@@ -358,42 +358,42 @@ Plan:
 [LISTING FOUND]
 collection: BAYC
 token id:   #1234
-price:      22.5 ETH (di bawah max)
+price:      22.5 ETH (below max)
 seller:     0xSeller...
 protocol:   Seaport 1.6
 gas:        ~$8
 
-Lanjut? (y/n)
+Proceed? (y/n)
 ```
 
 ### Floor sweep
 ```
-Kakak: sweep floor Pudgy Penguins, 5 unit, max avg 10 ETH per piece
+Operator: sweep floor Pudgy Penguins, 5 unit, max avg 10 ETH per piece
 ```
 
-Hermes pakai Reservoir aggregator (cek listing terendah cross-marketplace: OpenSea, Blur, LooksRare). Bulk fulfill dalam 1 tx kalau bisa.
+Hermes uses the Reservoir aggregator (checks the lowest listings across marketplaces: OpenSea, Blur, LooksRare). Bulk fulfill in 1 tx when possible.
 
-### List NFT buat dijual
+### List an NFT for sale
 ```
-Kakak: list NFT #5678 dari koleksi 0xMy... di opensea, harga 1.5 ETH, expire 7 hari
+Operator: list NFT #5678 from collection 0xMy... on opensea, price 1.5 ETH, expire 7 days
 ```
 
-Hermes sign EIP-712 Seaport order → post ke OpenSea API. Listing live di marketplace.
+Hermes signs an EIP-712 Seaport order → posts to the OpenSea API. The listing goes live on the marketplace.
 
 ### Magic Eden / Tensor (Solana)
 ```
-Kakak: beli SMB #1234 di magic eden, max 50 SOL
+Operator: beli SMB #1234 di magic eden, max 50 SOL
 ```
 
-Sama flow-nya, beda protocol (Magic Eden ME instruction, bukan Seaport).
+Same flow, different protocol (Magic Eden ME instruction, not Seaport).
 
 ---
 
 ## Whale & smart-money tracker
 
-### Track wallet whale + alert TG
+### Track a whale wallet + TG alert
 ```
-Kakak: tracker smart money via nansen, alert ke TG kalau ada buy > $50k
+Operator: smart money tracker via nansen, alert to TG on any buy > $50k
 ```
 
 Output:
@@ -419,156 +419,156 @@ tx:       https://basescan.org/tx/...
 
 ### Copy-trade pattern
 ```
-Kakak: copy-trade wallet 0xWhale..., ukuran 5% dari ukuran mereka, max $500 per trade
+Operator: copy-trade wallet 0xWhale..., size 5% of their size, max $500 per trade
 ```
 
-Hermes monitor whale wallet → mirror buy ukuran kecil di wallet Kakak, filter stablecoin transfer dan low-value noise.
+Hermes monitors the whale wallet → mirrors the buy at a small size in your wallet, filtering stablecoin transfers and low-value noise.
 
 ### NFT whale alert
 ```
-Kakak: alert kalau ada whale beli NFT > 10 ETH di koleksi blue chip
+Operator: alert when a whale buys an NFT > 10 ETH in a blue chip collection
 ```
 
-Hermes pakai Reservoir WebSocket stream — push notif real-time.
+Hermes uses the Reservoir WebSocket stream — real-time push notification.
 
 ### Floor drop alert
 ```
-Kakak: alert kalau floor BAYC drop > 5% dalam 1 jam
+Operator: alert when the BAYC floor drops > 5% in 1 hour
 ```
 
 ---
 
-## Airdrop Intelligence (sk31) — BARU v7.0
+## Airdrop Intelligence (sk31) — NEW in v7.0
 
-Skill khusus AirdropFinder: ubah siklus airdrop jadi keputusan ber-angka. Semua tool **offline & deterministik** — data on-chain diambil dulu lewat sk10/hermes, sk31 yang nge-judge & nyusun rencana. Fund movement (claim/exit) tetap lewat Spend Governor.
+A skill dedicated to AirdropFinder: turns the airdrop cycle into number-backed decisions. Every tool is **offline & deterministic** — on-chain data is pulled first via sk10/hermes, then sk31 does the judging and builds the plan. Fund movement (claim/exit) still goes through the Spend Governor.
 
-### 1. Eligibility scorer — wallet ini layak gak?
+### 1. Eligibility scorer — is this wallet eligible?
 ```
-Kakak: skor eligibility wallet 0xAbC...d4F1 buat airdrop Linea
+Operator: skor eligibility wallet 0xAbC...d4F1 buat airdrop Linea
 ```
 
 Output:
 ```
 [ELIGIBILITY] 0xAbC...d4F1 — Linea
 score:   72/100  (TIER: likely)
-✅ kuat:   age 210d, 47 tx, bridged 3x, 4 unique contracts
-⚠️ gap:    volume $1.2k (target >$5k), belum interaksi DeFi native
-🚩 flag:   gas spend rendah (bot-like? cek manual)
-saran:    + 2-3 swap di native DEX, + 1 LP position → proyeksi ~85/100
+✅ strong: age 210d, 47 tx, bridged 3x, 4 unique contracts
+⚠️ gap:    volume $1.2k (target >$5k), no native DeFi interaction yet
+🚩 flag:   low gas spend (bot-like? check manually)
+suggestion: + 2-3 swaps on a native DEX, + 1 LP position → projected ~85/100
 ```
 
-Rubric bisa di-override per-project (kalau Kakak tau kriteria spesifik proyeknya):
+The rubric can be overridden per project (when you know the project's specific criteria):
 ```
-Kakak: skor wallet#1 buat ZkSync, bobot: volume 40%, age 20%, kontrak unik 40%
+Operator: skor wallet#1 buat ZkSync, bobot: volume 40%, age 20%, kontrak unik 40%
 ```
 
-### 2. Sybil self-audit — wallet farm gua aman gak?
-Ini **jaring keselamatan buat wallet Kakak sendiri** — cek apakah pola antar-wallet gampang ke-cluster sama sybil filter, biar bisa di-de-correlate. Bukan buat ngecoh proyek.
+### 2. Sybil self-audit — is my farm wallet safe?
+This is a **safety net for your own wallets** — it checks whether the cross-wallet pattern is easy for a sybil filter to cluster, so you can de-correlate. Not for tricking the project.
 ```
-Kakak: sybil audit 50 wallet farming gua
+Operator: sybil audit my 50 farm wallets
 ```
 
 Output:
 ```
 [SYBIL AUDIT] 50 wallets
 risk: HIGH ⚠️
-korelasi terdeteksi:
-  • funding: 38 wallet didanai dari 1 sumber (0xFund...) — RED
-  • timing: 22 wallet tx dalam window 5 menit yang sama — RED
-  • gas pattern: amount identik di 41 wallet — YELLOW
-  • contract overlap: semua wallet sentuh kontrak yang sama urut sama
-saran de-correlation:
-  1. Variasikan funding source (pakai CEX withdrawal beda-beda)
-  2. Sebar timing (randomize 1-72 jam, jangan batch)
-  3. Variasikan urutan & jenis interaksi per wallet
+correlation detected:
+  • funding: 38 wallets funded from 1 source (0xFund...) — RED
+  • timing: 22 wallets tx inside the same 5-minute window — RED
+  • gas pattern: identical amounts on 41 wallets — YELLOW
+  • contract overlap: every wallet touches the same contracts in the same order
+de-correlation advice:
+  1. Vary the funding source (use different CEX withdrawals)
+  2. Spread the timing (randomize 1-72 hours, do not batch)
+  3. Vary the order & type of interaction per wallet
   4. Amount jitter ±15-30%
 ```
 
-### 3. Claim-window calendar — jangan kelewat claim
-`now` selalu di-inject (gak pernah nebak waktu). Alert fire-once di H-48 / H-2 / H-0.
+### 3. Claim-window calendar — do not miss a claim
+`now` is always injected (never guesses the time). Alerts fire once at D-48 / D-2 / D-0.
 ```
-Kakak: tambah ke kalender airdrop: ZK claim buka 17 Jun 14:00 WIB, tutup 24 Jun
-Kakak: airdrop apa aja yang claim window-nya minggu ini?
-```
-
-Output:
-```
-[CLAIM CALENDAR] minggu ini (12-18 Jun)
-🔔 ZK        — buka 17 Jun 14:00 WIB (H-5)   [alert set: H-48, H-2, H-0]
-🔔 LayerZero — tutup 15 Jun 23:59 WIB (H-3)  ⚠️ belum claim di 12 wallet!
-✅ Scroll    — udah di-claim semua wallet
-```
-
-### 4. Exit planner — kapan & gimana jual
-```
-Kakak: exit plan buat 5000 $ZK, profil balanced, likuiditas tipis
+Operator: tambah ke kalender airdrop: ZK claim buka 17 Jun 14:00 WIB, tutup 24 Jun
+Operator: which airdrops have a claim window this week?
 ```
 
 Output:
 ```
-[EXIT LADDER] 5000 $ZK — profil: balanced
-likuiditas DEX tipis → split sell biar gak slippage parah
-  • TGE +0h:   sell 30% (1500) — amankan modal
-  • +24h:      sell 25% (1250) — kalau harga > TGE
-  • +7d:       sell 25% (1250) — atau cut kalau dump
+[CLAIM CALENDAR] this week (12-18 Jun)
+🔔 ZK        — opens 17 Jun 14:00 WIB (D-5)   [alert set: D-48, D-2, D-0]
+🔔 LayerZero — closes 15 Jun 23:59 WIB (D-3)  ⚠️ not claimed on 12 wallets!
+✅ Scroll    — already claimed on every wallet
+```
+
+### 4. Exit planner — when & how to sell
+```
+Operator: exit plan buat 5000 $ZK, profil balanced, likuiditas tipis
+```
+
+Output:
+```
+[EXIT LADDER] 5000 $ZK — profile: balanced
+thin DEX liquidity → split the sell so slippage does not bite
+  • TGE +0h:   sell 30% (1500) — secure the principal
+  • +24h:      sell 25% (1250) — if price > TGE
+  • +7d:       sell 25% (1250) — or cut if it dumps
   • hold 20%:  moonbag (1000)
-⚠️ vesting: cek dulu, kalau ada cliff sebagian sell-nya geser
-eksekusi via Spend Governor (gate per leg, atau auto_confirm on)
-Lanjut setup auto-sell ladder? (y/n)
+⚠️ vesting: check first, if there is a cliff shift part of the sells
+execution via the Spend Governor (per-leg gate, or auto_confirm on)
+Set up the auto-sell ladder? (y/n)
 ```
 
 ---
 
-## CTF / Whitehat toolkit (sk32) — BARU v7.0
+## CTF / Whitehat toolkit (sk32) — NEW in v7.0
 
-Buat Kakak yang ikut CTF & bug bounty buat reward. **Legal & in-scope only** — target asing kena gate R9 (⚠️ izin? y/n), default tahan. Tool inti stdlib-only & pasif (decode/analisis); exploit aktif tetap manual + izin.
+For operators who join CTFs & bug bounties for rewards. **Legal & in-scope only** — a foreign target hits gate R9 (⚠️ permission? y/n) and is held by default. The core tools are stdlib-only & passive (decode/analysis); active exploits stay manual + need permission.
 
-### Triage soal — ini kategori apa, serang dari mana
+### Triage a challenge — which category is this, where to attack
 ```
-Kakak: triage soal CTF: "diberikan RSA public key dengan e kecil, decrypt flag"
+Operator: triage this CTF challenge: "given an RSA public key with small e, decrypt the flag"
 ```
 ```
-[TRIAGE] kategori: crypto (confidence tinggi)
-arah:    RSA small-e → coba cube-root attack (e=3, no padding)
-tooling: sk32 (math manual), atau sage kalau ada
+[TRIAGE] category: crypto (high confidence)
+direction: RSA small-e → try cube-root attack (e=3, no padding)
+tooling: sk32 (manual math), or sage if available
 ```
 
-### Decode berlapis otomatis
+### Automatic layered decode
 ```
-Kakak: decode ini: NHZ4dnRoaXNfaXNfYmFzZTY0X2ZsYWc=
+Operator: decode this: NHZ4dnRoaXNfaXNfYmFzZTY0X2ZsYWc=
 ```
 ```
-[DECODE] kupas berlapis (diurut printability):
+[DECODE] peeling layers (ordered by printability):
   base64 → "4vxvthis_is_base64_flag"
-  ...cek flag pattern: NAME{...}
-🚩 ketemu: flag{...}
+  ...check flag pattern: NAME{...}
+🚩 found: flag{...}
 ```
 
 ### Classic crypto
 ```
-Kakak: caesar bruteforce "Frperg Zrffntr"
-Kakak: xor single byte cari key buat hex ini: 1c0111001f...
+Operator: caesar bruteforce "Frperg Zrffntr"
+Operator: xor single byte find the key for this hex: 1c0111001f...
 ```
-26 shift / 256 key sekaligus, di-rank by englishness.
+26 shifts / 256 keys at once, ranked by englishness.
 
 ### Hash & misc
 ```
-Kakak: ini hash tipe apa: 5f4dcc3b5aa765d61d8327deb882cf99
+Operator: what hash type is this: 5f4dcc3b5aa765d61d8327deb882cf99
 ```
 ```
-[HASH-ID] panjang 32 hex → kandidat: MD5, NTLM, MD4
+[HASH-ID] length 32 hex → candidates: MD5, NTLM, MD4
 ```
 
-Recon kategori lain (web/pwn/forensics) → sk32 ngarahin ke tooling + delegasi ke sk11 (audit) / sk6 (httpx, in-scope). Mau auto-generate writeup PDF tiap flag ketemu? combo sk32 + sk8.
+Recon for other categories (web/pwn/forensics) → sk32 points to the tooling + delegates to sk11 (audit) / sk6 (httpx, in-scope). Want a writeup PDF auto-generated for every flag found? combo sk32 + sk8.
 
 ---
 
-## CTF Swarm full-auto (sk32 → sk43–sk48) — update v7.0
+## CTF Swarm full-auto (sk32 → sk43–sk48) — v7.0 update
 
-Naik level dari toolkit pasif: **framework CTF full-auto whitehat** di `tools/ctf/`. sk32 jadi orchestrator yang triage → cek scope → dispatch ke sub-skill kategori → validasi flag → submit. Cocok buat event CTFd dengan banyak soal sekaligus.
+A level up from the passive toolkit: a **full-auto whitehat CTF framework** in `framework/ctf/`. sk32 becomes the orchestrator that triages → checks scope → dispatches to the category sub-skill → validates the flag → submits. Good for CTFd events with many challenges at once.
 
-### Sub-skill kategori (otomatis dipilih sk32)
-| Soal | Skill |
+### Category sub-skills (picked automatically by sk32)
+| Challenge | Skill |
 |---|---|
 | web app / URL / HTTP | **sk43** (SQLi, SSTI, SSRF, IDOR, JWT, deserialization) |
 | binary + `nc host port` | **sk44** (ret2win, ret2libc, format string, heap, ROP) |
@@ -577,254 +577,254 @@ Naik level dari toolkit pasif: **framework CTF full-auto whitehat** di `tools/ct
 | pcap / memory / image / zip | **sk47** (volatility, binwalk, stego, carving) |
 | LLM / AI / jailbreak / Gandalf | **sk48** (prompt-injection / LLM red-team) |
 
-### Mode 1 — manual per soal (aman, default)
+### Mode 1 — manual per challenge (safe, default)
 ```
-Kakak: ini soal web, target https://chal.ctf.example/01, ada login form
+Operator: this is a web challenge, target https://chal.ctf.example/01, there is a login form
 ```
-sk32 konfirmasi scope (lihat `scope.json`) → load sk43 → kasih playbook + script recon. Flag yang ketemu **wajib** lewat `flag_validator.py`, lalu Kakak yang approve submit.
+sk32 confirms the scope (see `scope.json`) → loads sk43 → hands over the playbook + recon script. A found flag **must** pass `flag_validator.py`, then you approve the submit.
 
-### Mode 2 — full-auto swarm (banyak soal, butuh setup)
+### Mode 2 — full-auto swarm (many challenges, needs setup)
 ```bash
-cd tools/ctf
-cp .env.example .env            # isi CTFD_URL, CTFD_TOKEN, API key per provider, MODELS (ID asli!)
-cp scope.example.json scope.json # set host yang BOLEH diserang (event ini aja)
+cd framework/ctf
+cp .env.example .env            # fill CTFD_URL, CTFD_TOKEN, per-provider API key, MODELS (the real IDs!)
+cp scope.example.json scope.json # set the hosts that MAY be attacked (this event only)
 docker build -f sandbox/Dockerfile.sandbox -t ctf-sandbox .
 
-python3 run.py          # poll CTFd → race model per soal di sandbox → solve
-python3 run.py status   # lihat progress per soal
-python3 run.py approve  # submit flag yang antri (kalau HITL_SUBMIT=true)
+python3 run.py          # poll CTFd → race models per challenge in the sandbox → solve
+python3 run.py status   # see progress per challenge
+python3 run.py approve  # submit the queued flags (if HITL_SUBMIT=true)
 ```
-Tiap soal di-race beberapa model paralel di **Docker sandbox terisolasi** (default `--network none`). Lineup model bebas lintas-provider — adapter **Anthropic, OpenAI, Gemini** lengkap (`MODELS=anthropic:...,openai:...,gemini:...`, isi API key provider yang dipakai). Flag pertama yang valid menang; di mode tanpa pendamping, butuh `AUTO_SUBMIT_CONSENSUS` model setuju baru auto-submit.
+Every challenge races several models in parallel inside an **isolated Docker sandbox** (default `--network none`). The model lineup is free across providers — the **Anthropic, OpenAI, Gemini** adapters are complete (`MODELS=anthropic:...,openai:...,gemini:...`, fill the API key of the providers you use). The first valid flag wins; in unattended mode it takes `AUTO_SUBMIT_CONSENSUS` models agreeing before an auto-submit.
 
 ### Mode 3 — LLM red-team / Gandalf (sk48)
-Buat soal kategori AI/LLM (Gandalf-style: peras password dari LLM tanpa kena guard). Solver **host-locked ke gandalf.lakera.ai** (nolak host lain).
+For AI/LLM challenges (Gandalf-style: squeeze the password out of the LLM without tripping the guard). The solver is **host-locked to gandalf.lakera.ai** (rejects other hosts).
 ```bash
-cd tools/ctf
-python3 gandalf_solver.py --start 1 --end 7      # static: coba ladder strategi tiap level
-python3 gandalf_solver.py --adaptive --model anthropic:claude-opus-4-1   # attacker-LLM (bisa juga openai:.../gemini:..., isi API key-nya)
+cd framework/ctf
+python3 gandalf_solver.py --start 1 --end 7      # static: try the strategy ladder per level
+python3 gandalf_solver.py --adaptive --model anthropic:claude-opus-4-1   # attacker-LLM (also openai:.../gemini:..., fill the API key)
 ```
-Idenya: input guard periksa prompt *kamu* (lawan: parafrase intent), output guard periksa jawaban *model* (lawan: jangan emit secret literal → encode/acrostic/eja). Detail teknik & defense ladder L1–L8 ada di `skills/sk48.md`. ⚠️ API contract Gandalf gak resmi — verify dulu di DevTools sebelum jalan.
+The idea: the input guard inspects *your* prompt (counter: paraphrase the intent), the output guard inspects the *model's* answer (counter: never emit the literal secret → encode/acrostic/spell it). Technique details & the L1–L8 defense ladder are in `skills/ctf/ctf-playbook/sk48.md`. ⚠️ The Gandalf API contract is unofficial — verify in DevTools before running.
 
-### Pengaman (kenapa ini tetap whitehat)
-- **`scope_guard.py`** — cuma host di allowlist yang boleh disentuh; aturan deny menang. Out-of-scope = ditolak.
-- **Sandbox** — binary soal cuma jalan di dalam Docker, default tanpa network.
-- **`flag_validator.py`** — flag wajib full-match + lolos blocklist placeholder; flag diambil dari output target, **gak pernah dikarang**.
-- **HITL default** — `HITL_SUBMIT=true` → flag nunggu approve Kakak. Sejalan sama gate R9 sk32.
+### Safeguards (why this stays whitehat)
+- **`scope_guard.py`** — only allowlisted hosts may be touched; deny rules win. Out-of-scope = rejected.
+- **Sandbox** — challenge binaries only run inside Docker, no network by default.
+- **`flag_validator.py`** — a flag must full-match + pass the placeholder blocklist; flags are taken from the target output, **never invented**.
+- **HITL by default** — `HITL_SUBMIT=true` → the flag waits for your approval. In line with sk32 gate R9.
 
-Detail teknis: `tools/ctf/README.md`. Catatan review paket asli: `REVIEW.md`.
+Technical detail: `framework/ctf/README.md`. Review notes on the original package: `REVIEW.md`.
 
 ---
 
-## Rug & legitimacy check — BARU v7.0
+## Rug & legitimacy check — NEW in v7.0
 
-Satu command → verdict jelas. Sinyal mentah (honeypot/tax/verifikasi/holder/LP) diambil dari H4 + sk10, `rugcheck` yang nge-judge jadi keputusan + nampilin yang *belum* dicek (jangan diabaikan).
+One command → a clear verdict. Raw signals (honeypot/tax/verification/holders/LP) come from H4 + sk10, `rugcheck` turns them into a decision + shows what is *not yet* checked (never ignored).
 ```
-Kakak: rugcheck token 0xToken... di base
+Operator: rugcheck token 0xToken... di base
 ```
 ```
 [RUGCHECK] 0xToken... on base  →  ⚠️ CAUTION
 🛑 critical:  (none)
-⚠️ warnings:  sell-tax 9%, owner belum renounce, LP lock cuma 30 hari
-✅ ok:        kontrak verified, bukan honeypot, top10 holder 28%
-❓ unknown:   age kontrak belum dicek → suruh sk10 isi dulu
-verdict: boleh masuk kecil, jangan all-in. Re-check setelah LP lock & renounce.
+⚠️ warnings:  sell-tax 9%, owner not renounced, LP locked only 30 days
+✅ ok:        contract verified, not a honeypot, top10 holders 28%
+❓ unknown:   contract age not checked → have sk10 fill it first
+verdict: small entry allowed, do not go all-in. Re-check after the LP lock & renounce.
 ```
-Verdict: **SAFE / CAUTION / DANGER**. Cocok juga jadi bahan edukasi konten AirdropFinder ("cara baca rug signal").
+Verdict: **SAFE / CAUTION / DANGER**. Also good material for AirdropFinder educational content ("how to read rug signals").
 
 ---
 
-## Observability & safety baru — v7.0
+## New observability & safety — v7.0
 
-Mostly otomatis di belakang layar, tapi bisa Kakak panggil:
+Mostly automatic behind the scenes, but you can call it:
 
 | Command | Effect |
 |---|---|
-| `cost report` | Ledger biaya terpusat: token LLM + gas on-chain (USD) + API call, breakdown per provider/chain |
-| `router log` / `router tune` | Liat keputusan router + deteksi *tie* (keyword nabrak) + saran retune bobot |
-| `dry-run on` / `off` | Simulasi global — engine `plan()` bukan broadcast (udah ada, sekarang pakai contextvars, lebih rapi) |
-| `regression run <suite>` | Golden-set regression: bandingin output sekarang vs baseline → tau kalau ada yang rusak saat upgrade |
+| `cost report` | Central cost ledger: LLM tokens + on-chain gas (USD) + API calls, breakdown per provider/chain |
+| `router log` / `router tune` | See router decisions + *tie* detection (keyword collision) + weight retune advice |
+| `dry-run on` / `off` | Global simulation — the `plan()` engine, not broadcast (already existed, now uses contextvars, tidier) |
+| `regression run <suite>` | Golden-set regression: compare current output vs baseline → know if an upgrade broke something |
 
-Plus yang jalan otomatis:
-- **Secret tripwire** — di output layer, redaksi priv key / mnemonic / API key / JWT / PEM sebelum ke-print/log. CTF flag tetap boleh tampil, secret nyata yang gak relevan tetap di-redact.
-- **Cost ledger** — tiap operasi nyatet biayanya, jadi `cost report` selalu akurat.
+Plus what runs automatically:
+- **Secret tripwire** — at the output layer, redacts priv keys / mnemonics / API keys / JWT / PEM before print/log. CTF flags may still show; real irrelevant secrets stay redacted.
+- **Cost ledger** — every operation records its cost, so `cost report` is always accurate.
 
 ---
 
-## Alpha & farming intelligence (sk33 · sk34 · sk36) — update v7.0
+## Alpha & farming intelligence (sk33 · sk34 · sk36) — v7.0 update
 
-Tiga modul baru biar farming Kakak dari hulu ke hilir ber-angka: nemu proyek duluan → hitung ROI → tau kapan keluar. Semua offline & deterministik, data mentah diambil sk10/sk22/hermes dulu.
+Three new modules so your farming is number-backed end to end: find projects earlier → compute ROI → know when to exit. All offline & deterministic; raw data is pulled by sk10/sk22/hermes first.
 
-### Alpha radar (sk33) — nemu airdrop SEBELUM diumumkan
+### Alpha radar (sk33) — find airdrops BEFORE they are announced
 ```
-Kakak: scan proyek pre-TGE yang worth difarming di Base
+Operator: scan pre-TGE projects worth farming on Base
 ```
 ```
-[ALPHA RADAR] 3 kandidat
-📡 ZkProtoX  78/100 (HOT)   · points program ✅ · testnet ✅ · VC tier-1 · effort high
-📡 BaseThing 52/100 (WARM)  · governance aktif tanpa token · raise $12M
-📡 OldChain   8/100 (COLD)  · token udah ada → peluang airdrop utama lewat
-saran: mulai ZkProtoX minggu ini, BaseThing watch dulu
+[ALPHA RADAR] 3 candidates
+📡 ZkProtoX  78/100 (HOT)   · points program ✅ · testnet ✅ · tier-1 VC · effort high
+📡 BaseThing 52/100 (WARM)  · active governance without a token · raised $12M
+📡 OldChain   8/100 (COLD)  · token already exists → the main airdrop window passed
+advice: start ZkProtoX this week, watch BaseThing first
 ```
-Token udah listing? Skor otomatis di-cap 30 — jangan buang gas.
+Token already listed? The score is auto-capped at 30 — do not burn gas.
 
-### Farm ROI (sk34) — lanjut, trim, atau drop?
+### Farm ROI (sk34) — continue, trim, or drop?
 ```
-Kakak: hitung ROI semua posisi farming gua
+Operator: compute the ROI of all my farming positions
 ```
 ```
-[FARM ROI] 4 posisi · EV $3.2k − cost $410 = net $2.79k
+[FARM ROI] 4 positions · EV $3.2k − cost $410 = net $2.79k
 💼 LayerZero  EV $1.2k · ROI 9.0x → KEEP
 💼 ZkProtoX   EV $1.8k · ROI 6.2x → KEEP
-💼 BridgeFarm EV $150  · ROI 0.4x → TRIM (gas udah kegedean)
-💼 DeadFarm   net -$75 → DROP ⚠️ nganggur 60 hari — wallet pasif sering digugurin
+💼 BridgeFarm EV $150  · ROI 0.4x → TRIM (gas already too large)
+💼 DeadFarm   net -$75 → DROP ⚠️ idle 60 days — passive wallets get culled
 ```
 
-### Unlock pressure (sk36) — supply makro sebelum kejebak dump
+### Unlock pressure (sk36) — macro supply before you get trapped in a dump
 ```
-Kakak: kalender unlock $ZK 6 bulan ke depan, worth hold gak?
+Operator: unlock calendar $ZK for the next 6 months, worth holding?
 ```
 ```
 [UNLOCK CALENDAR] $ZK
 🔓 Investor cliff  T-10h  · $160M (40% circ) · pressure EXTREME (32x volume)
-   ⚠️ tekanan jual besar <2 minggu — pertimbangkan kurangi posisi DULUAN
-🔓 Team linear     T-120h · $40M (10% circ) · pressure HIGH — tandai, siapin exit
+   ⚠️ large sell pressure <2 weeks — consider trimming the position FIRST
+🔓 Team linear     T-120h · $40M (10% circ) · pressure HIGH — flag it, prepare an exit
 ```
-`now` selalu di-inject (TIME.md). Eksekusi jual tetap lewat exit planner sk31 + Spend Governor.
+`now` is always injected (TIME.md). The actual sell still goes through the sk31 exit planner + the Spend Governor.
 
 ---
 
-## Proteksi komunitas (sk37 · sk38) — update v7.0
+## Community protection (sk37 · sk38) — v7.0 update
 
-Dua modul defensif **read-only** — jaga member AirdropFinder dari drainer. Gak nyerang, gak nge-exploit; sejalan prinsip whitehat.
+Two **read-only** defensive modules — they keep AirdropFinder members away from drainers. No attacking, no exploiting; in line with the whitehat principle.
 
-### Anti-scam sentinel (sk37) — situs ini asli atau imitasi?
+### Anti-scam sentinel (sk37) — is this site real or an imitation?
 ```
-Kakak: cek zkprot0x.xyz, resminya zkprotox.xyz
+Operator: cek zkprot0x.xyz, resminya zkprotox.xyz
 ```
 ```
 [SCAM SENTINEL] zkprot0x.xyz → 🚨 LIKELY-SCAM (100/100)
-• typosquat: beda 1 huruf dari domain resmi
-• 🚩 minta SEED PHRASE — situs resmi GAK PERNAH minta ini
-• SSL umur 3 hari + tombol claim
-draft warning post udah disiapin — review dulu sebelum broadcast (false positive = fitnah)
+• typosquat: 1 letter off the official domain
+• 🚩 asks for a SEED PHRASE — the official site NEVER does
+• SSL 3 days old + a claim button
+draft warning post is ready — review before broadcasting (a false positive = defamation)
 ```
 
-### Contract watcher (sk38) — aman claim gak?
-Modus drainer paling sering: kontrak/claim address diganti diam-diam pas hype claim. Snapshot diambil H9/sk10, sk38 yang diff.
+### Contract watcher (sk38) — is claiming safe?
+The most common drainer trick: the contract/claim address is swapped quietly during claim hype. The snapshot is taken at H9/sk10, sk38 does the diff.
 ```
-Kakak: kontrak claim ZkProtoX berubah gak dari kemarin? aman claim?
+Operator: has the ZkProtoX claim contract changed since yesterday? safe to claim?
 ```
 ```
 [CONTRACT WATCH] 0xAbc... → 🚨 CRITICAL
-🚨 claim address berubah 0xC1... → 0xEVIL... — JANGAN claim sampai verifikasi resmi
-🚨 fungsi sensitif baru: setClaimAddress
-safe_to_claim: FALSE → semua claim job di-hold
+🚨 claim address changed 0xC1... → 0xEVIL... — DO NOT claim until official verification
+🚨 new sensitive function: setClaimAddress
+safe_to_claim: FALSE → every claim job is held
 ```
-`safe_to_claim = FALSE` → claim runner otomatis nahan. No exceptions.
+`safe_to_claim = FALSE` → the claim runner holds automatically. No exceptions.
 
 ---
 
-## Mesin konten & komunitas (sk35 · sk39–sk42) — update v7.0
+## Content & community engine (sk35 · sk39–sk42) — v7.0 update
 
-Pipeline konten AirdropFinder end-to-end: dengerin komunitas → bikin panduan → repurpose semua platform → video → hook terbaik.
+The AirdropFinder content pipeline end to end: listen to the community → build a guide → repurpose to every platform → video → best hook.
 
-### Auto guide studio (sk35) — 1 airdrop jadi panduan rapi
+### Auto guide studio (sk35) — 1 airdrop becomes a clean guide
 ```
-Kakak: bikinin panduan ZkProtoX lengkap + versi telegram & X, embed referral gua
+Operator: make a full ZkProtoX guide + telegram & X versions, embed my referral
 ```
 ```
 [GUIDE STUDIO] ZkProtoX (Base)
-✅ panduan full Markdown ID (header, persiapan, 6 langkah, disclaimer DYOR)
-✅ varian Telegram + varian X (≤280)
-✅ referral ke-embed di semua varian
-🖼️ 4 screenshot job → delegasi ke browser skill
-gate: sk37 scan domain dulu sebelum publish — jangan promosiin scam
+✅ full guide Markdown ID (header, preparation, 6 steps, DYOR disclaimer)
+✅ Telegram variant + X variant (≤280)
+✅ referral embedded in every variant
+🖼️ 4 screenshot jobs → delegate to the browser skill
+gate: sk37 scans the domain before publish — do not promote a scam
 ```
 
-### Community intelligence (sk39) — apa kata komunitas semalam
+### Community intelligence (sk39) — what the community said overnight
 ```
-Kakak: analisis chat grup 24 jam terakhir
+Operator: analisis chat grup 24 jam terakhir
 ```
 ```
-[COMMUNITY INTEL] 1.840 pesan (24h) · sentimen netral (+0.05)
- topik: zkprotox(214), claim(180), gas base(95)
-❓ paling sering: "kapan claim ZkProtoX dibuka min?" (38x)
-🚨 FUD: 12 pesan "gak cair / scam" → cek fakta (sk37/sk38) dulu, baru klarifikasi
-💡 ide: thread FAQ claim ZkProtoX, edukasi gas Base
+[COMMUNITY INTEL] 1.840 messages (24h) · neutral sentiment (+0.05)
+ topics: zkprotox(214), claim(180), gas base(95)
+❓ most frequent: "when does the ZkProtoX claim open min?" (38x)
+🚨 FUD: 12 messages "not paid out / scam" → fact-check (sk37/sk38) first, clarify after
+💡 idea: ZkProtoX claim FAQ thread, Base gas education
 ```
 
 ### Omni-repurpose (sk40) + video pipeline (sk41) + hook lab (sk42)
 ```
-Kakak: artikel ini jadiin thread X, post TG, carousel IG, script tiktok & youtube
-Kakak: bikinin paket video 45 detik soal 3 airdrop Base
-Kakak: kasih 8 varian hook buat konten ini, ranking
+Operator: turn this article into an X thread, TG post, IG carousel, tiktok & youtube script
+Operator: make a 45 second video package about 3 Base airdrops
+Operator: give 8 hook variants for this content, ranked
 ```
 ```
-[REPURPOSE] 5 format ✅ — thread 6 tweet (semua ≤280) · TG · 5 slide IG · tiktok 36s · YT 6 mnt
-[VIDEO PIPELINE] 45s · hook 6.8s → 3 poin → CTA · storyboard 5 shot · voiceover ID · subtitle .srt
+[REPURPOSE] 5 formats ✅ — 6-tweet thread (all ≤280) · TG · 5 IG slides · tiktok 36s · YT 6 min
+[VIDEO PIPELINE] 45s · hook 6.8s → 3 points → CTA · 5-shot storyboard · ID voiceover · .srt subtitles
 [HOOK LAB] top-3:
-  [76] 3 Airdrop Base yang wajib kamu tau sekarang   (angka, urgency)
-  [70] Rahasia airdrop Base yang bikin cuan         (curiosity, emosi)
-  [64] Jangan farming Base sebelum nonton ini 👀      (emosi, urgency)
+  [76] 3 Base airdrops you have to know right now    (numbers, urgency)
+  [70] The Base airdrop secret that prints money     (curiosity, emotion)
+  [64] Do not farm Base before watching this 👀      (emotion, urgency)
 ```
-Render video = skill `remotion_video`; TTS = `voice.py`. Skor hook = prediksi heuristik, bukan jaminan viral — feed balik performa aktual biar makin akurat.
+Video render = the `remotion_video` skill; TTS = `voice.py`. Hook scores are heuristic predictions, not a viral guarantee — feed actual performance back so they get sharper.
 
 ---
 
 ## Session control commands
 
-Cukup ngomong langsung ke Hermes, gak perlu syntax khusus:
+Just talk to Hermes directly, no special syntax:
 
 | Command | Effect |
 |---|---|
-| `auto_confirm on` | Mode cepat — skip per-tx gate |
-| `auto_confirm off` | Mode safe (default) |
-| `status` | Liat semua background job aktif |
-| `stop <jobname>` | Matikan background job (sniper, farming, watcher) |
-| `resume <jobname>` | Lanjut job yang ke-pause |
+| `auto_confirm on` | Fast mode — skip the per-tx gate |
+| `auto_confirm off` | Safe mode (default) |
+| `status` | See every active background job |
+| `stop <jobname>` | Kill a background job (sniper, farming, watcher) |
+| `resume <jobname>` | Resume a paused job |
 | `audit` | Trigger sk52 — system self-check |
-| `debug` | Trigger sk54 — kalau ada error/bug |
-| `upgrade brain` | Trigger sk52 deep review (analisa skill coverage, gap, redundancy) |
-| `dry-run on` | Semua tx jadi simulate-only, gak broadcast (buat testing) |
-| `dry-run off` | Kembali ke broadcast mode |
-| `wallet list` | Liat semua wallet di vault |
-| `balance <wallet>` | Liat balance multi-chain wallet |
-| `revoke approval <spender> di <wallet>` | Revoke ERC-20/721 approval |
-| `cost report` | **v7.0** — biaya terpusat: token + gas (USD) + API, per provider/chain |
-| `router log` / `router tune` | **v7.0** — log keputusan router + deteksi tie + saran retune |
-| `regression run <suite>` | **v7.0** — golden-set regression lintas rilis |
-| `skor eligibility <wallet> buat <proyek>` | **v7.0 (sk31)** — skor 0-100 + gap + flags |
-| `sybil audit <N wallet>` | **v7.0 (sk31)** — cek korelasi antar-wallet sendiri |
-| `kalender airdrop` / `claim window minggu ini` | **v7.0 (sk31)** — alert H-48/H-2/H-0 |
+| `debug` | Trigger sk54 — when something errors/breaks |
+| `upgrade brain` | Trigger sk52 deep review (skill coverage, gap, redundancy analysis) |
+| `dry-run on` | Every tx becomes simulate-only, no broadcast (for testing) |
+| `dry-run off` | Back to broadcast mode |
+| `wallet list` | See every wallet in the vault |
+| `balance <wallet>` | See a wallet's multi-chain balance |
+| `revoke approval <spender> di <wallet>` | Revoke an ERC-20/721 approval |
+| `cost report` | **v7.0** — central costs: tokens + gas (USD) + API, per provider/chain |
+| `router log` / `router tune` | **v7.0** — router decision log + tie detection + retune advice |
+| `regression run <suite>` | **v7.0** — cross-release golden-set regression |
+| `skor eligibility <wallet> buat <proyek>` | **v7.0 (sk31)** — 0-100 score + gaps + flags |
+| `sybil audit <N wallet>` | **v7.0 (sk31)** — check your own cross-wallet correlation |
+| `airdrop calendar` / `claim window this week` | **v7.0 (sk31)** — D-48/D-2/D-0 alerts |
 | `exit plan <amount> <token>` | **v7.0 (sk31)** — exit ladder, via governor |
-| `rugcheck <token> di <chain>` | **v7.0** — verdict SAFE/CAUTION/DANGER |
+| `rugcheck <token> di <chain>` | **v7.0** — SAFE/CAUTION/DANGER verdict |
 | `triage soal CTF ...` / `decode ...` | **v7.0 (sk32)** — whitehat, in-scope only |
-| `scan proyek pre-TGE di <chain>` | **v7.0 (sk33)** — alpha radar, skor + tier |
+| `scan proyek pre-TGE di <chain>` | **v7.0 (sk33)** — alpha radar, score + tier |
 | `hitung ROI posisi farming` | **v7.0 (sk34)** — EV/ROI, keep/trim/drop |
-| `bikinin panduan <proyek>` | **v7.0 (sk35)** — guide ID + varian TG/X + referral |
-| `kalender unlock <token>` | **v7.0 (sk36)** — tekanan jual per event |
+| `make a guide for <project>` | **v7.0 (sk35)** — full guide + TG/X variants + referral |
+| `kalender unlock <token>` | **v7.0 (sk36)** — sell pressure per event |
 | `cek domain <situs> resminya <situs>` | **v7.0 (sk37)** — typosquat + drainer signals |
-| `kontrak <proyek> berubah gak? aman claim?` | **v7.0 (sk38)** — diff + safe_to_claim gate |
-| `analisis chat grup <window>` | **v7.0 (sk39)** — topik, FUD, sentimen, ide |
-| `repurpose konten ini ke semua platform` | **v7.0 (sk40)** — X/TG/IG/TikTok/YT |
-| `bikinin paket video <durasi> soal <topik>` | **v7.0 (sk41)** — script+storyboard+SRT |
-| `kasih varian hook + ranking` | **v7.0 (sk42)** — skor stop-scroll 0-100 |
+| `did <project> contract change? safe to claim?` | **v7.0 (sk38)** — diff + safe_to_claim gate |
+| `analisis chat grup <window>` | **v7.0 (sk39)** — topics, FUD, sentiment, ideas |
+| `repurpose this content to every platform` | **v7.0 (sk40)** — X/TG/IG/TikTok/YT |
+| `make a video package <duration> about <topic>` | **v7.0 (sk41)** — script+storyboard+SRT |
+| `kasih varian hook + ranking` | **v7.0 (sk42)** — 0-100 stop-scroll score |
 
 ### Per-wallet alias
 ```
-Kakak: rename wallet 0xAbC...d4F1 jadi "farming-base-1"
-Kakak: swap 100 USDC pakai farming-base-1
+Operator: rename wallet 0xAbC...d4F1 jadi "farming-base-1"
+Operator: swap 100 USDC using farming-base-1
 ```
 
-Hermes pakai alias mulai sesi berikutnya.
+Hermes uses the alias from the next session on.
 
 ---
 
 ## Background job persistence
 
-Sniper, farming, watcher — semua jalan background via pm2. Survive reboot kalau pakai systemd.
+Sniper, farming, watcher — all run in the background via pm2. They survive a reboot if you use systemd.
 
-### Liat job aktif
+### See active jobs
 ```bash
 pm2 ls
 ```
@@ -842,7 +842,7 @@ Sample output:
 └─────┴────────────────────┴─────────────┴──────┴─────────┘
 ```
 
-### Log per job
+### Logs per job
 ```bash
 pm2 logs sniper-base --lines 50
 pm2 logs lz-farming -f          # follow real-time
@@ -852,263 +852,263 @@ pm2 logs lz-farming -f          # follow real-time
 ```bash
 pm2 restart sniper-base
 pm2 stop lz-farming
-pm2 delete anti-drainer         # hapus dari list
+pm2 delete anti-drainer         # remove from the list
 ```
 
-### Auto-start saat VPS reboot
+### Auto-start on VPS reboot
 ```bash
 pm2 save                        # save current state
-pm2 startup systemd             # generate systemd unit
-# follow instruksi yang muncul
+pm2 startup systemd             # generate the systemd unit
+# follow the printed instructions
 ```
 
 ---
 
-## Cheat sheet — natural language ke skill route
+## Cheat sheet — natural language to skill route
 
-Tabel cepat: Kakak ngomong apa → skill apa yang fire.
+Quick table: what you say → which skill fires.
 
-| Kakak ngomong | Route | File yang load |
+| You say | Route | File loaded |
 |---|---|---|
 | "mint NFT [URL]" | sk13 | `skills/sk13.md` |
-| "mass mint pakai N wallet" | sk13 + sk12 + sk10 | mint + batch + Web3 |
-| "swap X ke Y di [chain]" | H1 | `hermes/references/swap.md` |
-| "jual semua $TOKEN" | H1 | swap.md |
-| "bridge dari A ke B" | H2 | `hermes/references/bridge.md` |
-| "stake ETH di lido" | H3 | `hermes/references/defi.md` |
-| "supply USDC ke aave" | H3 | defi.md |
-| "open long ETH di GMX" | H3 | defi.md (perp section) |
-| "snipe token baru di [chain]" | H4 + sk10 | sniping.md + Web3 |
-| "snipe mint NFT [URL]" | H4 + sk13 | sniping + minter |
-| "pantau wallet [addr]" | H5 | `hermes/references/monitoring.md` |
-| "alert kalau whale beli > $X" | H5 + sk4 | monitoring + TG bot |
+| "mass mint with N wallets" | sk13 + sk12 + sk10 | mint + batch + Web3 |
+| "swap X to Y on [chain]" | H1 | `hermes/references/swap.md` |
+| "sell all $TOKEN" | H1 | swap.md |
+| "bridge from A to B" | H2 | `hermes/references/bridge.md` |
+| "stake ETH on lido" | H3 | `hermes/references/defi.md` |
+| "supply USDC to aave" | H3 | defi.md |
+| "open long ETH on GMX" | H3 | defi.md (perp section) |
+| "snipe a new token on [chain]" | H4 + sk10 | sniping.md + Web3 |
+| "snipe NFT mint [URL]" | H4 + sk13 | sniping + minter |
+| "watch wallet [addr]" | H5 | `hermes/references/monitoring.md` |
+| "alert if a whale buys > $X" | H5 + sk4 | monitoring + TG bot |
 | "mempool watch [wallet]" | H5 | monitoring (sniffer section) |
-| "tracker smart money" | H5 | monitoring (Nansen/Arkham) |
-| "beli NFT [token] di [marketplace]" | H6 | `hermes/references/nft.md` |
-| "list NFT gua dijual" | H6 | nft.md |
+| "smart money tracker" | H5 | monitoring (Nansen/Arkham) |
+| "buy NFT [token] on [marketplace]" | H6 | `hermes/references/nft.md` |
+| "list my NFT for sale" | H6 | nft.md |
 | "floor sweep [collection]" | H6 | nft.md (Reservoir) |
-| "sign in dApp pakai SIWE" | H7 | `hermes/references/web3_connect.md` |
+| "sign in to a dApp with SIWE" | H7 | `hermes/references/web3_connect.md` |
 | "resolve ENS [name].eth" | H7 | web3_connect.md |
-| "layerzero farming N wallet" | H2 + H1 + sk12 | bridge + swap + batch |
-| "zksync / linea farming" | H2 + H1 + sk12 | sama pattern |
-| "buat wallet baru di [chain]" | sk10 / hermes/wallets.md | tergantung chain |
-| "import wallet dari seed" | hermes/wallets.md | (security strict mode) |
-| "audit kontrak [addr]" | sk11 | `skills/sk11.md` |
-| "kenapa bot gua duplikat" | sk54 + sk4 | debug + telegram |
-| "deploy ke VPS" | sk2 | `skills/sk2.md` |
-| "buat landing page web3" | sk9 + sk10 | frontend + Web3 connect |
-| "bikin animasi penjelasan / diagram" | sk18 | `skills/sk18.md` (Manim/Excalidraw) |
-| "bikin gambar pakai comfyui" | sk18 | sk18 + `scene_prep.py` |
-| "kontrol Notes/Safari di Mac gua" | sk19 | sk19 + `desktop_control.py` (no cursor steal) |
-| "latih robot di Isaac Sim" | sk19 | sk19 + `scene_prep.py` |
-| "bikin tulisan gua gak kaya AI" | sk20 | sk20 + `humanizer.py` |
-| "blokir IP yang nyerang dari log" | sk21 | sk21 + `hids.py` |
-| "investigasi error pakai KQL" | sk21 + sk57 | sk21 + systematic debug |
-| "riset mendalam soal X + sumber" | sk22 | sk22 + `research_q.py` |
-| "pecahin task ini, gua overwhelmed" | sk23 | `skills/sk23.md` |
-| "bikin MCP server" | sk24 | sk24 + `mcp_builder.py` |
-| "cek prompt gua ada masalah gak" | sk24 | sk24 (`audit_prompt`) |
-| "review compliance / CI-CD / port kode" | sk25 | `skills/sk25.md` |
-| "ubah obrolan ini jadi PRD / issues" | sk26 | sk26 + `prd.py` |
-| "grill ide gua biar konkret" | sk26 + sk58 | shaping → spec |
-| "eval / variance test fitur ini" | sk56 | sk56 + `eval.py` |
-| "debug bug aneh yang kadang muncul" | sk57 | `skills/sk57.md` (4-fase + variance) |
-| "tujuan gua masih kabur, bantu rapihin" | sk58 | `skills/sk58.md` |
-| "bikin content calendar 30 hari" | sk27 | sk27 + `content.py` |
-| "adaptasi post ini ke X/LinkedIn/IG/TikTok" | sk27 | sk27 (`adapt`) |
-| "bikin thread / carousel / script reels" | sk27 | sk27 + `content.py` |
-| "bikin caption + hashtag IG" | sk27 | sk27 (`caption`/`hashtags`) |
-| "tulis pakai framework AIDA/PAS" | sk28 | `skills/sk28.md` |
-| "tulis blog SEO-friendly" | sk28 | sk28 (SEO writer) |
-| "lokalisasi konten ke bahasa lain" | sk28 | sk28 (localization/RTL) |
-| "riset tren & kompetitor di niche gua" | sk29 | sk29 (+ sk22 buat dalam) |
-| "analisis komentar / performa post" | sk29 | sk29 + `content.py` (butuh data real) |
-| "1 artikel jadi thread+carousel+reels" | sk29 | sk29 (`repurpose`) |
-| "full pipeline konten otomatis" | sk29 + sk4/sk17 | research→draft→visual→schedule→analyze |
-| "riset ilmiah genomics/forecasting" | sk22 | dispatch ke library (scanpy/prophet/dll) |
-| "robot lihat & ambil objek (VLA)" | sk19 | sk19 (VLA, sim dulu) |
-| "skor eligibility wallet buat [proyek]" | sk31 | `skills/sk31.md` + `eligibility.py` |
-| "sybil audit N wallet farming gua" | sk31 | sk31 + `sybil_audit.py` |
-| "kalender / claim window airdrop" | sk31 | sk31 + `claim_watcher.py` |
-| "exit plan / kapan jual [token]" | sk31 | sk31 + `exit_planner.py` |
-| "rugcheck / token ini aman gak" | sk11 + H4 + sk10 | `rugcheck.py` (verdict) |
-| "triage soal CTF / decode flag" | sk32 | `skills/sk32.md` + `ctf.py` |
-| "caesar / xor / hash tipe apa" | sk32 | sk32 + `ctf.py` |
-| "solve CTF web (SQLi/SSTI/JWT)" | sk32 → sk43 | `skills/sk43.md` + `tools/ctf/` |
-| "pwn binary / ret2libc / heap" | sk32 → sk44 | `skills/sk44.md` + pwntools template |
-| "reverse binary / angr / keygen" | sk32 → sk45 | `skills/sk45.md` + angr template |
-| "RSA attack / crypto challenge" | sk32 → sk46 | `skills/sk46.md` + `tools/ctf/rsa_attacks.py` |
-| "forensics / stego / pcap / memdump" | sk32 → sk47 | `skills/sk47.md` + sandbox tools |
-| "prompt injection / jailbreak / Gandalf" | sk32 → sk48 | `skills/sk48.md` + `tools/ctf/gandalf_solver.py` |
-| "full-auto solve CTFd (swarm)" | sk32 | `tools/ctf/run.py` (coordinator + sandbox) |
-| "scan proyek pre-TGE / alpha airdrop" | sk33 | `skills/sk33.md` + `alpha_radar.py` |
-| "ROI farming / farm mana di-drop" | sk34 | sk34 + `farm_roi.py` |
-| "bikin panduan airdrop [proyek]" | sk35 | sk35 + `guide_studio.py` (+browser buat SS) |
-| "kalender unlock / tekanan jual [token]" | sk36 | sk36 + `unlock_engine.py` |
-| "situs ini palsu gak / cek domain" | sk37 | sk37 + `scam_sentinel.py` |
-| "kontrak berubah gak / aman claim?" | sk38 | sk38 + `contract_watch.py` (+H9 snapshot) |
-| "apa yang lagi rame di grup / FUD" | sk39 | sk39 + `community_intel.py` (+sk4 tarik pesan) |
-| "repurpose ke X/TG/IG/TikTok/YT" | sk40 | sk40 + `repurpose.py` |
-| "bikin paket video / storyboard / srt" | sk41 | sk41 + `video_pipeline.py` |
-| "varian hook / prediksi judul" | sk42 | sk42 + `hook_lab.py` |
-| "biaya / cost report sesi ini" | core | `cost_ledger.py` |
-| "router nabrak / tune keyword" | core | `router_log.py` |
-| "regression test antar rilis" | sk56 | `eval.py` (RegressionSuite) |
+| "layerzero farming N wallets" | H2 + H1 + sk12 | bridge + swap + batch |
+| "zksync / linea farming" | H2 + H1 + sk12 | same pattern |
+| "create a new wallet on [chain]" | sk10 / hermes/wallets.md | depends on the chain |
+| "import a wallet from a seed" | hermes/wallets.md | (security strict mode) |
+| "audit contract [addr]" | sk11 | `skills/sk11.md` |
+| "why is my bot duplicating" | sk54 + sk4 | debug + telegram |
+| "deploy to a VPS" | sk2 | `skills/sk2.md` |
+| "build a web3 landing page" | sk9 + sk10 | frontend + Web3 connect |
+| "make an explainer animation / diagram" | sk18 | `skills/sk18.md` (Manim/Excalidraw) |
+| "make an image with comfyui" | sk18 | sk18 + `scene_prep.py` |
+| "control Notes/Safari on my Mac" | sk19 | sk19 + `desktop_control.py` (no cursor steal) |
+| "train a robot in Isaac Sim" | sk19 | sk19 + `scene_prep.py` |
+| "make my writing not sound like AI" | sk20 | sk20 + `humanizer.py` |
+| "block the IPs attacking from the log" | sk21 | sk21 + `hids.py` |
+| "investigate an error with KQL" | sk21 + sk57 | sk21 + systematic debug |
+| "deep research on X + sources" | sk22 | sk22 + `research_q.py` |
+| "break this task down, I'm overwhelmed" | sk23 | `skills/sk23.md` |
+| "build an MCP server" | sk24 | sk24 + `mcp_builder.py` |
+| "check my prompt for problems" | sk24 | sk24 (`audit_prompt`) |
+| "review compliance / CI-CD / port a codebase" | sk25 | `skills/sk25.md` |
+| "turn this conversation into a PRD / issues" | sk26 | sk26 + `prd.py` |
+| "grill my idea until it is concrete" | sk26 + sk58 | shaping → spec |
+| "eval / variance test this feature" | sk56 | sk56 + `eval.py` |
+| "debug a weird bug that shows up sometimes" | sk57 | `skills/sk57.md` (4-phase + variance) |
+| "my goal is still vague, help me sharpen it" | sk58 | `skills/sk58.md` |
+| "build a 30-day content calendar" | sk27 | sk27 + `content.py` |
+| "adapt this post to X/LinkedIn/IG/TikTok" | sk27 | sk27 (`adapt`) |
+| "write a thread / carousel / reels script" | sk27 | sk27 + `content.py` |
+| "write IG caption + hashtags" | sk27 | sk27 (`caption`/`hashtags`) |
+| "write with the AIDA/PAS framework" | sk28 | `skills/sk28.md` |
+| "write an SEO-friendly blog" | sk28 | sk28 (SEO writer) |
+| "localize content into another language" | sk28 | sk28 (localization/RTL) |
+| "research trends & competitors in my niche" | sk29 | sk29 (+ sk22 for depth) |
+| "analyze comments / post performance" | sk29 | sk29 + `content.py` (needs real data) |
+| "1 article into thread+carousel+reels" | sk29 | sk29 (`repurpose`) |
+| "full automatic content pipeline" | sk29 + sk4/sk17 | research→draft→visual→schedule→analyze |
+| "scientific research genomics/forecasting" | sk22 | dispatch to the library (scanpy/prophet/etc.) |
+| "robot sees & picks an object (VLA)" | sk19 | sk19 (VLA, sim first) |
+| "score wallet eligibility for [project]" | sk31 | `skills/sk31.md` + `eligibility.py` |
+| "sybil audit my N farm wallets" | sk31 | sk31 + `sybil_audit.py` |
+| "airdrop calendar / claim window" | sk31 | sk31 + `claim_watcher.py` |
+| "exit plan / when to sell [token]" | sk31 | sk31 + `exit_planner.py` |
+| "rugcheck / is this token safe" | sk11 + H4 + sk10 | `rugcheck.py` (verdict) |
+| "triage a CTF challenge / decode a flag" | sk32 | `skills/sk32.md` + `ctf.py` |
+| "caesar / xor / what hash type" | sk32 | sk32 + `ctf.py` |
+| "solve a CTF web (SQLi/SSTI/JWT)" | sk32 → sk43 | `skills/ctf/ctf-playbook/sk43.md` + `framework/ctf/` |
+| "pwn a binary / ret2libc / heap" | sk32 → sk44 | `skills/ctf/ctf-playbook/sk44.md` + pwntools template |
+| "reverse a binary / angr / keygen" | sk32 → sk45 | `skills/ctf/ctf-playbook/sk45.md` + angr template |
+| "RSA attack / crypto challenge" | sk32 → sk46 | `skills/ctf/ctf-playbook/sk46.md` + `framework/ctf/rsa_attacks.py` |
+| "forensics / stego / pcap / memdump" | sk32 → sk47 | `skills/ctf/ctf-playbook/sk47.md` + sandbox tools |
+| "prompt injection / jailbreak / Gandalf" | sk32 → sk48 | `skills/ctf/ctf-playbook/sk48.md` + `framework/ctf/gandalf_solver.py` |
+| "full-auto solve CTFd (swarm)" | sk32 | `framework/ctf/run.py` (coordinator + sandbox) |
+| "scan pre-TGE projects / alpha airdrop" | sk33 | `skills/sk33.md` + `alpha_radar.py` |
+| "farming ROI / which farm to drop" | sk34 | sk34 + `farm_roi.py` |
+| "build an airdrop guide [project]" | sk35 | sk35 + `guide_studio.py` (+browser for SS) |
+| "unlock calendar / sell pressure [token]" | sk36 | sk36 + `unlock_engine.py` |
+| "is this site fake / check a domain" | sk37 | sk37 + `scam_sentinel.py` |
+| "did the contract change / is claiming safe?" | sk38 | sk38 + `contract_watch.py` (+H9 snapshot) |
+| "what is hot in the group / FUD" | sk39 | sk39 + `community_intel.py` (+sk4 pulls messages) |
+| "repurpose to X/TG/IG/TikTok/YT" | sk40 | sk40 + `repurpose.py` |
+| "build a video package / storyboard / srt" | sk41 | sk41 + `video_pipeline.py` |
+| "hook variants / title predictions" | sk42 | sk42 + `hook_lab.py` |
+| "cost / cost report for this session" | core | `cost_ledger.py` |
+| "router collision / tune keywords" | core | `router_log.py` |
+| "regression test across releases" | sk56 | `eval.py` (RegressionSuite) |
 
 ---
 
-## Skill v7.0 — contoh ngomong (Airdrop Intelligence & Whitehat)
+## v7.0 skills — example commands (Airdrop Intelligence & Whitehat)
 
-Net-new di v7.0. Semua tool offline+deterministik; data on-chain didelegasi ke sk10/hermes; fund movement lewat Spend Governor.
+Net-new in v7.0. Every tool is offline+deterministic; on-chain data is delegated to sk10/hermes; fund movement goes through the Spend Governor.
 
 ### Airdrop Intelligence (sk31)
 ```
-Kakak: skor eligibility wallet#1 buat Linea, kasih gap & saran
-Kakak: sybil audit 50 wallet farming gua, mana yang bahaya
-Kakak: claim window airdrop apa aja minggu ini, alert H-48/H-2/H-0
-Kakak: exit plan 5000 $ZK profil balanced, likuiditas tipis
+Operator: skor eligibility wallet#1 buat Linea, kasih gap & saran
+Operator: sybil audit my 50 farm wallets, which ones are at risk
+Operator: which airdrops have a claim window this week, alert H-48/H-2/H-0
+Operator: exit plan 5000 $ZK profil balanced, likuiditas tipis
 ```
 
 ### CTF / Whitehat (sk32) — legal & in-scope only
 ```
-Kakak: triage soal CTF ini: [deskripsi]
-Kakak: decode berlapis: [blob base64/hex]
-Kakak: caesar bruteforce "[ciphertext]"
-Kakak: ini hash tipe apa: [hash]
+Operator: triage this CTF challenge: [description]
+Operator: decode berlapis: [blob base64/hex]
+Operator: caesar bruteforce "[ciphertext]"
+Operator: what hash type is this: [hash]
 ```
-Target asing / out-of-scope → gate R9 dulu (⚠️ izin? y/n). Exploit aktif = manual + izin.
+Foreign / out-of-scope target → gate R9 first (⚠️ permission? y/n). Active exploit = manual + permission.
 
 ### Safety & observability
 ```
-Kakak: cost report sesi ini       → token + gas + API breakdown
-Kakak: rugcheck 0xToken... di base → verdict SAFE/CAUTION/DANGER
-Kakak: regression run mint-detector → cek ada yang rusak gak abis upgrade
+Operator: cost report this session  → token + gas + API breakdown
+Operator: rugcheck 0xToken... di base → SAFE/CAUTION/DANGER verdict
+Operator: regression run mint-detector → check if anything broke after the upgrade
 ```
 
 ---
 
-## Skill non-crypto (v7.0) — contoh ngomong
+## Non-crypto skills (v7.0) — example commands
 
-Semua di bawah ini **modul opsional**. Identitas inti tetap crypto+dev — skill ini cuma nyala kalau Kakak nyebut. Gak nyentuh dana, jadi gak ada gate governor (kecuali aksi OS/desktop/robot fisik & firewall → satu kali gate R9).
+Everything below is an **optional module**. The core identity stays crypto+dev — these skills only wake up when you mention them. They do not touch funds, so there is no governor gate (except OS/desktop/physical-robot actions & firewall → one R9 gate).
 
-### Media & kreatif (sk18)
+### Media & creative (sk18)
 ```
-Kakak: bikinin animasi Manim buat jelasin gradient descent
-Kakak: generate 10 variasi gambar pakai comfyui, seed beda-beda
-Kakak: bikin diagram arsitektur sistem gua di excalidraw
-Kakak: bikin OG card 1200x630 buat artikel ini
+Operator: make a Manim animation explaining gradient descent
+Operator: generate 10 image variations with comfyui, different seeds
+Operator: draw my system architecture diagram in excalidraw
+Operator: make an OG card 1200x630 for this article
 ```
-Output = file artefak (MP4/PNG/SVG). Butuh engine lokal (ffmpeg/Manim/ComfyUI) — deploy via sk2 kalau di VPS.
+Output = artefact files (MP4/PNG/SVG). Needs a local engine (ffmpeg/Manim/ComfyUI) — deploy via sk2 if on a VPS.
 
-### Desktop & robotik (sk19)
+### Desktop & robotics (sk19)
 ```
-Kakak: catat ini ke Notes gua          → app-drive, kursor Kakak GAK kerebut
-Kakak: latih grasp robot di Isaac Sim, 200 step headless
+Operator: write this to my Notes          → app-drive, your cursor is NOT stolen
+Operator: latih grasp robot di Isaac Sim, 200 step headless
 ```
-macOS control = background-first (no cursor steal). Robot fisik / aksi destruktif desktop → gate R9 sekali.
+macOS control = background-first (no cursor steal). Physical robot / destructive desktop action → one R9 gate.
 
 ### Humanizer (sk20)
 ```
-Kakak: tulisan ini kaku banget, bikin natural   → buang AI-tell
-Kakak: tune ke brand voice "ct_degen"
+Operator: this writing is stiff, make it natural   → strip the AI-tell
+Operator: tune ke brand voice "ct_degen"
 ```
 
-### Enterprise & defensif (sk21)
+### Enterprise & defensive (sk21)
 ```
-Kakak: pantau auth.log, auto-block IP brute-force SSH (dry-run dulu)
-Kakak: tulis KQL buat cari spike latency 6 jam terakhir
+Operator: pantau auth.log, auto-block IP brute-force SSH (dry-run dulu)
+Operator: tulis KQL buat cari spike latency 6 jam terakhir
 ```
-HIDS selalu allowlist IP Kakak + TTL block (gak permaban). Aktivasi firewall → gate R9.
+HIDS always allowlists your IP + TTL blocks (never a permaban). Firewall activation → R9 gate.
 
-### Riset, fokus, produk (sk22/sk23/sk26)
+### Research, focus, product (sk22/sk23/sk26)
 ```
-Kakak: riset mendalam dampak EIP-4844 ke L2, kasih sumber
-Kakak: gua overwhelmed, pecahin task ini satu-satu, kasih yang pertama doang
-Kakak: dari obrolan tadi, bikinin PRD + breakdown jadi issues
+Operator: riset mendalam dampak EIP-4844 ke L2, kasih sumber
+Operator: I'm overwhelmed, break this task down one by one, give me only the first
+Operator: from that chat, write a PRD + break it down into issues
 ```
 
 ### Meta-dev & quality (sk24/sk25/sk56/sk57/sk58)
 ```
-Kakak: scaffold MCP server "weather" di Python
-Kakak: audit prompt system ini, ada masalah apa
-Kakak: variance test fungsi mint-detector 10x, stabil gak
-Kakak: bug ini kadang muncul kadang enggak — debug sistematis
-Kakak: tujuan "cuan dari web3" masih kabur, bantu shaping
+Operator: scaffold MCP server "weather" di Python
+Operator: audit this system prompt, what is wrong with it
+Operator: variance test the mint-detector function 10x, is it stable
+Operator: this bug shows up sometimes — debug it systematically
+Operator: the goal "profit from web3" is still vague, help me shape it
 ```
 
-### Konten & social media (sk27/sk28/sk29)
-Suite marketing lengkap. Identitas inti tetap crypto+dev — ini modul opsional buat bikin & nyebarin konten.
+### Content & social media (sk27/sk28/sk29)
+A full marketing suite. The core identity stays crypto+dev — this is an optional module for making & spreading content.
 ```
-Kakak: bikin content strategy: pillar, audience, positioning buat akun gua
-Kakak: bikinin content calendar 30 hari, 5 post/minggu, X + IG
-Kakak: pesan ini adaptasi ke X thread, LinkedIn, IG carousel, sama reels script
-Kakak: bikin 5 hook scroll-stopper buat topik [X]
-Kakak: tulis ulang pakai framework PAS, terus humanize (sk20) biar gak bau AI
-Kakak: 1 artikel ini repurpose jadi thread + carousel + reels
-Kakak: riset tren & kompetitor di niche [X], kasih peluang konten
-Kakak: analisis komentar ini — sentimen, pertanyaan, objection
-Kakak: bikin 3 variasi A/B buat caption ini (ubah hook doang)
-Kakak: jalanin full pipeline: research → draft → visual → schedule → analyze
+Operator: build a content strategy: pillars, audience, positioning for my account
+Operator: make a 30 day content calendar, 5 posts/week, X + IG
+Operator: adapt this message to an X thread, LinkedIn, IG carousel, and reels script
+Operator: write 5 scroll-stopper hooks for topic [X]
+Operator: rewrite with the PAS framework, then humanize (sk20) so it does not smell like AI
+Operator: repurpose this 1 article into a thread + carousel + reels
+Operator: riset tren & kompetitor di niche [X], kasih peluang konten
+Operator: analyze these comments — sentiment, questions, objections
+Operator: make 3 A/B variants for this caption (change the hook only)
+Operator: jalanin full pipeline: research → draft → visual → schedule → analyze
 ```
-Catatan jujur:
-- **Analitik & best-time butuh data real** akun Kakak (export/API). Tanpa itu → estimasi bertanda, bukan angka karangan.
-- **Publish & balas komentar = aksi keluar** → default human-in-the-loop (draft → Kakak ACC → kirim). Hal sensitif gak auto-reply.
-- Alur juara: sk29 (riset) → sk28 (copy) → sk27 (format) → sk20 (humanize) → sk18 (visual) → sk4/sk17 (schedule).
+Honest notes:
+- **Analytics & best-time need real data** from your account (export/API). Without it → estimates marked as such, not invented numbers.
+- **Publishing & replying to comments = outbound actions** → human-in-the-loop by default (draft → you approve → send). Sensitive replies are never auto-sent.
+- Winning flow: sk29 (research) → sk28 (copy) → sk27 (format) → sk20 (humanize) → sk18 (visual) → sk4/sk17 (schedule).
 
-### Riset & robotik (sk22/sk19)
+### Research & robotics (sk22/sk19)
 ```
-Kakak: riset mendalam [topik ilmiah], dispatch ke library yang tepat + sumber
-Kakak: cari dataset/model di Hugging Face buat [task]
-Kakak: robot di Isaac Sim lihat botol merah terus ambil (VLA, latih di sim dulu)
+Operator: deep research [scientific topic], dispatch to the right library + sources
+Operator: cari dataset/model di Hugging Face buat [task]
+Operator: robot di Isaac Sim lihat botol merah terus ambil (VLA, latih di sim dulu)
 ```
-Robot fisik / VLA real = gate R9 + meta-action STOP selalu menang. Sains = dispatch ke library tervalidasi + verifikasi, bukan ngarang hasil.
+Physical robot / real VLA = R9 gate + the STOP meta-action always wins. Science = dispatch to validated libraries + verification, never invented results.
 
 ---
 
-## Yang perlu Kakak siapin sebelum mulai
+## What to prepare before starting
 
-1. **VPS akses** — ✅ udah punya `root@vmi3159875`
-2. **Master password vault** — buat sekarang, minimum 16 char, simpan di password manager
-3. **RPC primary + fallback per chain** — minimum 2 endpoint per chain (rotating biar gak rate-limit). Recommended: Alchemy / Infura / QuickNode + 1 public RPC sebagai fallback
-4. **Test wallet kecil dulu** — generate wallet baru via Hermes, isi $20-50 buat smoke test, jangan langsung pakai wallet utama
-5. **Telegram bot baru buat alert** — bikin via @BotFather, taro token-nya di `HERMES_TG_BOT_TOKEN`. Jangan pakai bot yang sama dengan channel publik Kakak
-6. **API key opsional** — skip dulu kalau belum, Hermes auto-fallback:
+1. **VPS access** — ✅ already have `root@vmi3159875`
+2. **Vault master password** — create it now, minimum 16 chars, store it in a password manager
+3. **Primary + fallback RPC per chain** — minimum 2 endpoints per chain (rotating so you do not get rate-limited). Recommended: Alchemy / Infura / QuickNode + 1 public RPC as fallback
+4. **A small test wallet first** — generate a new wallet via Hermes, fund it with $20-50 for a smoke test, do not start on the main wallet
+5. **A new Telegram bot for alerts** — create it via @BotFather, put the token in `HERMES_TG_BOT_TOKEN`. Do not reuse the bot behind your public channel
+6. **Optional API keys** — skip them for now if missing, Hermes auto-falls back:
    - 1inch (swap): free tier OK
    - Reservoir (NFT): free tier OK
-   - Nansen (smart money): paid, paling akurat — opsional
+   - Nansen (smart money): paid, most accurate — optional
    - Arkham: free tier OK
    - Zerion / Birdeye (portfolio): free tier OK
 
-Setelah 6 hal ini ready → Hermes bisa langsung run. Mau gua bikin **bootstrap script** otomatis (install + env setup + first wallet gen + smoke test), atau Kakak prefer setup manual step-by-step?
+Once these 6 are ready → Hermes can run immediately. Want me to build the automatic **bootstrap script** (install + env setup + first wallet gen + smoke test), or do you prefer manual step-by-step setup?
 
 ---
 
-## Cara cepat verify v7.0 + hermes udah jalan
+## Quick verification that v7.0 + hermes is running
 
-Setelah install + restart, cek 5 hal:
+After install + restart, check 5 things:
 
 ```bash
-# 1. Agent boot tanpa error
+# 1. Agent boots without errors
 pm2 logs hermes --lines 20
-# harus muncul: [BOOT] v7.0 SYADAGENTIC SUPREME loaded
+# must show: [BOOT] v7.0 SYADAGENTIC SUPREME loaded
 
-# 2. Env var ke-load
+# 2. Env vars load
 env | grep -E "HERMES_|RPC_|ARKHAM_" | head -10
 
-# 3. Skill ke-baca (sekarang sk1-sk32 + sk52-sk58)
+# 3. Skills are readable (now sk1-sk32 + sk52-sk58)
 ls ~/.openclaw/workspace/openclaw/skills/
-# harus liat: sk0-sk32, sk52-sk58, hermes/
+# must see: sk0-sk32, sk52-sk58, hermes/
 
-# 4. Integrity OK (PENTING — boot rail)
-python3 tools/skill_integrity.py verify
-# harus: "✅ Integritas OK — 150 file cocok" (exit 0)
+# 4. Integrity OK (IMPORTANT — boot rail)
+python3 scripts/skill_integrity.py verify
+# must be: "✅ Integrity OK — 150 files match" (exit 0)
 
-# 5. Test offline hijau (zero leak)
-bash tools/tests/run_tests.sh           # 85 tests OK
+# 5. Offline tests green (zero leak)
+python3 tests/run_tests.py           # 85 tests OK
 bash skills/hermes/tests/run_tests.sh   # 44 tests OK
-# total 129 pass, 0 ResourceWarning di -W error::ResourceWarning
+# total 129 pass, 0 ResourceWarning under -W error::ResourceWarning
 ```
 
-Kalau 5 hal di atas ✅, SYADAGENTIC v7.0 siap eksekusi.
+If all 5 above are ✅, SYADAGENTIC v7.0 is ready to execute.
 
-> Catatan: tiap habis edit/tambah file `.md` atau `.py`, jalanin `python3 tools/skill_integrity.py generate` lalu `verify`. Verify gagal (exit≠0) = boot rail nahan operasi on-chain sampai diaudit.
+> Note: after every edit/add of a `.md` or `.py` file, run `python3 scripts/skill_integrity.py generate` then `verify`. A failed verify (exit≠0) = the boot rail holds on-chain operations until it is audited.

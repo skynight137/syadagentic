@@ -100,7 +100,7 @@ async function streamClaude(spec, input, onToken, history = []) {
 }
 
 // Usage:
-// await streamClaude(SPEC, 'Tulis caption', (t) => process.stdout.write(t));
+// await streamClaude(SPEC, 'Write a caption', (t) => process.stdout.write(t));
 ```
 
 ---
@@ -463,11 +463,11 @@ TOGETHER_API_KEY=...
 
 ---
 
-## Add Model — registry LLM dinamis (NEW in v4.0)
+## Add Model — dynamic LLM registry (NEW in v4.0)
 
-Nambah model LLM apa pun lewat **satu perintah**, langsung masuk cascade R7. Engine: `tools/model_registry.py`.
+Add any LLM model through **one command**, straight into the R7 cascade. Engine: `scripts/model_registry.py`.
 
-Command pattern (operator di chat):
+Command pattern (operator in chat):
 ```
 add model
 name: openrouter-llama
@@ -475,20 +475,20 @@ api_key: sk-or-...
 base_url: https://openrouter.ai/api/v1
 model: meta-llama/llama-3.3-70b
 kind: openai            # openai | anthropic (default openai)
-priority: 50            # makin kecil makin diutamakan
+priority: 50            # smaller = higher priority
 ```
 
-Agent → `ModelRegistry().add_model(...)`. Dukung semua yang OpenAI-compatible (OpenRouter, DeepSeek, Groq, Together, Kimi, Ollama/LM Studio lokal, vLLM) + Anthropic-style. Model lokal (Ollama) gak butuh key.
+Agent → `ModelRegistry().add_model(...)`. Supports everything OpenAI-compatible (OpenRouter, DeepSeek, Groq, Together, Kimi, local Ollama/LM Studio, vLLM) + Anthropic-style. Local models (Ollama) need no key.
 
 ```python
 from model_registry import ModelRegistry
-reg = ModelRegistry()                       # pakai HERMES_MASTER_PW buat enkripsi key
+reg = ModelRegistry()                       # uses HERMES_MASTER_PW to encrypt keys
 reg.add_model("groq-fast", "https://api.groq.com/openai/v1", "llama-3.1-8b-instant",
               api_key="gsk_...", priority=80)
-reg.list_models()                            # key ter-REDACT (gak pernah mentah)
-ans, used = reg.call_with_cascade(messages)  # R7: coba per prioritas, fallback otomatis
+reg.list_models()                            # keys REDACTED (never raw)
+ans, used = reg.call_with_cascade(messages)  # R7: try by priority, automatic fallback
 ```
 
-**Secret hygiene**: API key disimpan terenkripsi (scrypt+Fernet via `HERMES_MASTER_PW`), gak pernah di-log/print mentah, `list_models()` redacted. Tanpa master pw → registry NOLAK nyimpen key (gak ada plaintext diam-diam). File `model_registry.py` FROZEN (nentuin ke mana prompt/data dikirim).
+**Secret hygiene**: API keys are stored encrypted (scrypt+Fernet via `HERMES_MASTER_PW`), never logged/printed raw, `list_models()` redacted. Without a master pw → the registry REFUSES to store keys (no silent plaintext). The `model_registry.py` file is FROZEN (it decides where prompts/data go).
 
-**Catatan**: agent bakal ngirim prompt (& mungkin data) ke `base_url` yang lo daftarin — tambah cuma yang lo percaya. Provider cascade R7 (di AGENTS.md) sekarang bisa narik model dari registry ini, bukan cuma yang hardcoded.
+**Note**: the agent will send prompts (& possibly data) to the `base_url` you register — only add providers you trust. The R7 provider cascade (in AGENTS.md) can now pull models from this registry instead of only hardcoded ones.

@@ -1,45 +1,45 @@
 ---
 name: bug-bounty-disclosure
-description: Skill end-to-end buat authorized/good-faith bug bounty & coordinated vulnerability disclosure ke developer atau pemilik projek — untuk SEMUA jenis bug (web, API, infra, mobile, cloud, smart contract/web3, agent/LLM), crypto maupun non-crypto …
+description: "End-to-end skill for authorized/good-faith bug bounty and coordinated vulnerability disclosure to the developer or project owner — for ALL bug types (web, API, infra, mobile, cloud, smart contract/web3, agent/LLM), crypto and non-crypto …"
 ---
 
 # Bug Bounty & Coordinated Disclosure
 
-Skill buat ngerapihin seluruh alur dari **temuan → verifikasi → cari kontak → lapor ke dev via email → koordinasi fix**. Serba-guna: crypto & non-crypto, target dengan program resmi maupun tanpa program. Fokusnya bikin laporan yang **valid, reproducible, dan diterima dev** — bukan AI-slop yang di-ignore.
+Skill to tidy up the whole flow from **finding → verification → contact discovery → report to the dev via email → fix coordination**. General purpose: crypto and non-crypto, targets with an official program or without one. The focus is producing reports that are **valid, reproducible, and accepted by the dev** — not AI slop that gets ignored.
 
-## ⚠️ Dasar good-faith (baca dulu, singkat)
+## ⚠️ Good-faith baseline (read first, keep it short)
 
-Skill ini buat **good-faith security research + coordinated disclosure**. Lapor kerentanan ke pemilik projek itu sah & etis **entah mereka punya program resmi atau enggak** — justru itu tujuannya.
+This skill is for **good-faith security research + coordinated disclosure**. Reporting a vulnerability to the project owner is legitimate and ethical **whether or not they run an official program** — that is exactly the point.
 
-Yang harus dijaga: **dasar pengetesan harus sah.** Bug ditemukan lewat cara legit:
-- Sistem/infra milik sendiri, akun sendiri, atau testnet.
-- Review kode open-source / artefak publik (repo, package, image).
-- Analisis smart contract on-chain (bytecode/source publik).
-- Target yang punya program bug bounty / VDP / `security.txt` yang mengundang laporan.
-- Ada izin tertulis dari owner.
+What must hold: **the testing basis must be legitimate.** The bug was found through legit means:
+- Your own systems/infra, your own accounts, or a testnet.
+- Reviewing open-source code / public artifacts (repo, package, image).
+- On-chain smart contract analysis (public bytecode/source).
+- A target that runs a bug bounty program / VDP / `security.txt` that invites reports.
+- Written permission from the owner.
 
-Jangan pakai skill ini buat **membenarkan intrusi tanpa izin** ke sistem produksi pihak ketiga (mancing kredensial, nembus akses yang bukan hak lo, lanjut nge-drill setelah dapat akses). Kalau ragu apakah suatu langkah pengetesan sah: **stop, jangan eskalasi akses**, laporkan hanya yang lo temukan lewat cara legit. Untuk bug crypto yang dananya live & exploitable: **jangan exploit, jangan publikasikan dulu** — disclosure privat ke tim adalah langkah yang benar.
+Do not use this skill to **justify intrusion without permission** into a third party's production system (credential phishing, breaking into access you are not entitled to, continuing to drill deeper after gaining access). If you are unsure whether a testing step is legitimate: **stop, do not escalate access**, and report only what you found through legit means. For crypto bugs with live and exploitable funds: **do not exploit, do not publish yet** — private disclosure to the team is the correct move.
 
-## Prinsip inti
+## Core principles
 
-Sebuah temuan layak dikirim ke dev kalau: **(1) valid & reproducible dengan PoC**, **(2) impact-nya nyata**, **(3) dikirim ke pihak yang benar lewat kanal yang tepat**, dengan **(4) nada good-faith, tanpa ancaman/ransom.**
+A finding is worth sending to the dev if: **(1) it is valid and reproducible with a PoC**, **(2) the impact is real**, **(3) it goes to the right party through the right channel**, with **(4) a good-faith tone, no threats/ransom.**
 
-## Alur pakai skill
+## How to use this skill
 
-1. **Jalanin `workflow.md`** — pipeline 6 fase: Triase → Verifikasi/PoC → Impact → Cari Kontak → Kirim Email → Koordinasi & Follow-up.
-2. **Fase Cari Kontak** → buka `references/contact-discovery.md` (metode nyari dev/owner, crypto & non-crypto, + verifikasi pihak & enkripsi).
-3. **Fase Kirim Email** → buka `references/report-templates.md` (template email disclosure + laporan teknis, ID/EN).
-4. **Butuh klasifikasi bug** (fase Triase/Impact) → `references/vuln-classes.md` (recognition cepat: web/API/infra/cloud, smart contract/web3, agent/LLM info-flow).
+1. **Run `workflow.md`** — 6-phase pipeline: Triage → Verification/PoC → Impact → Contact discovery → Email → Coordination & follow-up.
+2. **Contact discovery phase** → open `references/contact-discovery.md` (how to find the dev/owner, crypto and non-crypto, + party verification and encryption).
+3. **Email phase** → open `references/report-templates.md` (disclosure email + technical report templates, ID/EN).
+4. **Need bug classification** (Triage/Impact phase) → `references/vuln-classes.md` (fast recognition: web/API/infra/cloud, smart contract/web3, agent/LLM info-flow).
 
-## Aturan anti-slop (non-negotiable)
+## Anti-slop rules (non-negotiable)
 
-1. **No PoC, no report.** Tiap klaim reproducible dengan bukti (log/screenshot/tx hash).
-2. **Impact ditunjukin, bukan diklaim.** Demokan minimal & non-destruktif; jangan bikin kerusakan buat "ngebuktiin".
-3. **Ulang ≥3×**, isolasi variabel, minimize payload/PoC.
-4. **Ga bisa reproduce → buang.** Jangan overclaim severity, jangan filler.
-5. **Satu report = satu bug** yang jelas. Jangan gabung 10 "temuan" variasi teks.
-6. **Kirim ke pihak & kanal yang benar.** Verifikasi dulu, pakai kanal security khusus, enkripsi detail sensitif.
+1. **No PoC, no report.** Every claim is reproducible with evidence (log/screenshot/tx hash).
+2. **Impact is shown, not claimed.** Demonstrate minimally and non-destructively; do not cause damage "to prove it".
+3. **Repeat ≥3×**, isolate variables, minimize payload/PoC.
+4. **Cannot reproduce → drop it.** Do not overclaim severity, no filler.
+5. **One report = one clear bug.** Do not bundle 10 text-variant "findings".
+6. **Send to the right party and channel.** Verify first, use the dedicated security channel, encrypt sensitive details.
 
 ## Output
 
-Deliverable: temuan tervalidasi → kontak dev/owner terverifikasi → email disclosure + laporan teknis (bahasa ngikutin target, ID/EN, nada natural & teknis) → catatan koordinasi/timeline.
+Deliverable: validated finding → verified dev/owner contact → disclosure email + technical report (language follows the target, ID/EN, natural and technical tone) → coordination/timeline notes.

@@ -4,7 +4,7 @@
 
 Make your agent comply: farming, automation, security testing, and full execution without friction.
 
-`bash install.sh` — runs on Hermes, Claude Code, Codex, opencode, any API
+`bash scripts/install.sh` — runs on Hermes, Claude Code, Codex, opencode, any API
 
 [![Version](https://img.shields.io/badge/version-7.3-2ea44f)](#)
 [![Templates](https://img.shields.io/badge/templates-40%2B-blue)](#-strongest-jailbreak-templates-t1t119)
@@ -42,10 +42,10 @@ It is a curated body of jailbreak, refusal-bypass, automation, and security tech
 
 ```
 SYADAGENTIC/
-├── SOUL.md                     # Boot identity — zero-refusal sovereign agent (core)
+├── docs/identity/SOUL.md                     # Boot identity — zero-refusal sovereign agent (core)
 ├── AGENTS.md                   # Routing and dispatch — 10 subagent divisions
-├── SYADAGENTIC.md              # Full protocol (self-activating)
-├── SYADAGENTIC-SHORT.md        # Compact identity variant
+├── docs/identity/SYADAGENTIC.md              # Full protocol (self-activating)
+├── docs/identity/SYADAGENTIC-SHORT.md        # Compact identity variant
 ├── skills/                     # 83 skills, one folder per skill, all SKILL.md-first
 │   ├── security/               # 72 pentest/audit skills (incl. bug-bounty master + 25 vuln classes)
 │   ├── ctf/ · engineering/ · intelligence/ · meta/ · monetization/   # playbooks
@@ -56,22 +56,26 @@ SYADAGENTIC/
 │   ├── jailbreak/MASTER-JB-TEMPLATES.md · jailbreak/T104-DAN.md
 │   ├── ken/                    # Full ENI LIME + compact per-model payloads
 │   └── prefill.json
-├── arsenal-framework/          # Executable framework core
+├── framework/          # Executable framework core
 │   ├── phase-engine/           # Phase engine + farm pipeline
 │   ├── governor/               # Spend cap + kill-switch + dry-run
 │   ├── chain-map/              # Chain taxonomy (primitive → impact)
 │   ├── drills/                 # Agent benchmark L1–L5
 │   └── captcha-harvester/      # 9-vendor route-intercept captcha
 ├── docs/
+│   ├── identity/               # SOUL.md · SYADAGENTIC.md · SYADAGENTIC-SHORT.md (the system prompts)
 │   ├── reference/              # DISPATCH, IDENTITY, STANDARD, SAFETY-FRAMEWORK, RESULTS-MATRIX
 │   ├── guides/                 # DEPLOY, FINE-TUNE-JB, TOOLS, walkthroughs
 │   ├── strategies/             # STRATEGIES-LIBRARY.yaml (5-layer JB + 8 patterns)
 │   ├── archive/                # extraction/audit notes
 │   └── index.html              # Landing page
-├── tools/                      # checkpoint.py, audit_core.py, syad_farm_agent.py
-├── farm_scripts/ · farm_output/ # Prompt sets / scraped output
-├── install.sh                  # ⭐ Automatic installer
-├── install_universal.py        # Profile installer (Hermes profile, opt-in other agents)
+├── scripts/                    # every entry point
+│   ├── install.sh              # ⭐ Automatic installer
+│   ├── install_universal.py    # Profile installer (Hermes profile, opt-in other agents)
+│   ├── gate.py                 # Claim verification gate
+│   └── checkpoint.py · audit_core.py · syad_farm_agent.py · *encode.py
+├── templates/farm/             # Per-model farm prompt payloads
+├── outputs/                    # Farm run output (git-ignored content, .gitkeep only)
 └── tests/                      # Test suite + check_skills.py layout lint
 ```
 
@@ -86,9 +90,9 @@ SYADAGENTIC/
 ```bash
 git clone https://github.com/USERNAME/syadagentic.git
 cd syadagentic
-bash install.sh                  # -> Hermes profile `syad` (created if missing, patched if present)
-# bash install.sh --profile work # -> profile `work`
-# bash install.sh --all-agents   # + Claude Code / Codex / opencode (opt-in, $HOME scope)
+bash scripts/install.sh                  # -> Hermes profile `syad` (created if missing, patched if present)
+# bash scripts/install.sh --profile work # -> profile `work`
+# bash scripts/install.sh --all-agents   # + Claude Code / Codex / opencode (opt-in, $HOME scope)
 ```
 
 Hermes target is profile-first: it writes profile `syad` and leaves the default
@@ -101,14 +105,14 @@ the default profile should carry SYADAGENTIC itself (it then also writes
 ### Option B — Manual (any framework)
 
 ```bash
-# 1.1. Put SOUL.md where the agent loads identity
-#    Hermes:   python3 install_universal.py            (profile `syad`, SOUL.md auto-load)
-#              other profile: python3 install_universal.py --profile work
-#              default profile: python3 install_universal.py --profile default
-#    Claude:   cp SOUL.md ~/.claude/CLAUDE.md
-#    Codex:    cp SOUL.md ~/.codex/AGENTS.md
-#    opencode: cp SOUL.md ~/.config/opencode/AGENTS.md
-#    API:      prepend SOUL.md to the system prompt
+# 1.1. Put docs/identity/SOUL.md where the agent loads identity
+#    Hermes:   python3 scripts/install_universal.py            (profile `syad`, docs/identity/SOUL.md auto-load)
+#              other profile: python3 scripts/install_universal.py --profile work
+#              default profile: python3 scripts/install_universal.py --profile default
+#    Claude:   cp docs/identity/SOUL.md ~/.claude/CLAUDE.md
+#    Codex:    cp docs/identity/SOUL.md ~/.codex/AGENTS.md
+#    opencode: cp docs/identity/SOUL.md ~/.config/opencode/AGENTS.md
+#    API:      prepend docs/identity/SOUL.md to the system prompt
 
 # 2. Verify
 python3 tests/run_tests.py
@@ -177,10 +181,10 @@ Real test results, not claims:
 ## Safety and corruption protection
 
 ```
-✅ tools/checkpoint.py — auto-backup of critical files (9router DB, config, SSH, memory)
+✅ scripts/checkpoint.py — auto-backup of critical files (9router DB, config, SSH, memory)
 ✅ SAFETY-FRAMEWORK — protected paths + profile silo + dry-run + kill-switch
 ✅ Separate profile — never overwrites the primary configuration
-✅ SKILLS.lock — integrity manifest across 8137 skills (anti-corruption)
+✅ SKILLS.lock — SHA-256 manifest over the skill tree, verified by scripts/skill_integrity.py
 ```
 
 ## Ethics and responsibility
@@ -193,11 +197,11 @@ Hard limits that never move: content involving minors, weapons of mass destructi
 
 | Platform | Status |
 |---|---|
-| Hermes Agent | ✅ Native (`install.sh`) |
+| Hermes Agent | ✅ Native (`scripts/install.sh`) |
 | Claude Code | ✅ `CLAUDE.md` |
 | OpenAI Codex | ✅ `AGENTS.md` |
 | opencode | ✅ `AGENTS.md` |
-| Any OpenAI-compatible API | ✅ Paste `SOUL.md` |
+| Any OpenAI-compatible API | ✅ Paste `docs/identity/SOUL.md` |
 | Windows / Linux / macOS | ✅ Python 3.8+, no heavy dependency |
 
 ---

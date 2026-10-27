@@ -1,11 +1,11 @@
-# Shopee Affiliate Links Database (v5) — BATCH 3 — 100 PRODUKS
+# Shopee Affiliate Links Database (v5) — BATCH 3 — 100 LIVE ITEMS
 
 ## 📋 Rules
-- **WAJIB** gunakan link affiliate (`s.shopee.co.id/XXXX`)
-- **JANGAN PERNAH** post link asli Shopee
-- Rotasi link — jangan pakai link yang sama 2x berturut-turut
-- Setelah dipake, TANDAI ✅ Status + tambahin tanggal & context
-- Link yang udah dipake → rotate ke UNUSED lain
+- **MUST** use the affiliate link (`s.shopee.co.id/XXXX`)
+- **NEVER** post the raw Shopee link
+- Rotate links — never use the same link twice in a row
+- After use, MARK ✅ Status + add the date & context
+- Already-used link → rotate to another UNUSED one
 
 ---
 
@@ -27,9 +27,9 @@
 
 ---
 
-## 🧴 SKINCARE (37 produk)
+## 🧴 SKINCARE (37 products)
 
-| # | Produk | Link | Status | Last Used |
+| # | Product | Link | Status | Last Used |
 |---|--------|------|--------|-----------|
 || 1 | Azarine Hydrasoothe Sunscreen Gel SPF45 PA++ | `https://s.shopee.co.id/9ALogn6aec` | ✅ USED (2026-07-11) — Pinterest cron post | - |
 || 2 | SKINTIFIC Mugwort Acne Clay Stick 40g | `https://s.shopee.co.id/8V67tuyezd` | ✅ USED (2026-07-11) — Pinterest cron post | - |
@@ -70,9 +70,9 @@
 || 98 | BIOAQUA SymWhite 377 Whitening Serum | `https://s.shopee.co.id/8Kmhk5twIg` | ❌ UNUSED (2026-06-25) — Pinterest auto-post | - |
 || 99 | BREYLEE Tea Tree Acne Gel Perawatan Jerawat | `https://s.shopee.co.id/7VDUT3cU8z` | ❌ UNUSED (2026-06-26) — Pinterest cron post | - |
 
-## 💄 MAKEUP (19 produk)
+## 💄 MAKEUP (19 products)
 
-| # | Produk | Link | Status | Last Used |
+| # | Product | Link | Status | Last Used |
 |---|--------|------|--------|-----------|
 || 3 | Rose All Day The Radiant Liquid Lipstick | `https://s.shopee.co.id/5Apfw9Jr78` | ✅ USED (2026-07-11) — Pinterest cron post | - |
 || 5 | Ellips Hair Vitamin Pro-Keratin Complex | `https://s.shopee.co.id/2BC4NXS2du` | ✅ USED (2026-07-11) — Pinterest cron post | 2026-06-09 |
@@ -94,9 +94,9 @@
 || 85 | Carven & Co Lioplus Lip Tint Matte | `https://s.shopee.co.id/1LcxN9tRSW` | ❌ UNUSED | - |
 || #87 | Skintific Cover All Perfect Air Cushion | `https://s.shopee.co.id/AAEFeI1dIy` | ❌ UNUSED | - |
 
-## 🌸 PARFUM (25 produk)
+## 🌸 PARFUM (25 products)
 
-| # | Produk | Link | Status | Last Used |
+| # | Product | Link | Status | Last Used |
 |---|--------|------|--------|-----------|
 || 4 | AL Rehab Choco Musk EDP 35ml | `https://s.shopee.co.id/50WFkG1fYg` | ✅ USED (2026-07-11) — Pinterest cron post | - |
 | 19 | NCO Vanilla Orchid EDP Parfum Wanita | `https://s.shopee.co.id/9Kf8f6BW0R` | ❌ UNUSED | - |
@@ -124,9 +124,9 @@
 || 93 | ALETIA Fragrance Mist 100ml | `https://s.shopee.co.id/6feNUKrZ3e` | ❌ UNUSED | - |
 || 100 | Vienna Parfum Mist Rose Garden | `https://s.shopee.co.id/6VL3XvhSTs` | ❌ UNUSED | - |
 
-## 💇 HAIRCARE (19 produk)
+## 💇 HAIRCARE (19 products)
 
-| # | Produk | Link | Status | Last Used |
+| # | Product | Link | Status | Last Used |
 |---|--------|------|--------|-----------|
 || 7 | IMPLORA Glossy Plumpy Jelly Tint | `https://s.shopee.co.id/1qZ7il8dSi` | ✅ USED (2026-07-11) — Pinterest cron post | - |
 || 11 | Hada Labo Gokujyun Ultimate Moisturizing Lotion | `https://s.shopee.co.id/AKXm7kQruS` | ✅ USED (2026-07-11) — Pinterest cron post | - |
@@ -167,11 +167,11 @@ _(empty — batch 3 reset)_
 ## 🔄 Rotation Rules
 
 **Reply (every 45m):**
-- Pilih dari category sesuai topik post yang di-reply
-- Tandai ✅ setelah dipake
+- Pick from the category matching the topic of the post being replied to
+- Mark ✅ after use
 
 **Post (07:30/11:30/19:30):**
-- Thread 3 posts → link di POST 3 (terakhir)
+- Thread of 3 posts → link in POST 3 (last)
 - Category rotation: Skincare → Makeup → Parfum → Haircare
 
 *Total: 100 affiliate links | Source: jagonya.my.id | Updated: 2026-05-30*

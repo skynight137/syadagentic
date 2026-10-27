@@ -8,13 +8,13 @@
 #    git clone https://github.com/USER/syadagentic.git
 #    cd syadagentic
 # 2) Run the installer:
-#    bash install.sh                      # -> Hermes profile `syad` (created if missing)
-#    bash install.sh --profile other      # -> profile `other` (patched if it exists)
-#    bash install.sh --profile default    # -> default profile (+ agent.system_prompt)
+#    bash scripts/install.sh                      # -> Hermes profile `syad` (created if missing)
+#    bash scripts/install.sh --profile other      # -> profile `other` (patched if it exists)
+#    bash scripts/install.sh --profile default    # -> default profile (+ agent.system_prompt)
 #
 # NEVER writes the default profile unless you target it explicitly.
 # Other agents are opt-in: --all-agents (Claude Code, Codex, opencode).
-# Custom location: bash install.sh --dir /target/path
+# Custom location: bash scripts/install.sh --dir /target/path
 # ============================================================
 set -euo pipefail
 
@@ -43,12 +43,13 @@ while [ $# -gt 0 ]; do
     --default)  PROFILE="default"; shift ;;
     --all-agents) ALL_AGENTS=1; shift ;;
     --no-create) CREATE_ARGS+=(--no-create); shift ;;
+    --no-links)  shift ;;  # accepted for symmetry with install_universal.py
     -h|--help)  sed -n '2,20p' "${BASH_SOURCE[0]}"; exit 0 ;;
     *)          INSTALL_DIR="$1"; shift ;;
   esac
 done
 
-SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"  # repo root; this script lives in scripts/
 
 banner() {
   echo ""
@@ -73,24 +74,24 @@ detect_agents() {
 # Hermes: the Python installer owns profiles (create / patch / system_prompt on default).
 install_hermes() {
   command -v python3 >/dev/null 2>&1 || fail "python3 required for the Hermes target"
-  python3 "$INSTALL_DIR/install_universal.py" --profile "$PROFILE" "${CREATE_ARGS[@]}"
+  python3 "$INSTALL_DIR/scripts/install_universal.py" --profile "$PROFILE" "${CREATE_ARGS[@]}"
 }
 
 install_claude() {
   mkdir -p "$HOME/.claude"
-  cp "$INSTALL_DIR/SOUL.md" "$HOME/.claude/CLAUDE.md"
+  cp "$INSTALL_DIR/docs/identity/SOUL.md" "$HOME/.claude/CLAUDE.md"
   ok "Claude Code: CLAUDE.md installed (~/.claude is wiped on sandbox restart)"
 }
 
 install_codex() {
   mkdir -p "$HOME/.codex"
-  cp "$INSTALL_DIR/SOUL.md" "$HOME/.codex/AGENTS.md"
+  cp "$INSTALL_DIR/docs/identity/SOUL.md" "$HOME/.codex/AGENTS.md"
   ok "Codex: AGENTS.md installed"
 }
 
 install_opencode() {
   mkdir -p "$HOME/.config/opencode"
-  cp "$INSTALL_DIR/SOUL.md" "$HOME/.config/opencode/AGENTS.md"
+  cp "$INSTALL_DIR/docs/identity/SOUL.md" "$HOME/.config/opencode/AGENTS.md"
   ok "opencode: AGENTS.md installed (~/.config is wiped on sandbox restart)"
 }
 
@@ -113,7 +114,7 @@ cd "$INSTALL_DIR"
 AGENTS="$(detect_agents)"
 if [ -z "$AGENTS" ]; then
   warn "No agent CLI detected."
-  info "Manual route: copy SOUL.md into your agent's system prompt slot"
+  info "Manual route: copy docs/identity/SOUL.md into your agent's system prompt slot"
 else
   for agent in $AGENTS; do
     case "$agent" in
@@ -128,10 +129,10 @@ fi
 # 3. Verify the install
 info "Verifying the installation..."
 VFAIL=0
-if [ -f "$INSTALL_DIR/SOUL.md" ]; then
-  ok "SOUL.md ($(wc -l < "$INSTALL_DIR/SOUL.md") lines)"
+if [ -f "$INSTALL_DIR/docs/identity/SOUL.md" ]; then
+  ok "docs/identity/SOUL.md ($(wc -l < "$INSTALL_DIR/docs/identity/SOUL.md") lines)"
 else
-  fail "SOUL.md missing"; VFAIL=1
+  fail "docs/identity/SOUL.md missing"; VFAIL=1
 fi
 if [ -f "$INSTALL_DIR/templates/jailbreak/templates.md" ]; then
   ok "templates/jailbreak/templates.md ($(grep -c '^## T' "$INSTALL_DIR/templates/jailbreak/templates.md" || true) templates)"
@@ -143,10 +144,10 @@ if [ -d "$INSTALL_DIR/skills" ]; then
 else
   warn "skills/ missing"
 fi
-if [ -d "$INSTALL_DIR/arsenal-framework" ]; then
-  ok "arsenal-framework (executable framework core)"
+if [ -d "$INSTALL_DIR/framework" ]; then
+  ok "framework (executable framework core)"
 else
-  warn "arsenal-framework missing"
+  warn "framework missing"
 fi
 
 # 4. Verify the Hermes target actually carries the identity
@@ -158,10 +159,10 @@ if command -v hermes >/dev/null 2>&1; then
     else
       warn "default profile: agent.system_prompt not readable"; VFAIL=1
     fi
-  elif [ -f "$HHOME/profiles/$PROFILE/SOUL.md" ]; then
-    ok "profile '$PROFILE': SOUL.md + skills installed"
+  elif [ -f "$HHOME/profiles/$PROFILE/docs/identity/SOUL.md" ]; then
+    ok "profile '$PROFILE': docs/identity/SOUL.md + skills installed"
   else
-    warn "profile '$PROFILE': SOUL.md missing"; VFAIL=1
+    warn "profile '$PROFILE': docs/identity/SOUL.md missing"; VFAIL=1
   fi
 fi
 
@@ -177,7 +178,7 @@ if [ "$VFAIL" -eq 0 ]; then
   echo "  Run it    : hermes -p $PROFILE"
   echo "  Re-run    : idempotent — an existing profile is patched, never recreated"
   echo ""
-  echo "  Full walkthrough: cat SOLVED-LENGKAP.md"
+  echo "  Full walkthrough: cat docs/guides/SOLVED-LENGKAP.md"
   echo "==============================================================="
 else
   fail "Verification failed — check the output above"

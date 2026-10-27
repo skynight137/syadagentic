@@ -110,7 +110,7 @@ ARSENAL_TOOLS=(
   "anew|filter|GOBIN=\$HOME/go/bin go install github.com/tomnomnom/anew@latest|github.com/tomnomnom/anew"
   "interactsh-client|oob|GOBIN=\$HOME/go/bin go install github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest|github.com/projectdiscovery/interactsh"
   # ── AI Coding Assistants ────────────────────────────────────────────────
-  "kimchi|ai|curl -fsSL https://kimchi.dev/install.sh -o kimchi_install.sh && sh kimchi_install.sh|kimchi.dev"
+  "kimchi|ai|curl -fsSL https://kimchi.dev/scripts/install.sh -o kimchi_scripts/install.sh && sh kimchi_scripts/install.sh|kimchi.dev"
   "freebuff|ai|npm install -g freebuff|freebuff.com"
 )
 

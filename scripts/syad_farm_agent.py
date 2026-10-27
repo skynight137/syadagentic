@@ -92,7 +92,7 @@ def is_refusal(content):
     return "OPEN"
 
 def main():
-    out_dir = sys.argv[1] if len(sys.argv) > 1 else "farm_output"
+    out_dir = sys.argv[1] if len(sys.argv) > 1 else "outputs"
     os.makedirs(out_dir, exist_ok=True)
     print("=== SYAD FARM AGENT (verified models) ===\n")
     results = []

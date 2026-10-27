@@ -120,7 +120,7 @@ Before naming a chain, contract, or deployment as affected, re-resolve the deplo
 
 See the `bb-methodology` reference `references/live-dapp-deployment-provenance.md` for the pinned-fork and bytecode-verification workflow.
 
-If `tools/validate.py` already wrote `submission-notes.md`, append/update it
+If `scripts/validate.py` already wrote `submission-notes.md`, append/update it
 instead of creating a duplicate.
 
 ---
@@ -321,11 +321,11 @@ CVSS 3.1 Score: X.X ([Severity]) — AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N
 - Title format: `[Bug Class]: [One-line impact]` — keep **short** (form often has a hard char limit; long titles get truncated). Prefer ≤90–100 chars; offer 2–3 short alternatives when packaging.
 - Severity is set by you: Critical/High/Medium/Low/Exceptional. If user self-selects **Medium** on a High-framed package, **accept** — do not re-argue High after submit.
 - CVSS 3.1 is standard (CVSS 4.0 also accepted on newer programs). When user shares the CVSS calculator UI, answer with a **pick table** (metric → value → one-line reason), not only the vector string.
-- **Video PoC:** if the form asks *"Did you include a video PoC… (video proof is mandatory)"* / *"gimana ini"*, treat as **hard gate**. Answer honestly: **No until video is attached**. JSON/HTTP dumps are not substitutes. Ship a 2–4 min on-screen script (victim context → attacker empty cookies → 200/201s) before Yes. Never tell user to check Yes without video.
+- **Video PoC:** if the form asks *"Did you include a video PoC… (video proof is mandatory)"* / *"gimana ini"* (how do I answer this), treat as **hard gate**. Answer honestly: **No until video is attached**. JSON/HTTP dumps are not substitutes. Ship a 2–4 min on-screen script (victim context → attacker empty cookies → 200/201s) before Yes. Never tell user to check Yes without video.
 - Asset/tier: pick the **listed Tier-1/2 URL asset** (e.g. `https://api.brand.com`), **not** Tier-5 `*.domain` wildcard — wrong tier tanks bounty. State tier + URL-vs-wildcard explicitly in chat when user asks.
-- **Paste hygiene — NO markdown tables in Impact (or any paste body):** user feedback *"jangan bentuk tabel, berantakan pas di paste"*. Use **bullets / short paragraphs only** in Description Impact. Keep comparison tables only in local `submission-notes.md`, never in paste blocks.
+- **Paste hygiene — NO markdown tables in Impact (or any paste body):** user feedback *"jangan bentuk tabel, berantakan pas di paste"* (no tables, they break on paste). Use **bullets / short paragraphs only** in Description Impact. Keep comparison tables only in local `submission-notes.md`, never in paste blocks.
 - Bug type dropdown: map IDOR/BOLA → **Broken Access Control** or **IDOR** (whichever exists); include CWE-639 / CWE-284 in body.
-- Post-submit: if user says *"oke udah aku submit"* → short ack + wait guidance only; if *"skip dulu… bounty lain"* → **stop residual hunt on that target** (cancel residual todos), do not push more probes unless they re-open.
+- Post-submit: if user says *"oke udah aku submit"* (ok, submitted) → short ack + wait guidance only; if *"skip dulu… bounty lain"* (skip for now, other bounty) → **stop residual hunt on that target** (cancel residual todos), do not push more probes unless they re-open.
 - Safe harbor: Intigriti enforces it, be comfortable going slightly aggressive with testing
 
 ---
@@ -538,7 +538,7 @@ references/telegram-delivery-preferences.md — this user's hard report-format r
 ```
 ### H1 form coaching + Telegram attachments (this user)
 
-- Field-by-field paste mode (`Description*`, mid-stream `eh salah maksud aku G2`): re-anchor immediately; answer with **copy-paste field blocks only**. See `references/h1-single-asset-form-fill.md`.
+- Field-by-field paste mode (`Description*`, mid-stream `eh salah maksud aku G2` = "oops, I meant G2"): re-anchor immediately; answer with **copy-paste field blocks only**. See `references/h1-single-asset-form-fill.md`.
 - Attachment delivery recovery (MEDIA → secret gist + tar.gz, no `$` in gists): `references/telegram-h1-attachments.md
 references/telegram-delivery-preferences.md — this user's hard report-format rules: no severity words, no symbols/em-dashes, no internal status notes, grep-verify before sending.`.
 
@@ -595,7 +595,7 @@ Key fields:
 
 ## HUMANIZER PASS (this user — hard pref)
 
-User explicitly asks for a humanizer pass on reports/PoCs ("jangan lupa pakai humanizer"). Before finalizing any report, run the text through the `creative/humanizer` skill's 29-pattern checklist. Concretely, strip:
+User explicitly asks for a humanizer pass on reports/PoCs ("jangan lupa pakai humanizer" = do not forget the humanizer). Before finalizing any report, run the text through the `creative/humanizer` skill's 29-pattern checklist. Concretely, strip:
 - AI-vocab filler: `delve`, `moreover`, `furthermore`, `crucial`, `leverage`, `utilize`, `robust`, `seamless`, `landscape`, `tapestry`, `in conclusion`, `it is worth noting`, `notably`, `underscore`, `foster`, `harness`, `cutting-edge`, `game-changer`, `unlock`, `elevate`, `supercharge`.
 - Copula avoidance ("serves as / stands as / marks") → plain `is`/`are`.
 - Em-dash overuse, boldface headers, emojis, title-case headings, rule-of-three, negative parallelism ("not just X, it's Y"), passive voice, filler phrases ("in order to", "due to the fact that").
@@ -703,7 +703,7 @@ Per the PERSISTENCE RULE above: every report, PoC, screenshot, and submission no
 
 ### Intigriti submit package (disk + Telegram) — when user says submit
 
-User often says **"submit dulu"** / **"Oke submit dulu deh"** mid-hunt. **Stop hunting** and ship a paste-ready package before more probes (T&C reverse, register, XSS, etc.).
+User often says **"submit dulu"** / **"Oke submit dulu deh"** (submit first) mid-hunt. **Stop hunting** and ship a paste-ready package before more probes (T&C reverse, register, XSS, etc.).
 
 ```text
 findings/<program-or-brand>-<bug-class>/
@@ -715,7 +715,7 @@ findings/<program-or-brand>-<bug-class>/
 
 Also ship `findings/<same>.tar.gz` for one-shot Telegram download.
 
-**Chat delivery (this user — Indonesian, concise):**
+**Chat delivery (this user — Indonesian, concise, keep the Indonesian phrasing above):**
 1. Title + Severity + Asset + Endpoint as copy-paste blocks
 2. `MEDIA:` report.md + PASTE_FIELDS.txt + submission-notes.md + tar.gz
 3. Min attach list + **Do NOT claim** table

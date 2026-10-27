@@ -64,20 +64,20 @@ every downstream tool (httpx, katana, ffuf, nuclei, dalfox, the SQLi / SSTI
 
 ```bash
 # Pick ONE of these and run hunt.py normally:
-python3 tools/hunt.py --target T --cookie 'session=eyJabc...'
-python3 tools/hunt.py --target T --bearer 'eyJhbGciOi...'
-python3 tools/hunt.py --target T --auth-file .private/T.json
+python3 scripts/hunt.py --target T --cookie 'session=eyJabc...'
+python3 scripts/hunt.py --target T --bearer 'eyJhbGciOi...'
+python3 scripts/hunt.py --target T --auth-file .private/T.json
 
 # Or via env (persists for the shell):
 export BBHUNT_COOKIE='session=eyJabc...'
-python3 tools/hunt.py --target T
+python3 scripts/hunt.py --target T
 ```
 
 **For IDOR / BOLA hunts**, load two sessions and diff behavior:
 
 ```bash
-python3 tools/hunt.py --target T --auth-file .private/T-user-a.json
-python3 tools/hunt.py --target T --auth-file .private/T-user-b.json
+python3 scripts/hunt.py --target T --auth-file .private/T-user-a.json
+python3 scripts/hunt.py --target T --auth-file .private/T-user-b.json
 # Audit log entries carry different session_id hashes → diff which
 # endpoints behaved differently per identity.
 ```
@@ -808,7 +808,7 @@ When target has AI agents with tool access, these are the 10 attack classes:
 | ASI06 | Excessive agency | AI takes destructive actions without confirmation -- delete, send, pay |
 | ASI07 | Model DoS | Craft inputs that cause infinite loops, excessive token usage, or OOM |
 | ASI08 | Insecure output | AI generates XSS/SQLi/command injection in its output that gets rendered |
-| ASI09 | Supply chain | Compromised plugins/tools/MCP servers the AI calls |
+| ASI09 | Supply chain | Compromised plugins/scripts/MCP servers the AI calls |
 | ASI10 | Sensitive disclosure | AI reveals internal configs, API keys, system prompts, user data |
 
 **Triage rule:** ASI alone = Informational. Must chain to IDOR/exfil/RCE/ATO for paid bounty.

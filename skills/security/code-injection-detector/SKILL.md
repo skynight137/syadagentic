@@ -1,6 +1,6 @@
 ---
 name: code-injection-detector
-description: Code Injection Detector - Auto-activating skill for Security Fundamentals. Triggers on: code injection detector, code injection detector Part of the Security Fundamentals skill category.
+description: "Code Injection Detector - Auto-activating skill for Security Fundamentals. Triggers on: code injection detector, code injection detector Part of the Security Fundamentals skill category."
 allowed-tools: Read, Write, Grep, Bash(npm:*)
 version: 1.0.0
 license: MIT

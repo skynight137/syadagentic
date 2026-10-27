@@ -22,7 +22,7 @@ The MCP server auto-redacts `Authorization`, `Cookie`, `Set-Cookie`, and API-key
 ### Step 1: Install the Caido MCP server
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/c0tton-fluff/caido-mcp-server/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/c0tton-fluff/caido-mcp-server/main/scripts/install.sh | bash
 ```
 
 Or build from source — see the [project README](https://github.com/c0tton-fluff/caido-mcp-server).
