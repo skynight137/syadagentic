@@ -89,7 +89,7 @@ log("Enabling Network...")
 cdp(ws, "Network.enable", {})
 
 log("Injecting IG cookies to .instagram.com...")
-ig_cookies = json.load(open(os.path.join(HOME, "instagram_cookies.json")))
+ig_cookies = _cookies()
 for name, value in ig_cookies.items():
     cdp(ws, "Network.setCookie", {"name": name, "value": value, "domain": ".instagram.com", "path": "/", "secure": True})
 

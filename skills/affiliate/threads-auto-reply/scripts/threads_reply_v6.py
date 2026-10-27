@@ -32,6 +32,12 @@ def _chrome():
     return _first(*[c for c in cands if c])
 CHROME = _chrome()
 
+def _cookies():
+    p = os.path.join(HOME, "instagram_cookies.json")
+    if not os.path.exists(p):
+        raise SystemExit(f"Cookie tidak ada: {p} - export dari browser setelah login IG, atau set SYAD_HOME ke folder berisi cookie.")
+    return json.load(open(p))
+
 # Tanpa X display (sandbox/VPS) Chrome harus headless + no-sandbox, kalau tidak CDP 9222 refused.
 _EXTRA_FLAGS = ["--headless=new", "--no-sandbox"] if not os.environ.get("DISPLAY") else ["--no-sandbox"]
 
@@ -370,7 +376,7 @@ def main():
 
     # Inject cookies
     log("Injecting cookies...")
-    ig_cookies = json.load(open(os.path.join(HOME, "instagram_cookies.json")))
+    ig_cookies = _cookies()
     for name, value in ig_cookies.items():
         cdp(ws, "Network.setCookie", {"name": name, "value": value, "domain": ".instagram.com", "path": "/", "secure": True})
 
